@@ -15,4 +15,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCases\" />
+    <Folder Include="UI\" />
+  </ItemGroup>
+
 </Project>
