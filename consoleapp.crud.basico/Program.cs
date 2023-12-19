@@ -1,6 +1,5 @@
 ﻿
+using consoleapp.crud.basico.UI;
 
-
-
-
-Console.WriteLine("Hello, World!");
+Menu.ExibirMenu();
+Console.WriteLine("\n\nPrograma finalizado!");
