@@ -17,7 +17,7 @@ namespace consoleapp.crud.basico.UI
             ApagarPessoa = 5
         }
 
-        public static void ExibirMenu()
+        public void ExibirMenu()
         {
             do
             {
@@ -32,18 +32,23 @@ namespace consoleapp.crud.basico.UI
                 switch (escolhaMenuUsuario)
                 {
                     case OpcoesMenu.ListarTodasPessoas:
+                        ListarTodasPessoas();
                         break;
 
                     case OpcoesMenu.ListarPessoasPorEstado:
+                        ListarPessoasPorEstado();
                         break;
 
                     case OpcoesMenu.AlterarDadosPessoa:
+                        AlterarDadosPessoa();
                         break;
 
                     case OpcoesMenu.InserirNovaPessoa:
+                        InserirNovaPessoa();
                         break;
 
                     case OpcoesMenu.ApagarPessoa:
+                        ApagarPessoa();
                         break;
 
                     default:
@@ -52,12 +57,10 @@ namespace consoleapp.crud.basico.UI
                         Console.ForegroundColor = ConsoleColor.White;
                         break;
                 }
-
-
             } while (true);
         }
 
-        private static string MontaMenu()
+        private string MontaMenu()
         {
             var menu = new StringBuilder();
             menu.AppendLine("**********************************************");
@@ -71,6 +74,31 @@ namespace consoleapp.crud.basico.UI
             menu.AppendLine("Informe o número do menu da sua escolha:");
 
             return menu.ToString();
+        }
+
+        private void ListarTodasPessoas()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ListarPessoasPorEstado()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void AlterarDadosPessoa()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void InserirNovaPessoa()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ApagarPessoa() 
+        {  
+            throw new NotImplementedException(); 
         }
     }
 }

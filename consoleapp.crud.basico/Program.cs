@@ -1,5 +1,7 @@
 ﻿
 using consoleapp.crud.basico.UI;
 
-Menu.ExibirMenu();
+var menu = new Menu();
+menu.ExibirMenu();
+
 Console.WriteLine("\n\nPrograma finalizado!");
