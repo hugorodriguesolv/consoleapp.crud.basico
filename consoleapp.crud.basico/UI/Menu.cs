@@ -1,4 +1,5 @@
-﻿using System;
+﻿using consoleapp.crud.basico.UseCases;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,7 +79,19 @@ namespace consoleapp.crud.basico.UI
 
         private void ListarTodasPessoas()
         {
-            throw new NotImplementedException();
+            var pessoaUC = new PessoaUC();
+            var pessoas = pessoaUC.ListarTodasPessoas();
+
+            Console.WriteLine("**********************************************");
+            Console.WriteLine("      Todas as pessoas da base de dados");
+            Console.WriteLine("**********************************************");
+
+            foreach (var pessoa in pessoas)
+            {
+                Console.WriteLine($"Id: {pessoa.Id} | Nome: {pessoa.Nome} | Id Departamento: {pessoa.IdDepartamento}");
+            }
+
+            Console.WriteLine("-----------------------------------------------------------------------------------------------");
         }
 
         private void ListarPessoasPorEstado()
@@ -96,9 +109,9 @@ namespace consoleapp.crud.basico.UI
             throw new NotImplementedException();
         }
 
-        private void ApagarPessoa() 
-        {  
-            throw new NotImplementedException(); 
+        private void ApagarPessoa()
+        {
+            throw new NotImplementedException();
         }
     }
 }
