@@ -18,7 +18,7 @@ namespace consoleapp.crud.basico.UI
             ApagarPessoa = 5
         }
 
-        public void ExibirMenu()
+        public void ExibirMenu() 
         {
             do
             {
@@ -96,7 +96,18 @@ namespace consoleapp.crud.basico.UI
 
         private void ListarPessoasPorEstado()
         {
-            throw new NotImplementedException();
+            var pessoaUC = new PessoaUC();
+
+            Console.WriteLine("Informe um Id de um estado:");
+            var IdEstadoInformado = int.Parse(Console.ReadLine());
+
+            var pessoasEstado = pessoaUC.ListarPessoasPorEstado(IdEstadoInformado);
+
+            foreach (var pessoa in pessoasEstado)
+            {
+                Console.WriteLine($"Pessoa: {pessoa.Id} - {pessoa.NomePessoa} | Departamento: {pessoa.NomeDepartamento} | Estado: {pessoa.NomeEstado}");
+            }
+
         }
 
         private void AlterarDadosPessoa()
