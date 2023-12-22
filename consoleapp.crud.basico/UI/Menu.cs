@@ -1,4 +1,5 @@
-﻿using consoleapp.crud.basico.UseCases;
+﻿using consoleapp.crud.basico.Entities;
+using consoleapp.crud.basico.UseCases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace consoleapp.crud.basico.UI
     {
         private enum OpcoesMenu
         {
+            Sair = 0,
             ListarTodasPessoas = 1,
             ListarPessoasPorEstado = 2,
             AlterarDadosPessoa = 3,
@@ -18,17 +20,27 @@ namespace consoleapp.crud.basico.UI
             ApagarPessoa = 5
         }
 
-        public void ExibirMenu() 
+        public void ExibirMenu()
         {
+            var exibirMenu = true;
+
             do
             {
+                Console.Clear();
+
                 var textoMenu = MontaMenu();
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(textoMenu);
                 Console.ForegroundColor = ConsoleColor.White;
 
-                var escolhaMenuUsuario = (OpcoesMenu)Enum.Parse(typeof(OpcoesMenu), Console.ReadLine());
+                var valorMenuEscolhido = Console.ReadLine()?.Trim();
+                valorMenuEscolhido = valorMenuEscolhido == string.Empty | valorMenuEscolhido == null ? "0" : valorMenuEscolhido;
+
+                var escolhaMenuUsuario = (OpcoesMenu)Enum.Parse(typeof(OpcoesMenu), valorMenuEscolhido);
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"O menu escolhido foi {escolhaMenuUsuario}");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine();
 
                 switch (escolhaMenuUsuario)
                 {
@@ -52,13 +64,21 @@ namespace consoleapp.crud.basico.UI
                         ApagarPessoa();
                         break;
 
+                    case OpcoesMenu.Sair:
+                        exibirMenu = false;
+                        break;
+
                     default:
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Essa opção não existe no menu.");
                         Console.ForegroundColor = ConsoleColor.White;
                         break;
                 }
-            } while (true);
+
+                Console.WriteLine();
+                Console.WriteLine("Pressione qualquer tecla para continuar.");
+                Console.ReadLine();
+            } while (exibirMenu);
         }
 
         private string MontaMenu()
@@ -67,6 +87,7 @@ namespace consoleapp.crud.basico.UI
             menu.AppendLine("**********************************************");
             menu.AppendLine("       Menu de opções da aplicação");
             menu.AppendLine("**********************************************");
+            menu.AppendLine("0 - Sair");
             menu.AppendLine("1 - Listar Todas Pessoas");
             menu.AppendLine("2 - Listar Pessoas por Estado");
             menu.AppendLine("3 - Alterar Dados de uma Pessoa");
@@ -81,17 +102,17 @@ namespace consoleapp.crud.basico.UI
         {
             var pessoaUC = new PessoaUC();
             var pessoas = pessoaUC.ListarTodasPessoas();
+            
+            var fechamentoTabela = $"| {new string('¯', 8)} | {new string('¯', 25)} | {new string('¯', 25)} |";
 
-            Console.WriteLine("**********************************************");
-            Console.WriteLine("      Todas as pessoas da base de dados");
-            Console.WriteLine("**********************************************");
+            Console.WriteLine(fechamentoTabela);
+            Console.WriteLine($"| {"Id".PadRight(8)} | {"Pessoa".PadRight(25)} | {"Departamento".PadRight(25)} |");
+            Console.WriteLine(fechamentoTabela);
 
             foreach (var pessoa in pessoas)
             {
-                Console.WriteLine($"Id: {pessoa.Id} | Nome: {pessoa.Nome} | Id Departamento: {pessoa.IdDepartamento}");
+                Console.WriteLine($"| {pessoa.Id.ToString().PadRight(8)} | {pessoa.NomePessoa.PadRight(25)} | {pessoa.NomeDepartamento.PadRight(25)} |");
             }
-
-            Console.WriteLine("-----------------------------------------------------------------------------------------------");
         }
 
         private void ListarPessoasPorEstado()
@@ -103,11 +124,16 @@ namespace consoleapp.crud.basico.UI
 
             var pessoasEstado = pessoaUC.ListarPessoasPorEstado(IdEstadoInformado);
 
+            var fechamentoTabela = $"| {new string('¯', 25)} | {new string('¯', 25)} | {new string('¯', 15)} |";
+
+            Console.WriteLine(fechamentoTabela);
+            Console.WriteLine($"| {"Pessoa".PadRight(25)} | {"Departamento".PadRight(25)} | {"Estado".PadRight(15)} |");
+            Console.WriteLine(fechamentoTabela);
+
             foreach (var pessoa in pessoasEstado)
             {
-                Console.WriteLine($"Pessoa: {pessoa.Id} - {pessoa.NomePessoa} | Departamento: {pessoa.NomeDepartamento} | Estado: {pessoa.NomeEstado}");
+                Console.WriteLine($"| {pessoa.NomePessoa.PadRight(25)} | {pessoa.NomeDepartamento.PadRight(25)} | {pessoa.NomeEstado.PadRight(15)} |");
             }
-
         }
 
         private void AlterarDadosPessoa()

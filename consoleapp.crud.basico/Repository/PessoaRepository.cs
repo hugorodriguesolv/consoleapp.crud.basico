@@ -17,37 +17,38 @@ namespace consoleapp.crud.basico.Repository
 
         public PessoaRepository()
         {
-            _connection = new SqlConnection("Data Source=sql-server, 1433;Initial Catalog=geekjobs;Integrated Security=False;User ID=sa;Password=AulaGeekJobs1;TrustServerCertificate=true");
+            _connection = new SqlConnection("Data Source=localhost, 1522;Initial Catalog=geekjobs;Integrated Security=False;User ID=sa;Password=AulaGeekJobs1;TrustServerCertificate=true");
             _connection.Open();
         }
 
-        public IList<Pessoa> ObterTodasPessoas()
+        public IList<PessoaDepartamento> ObterTodasPessoas()
         {
             var sql = new StringBuilder();
             sql.AppendLine("SELECT ");
-            sql.AppendLine("    Id,");
-            sql.AppendLine("    Nome,");
-            sql.AppendLine("    IdDepartamento");
+            sql.AppendLine("    Pessoa.Id AS IdPessoa,");
+            sql.AppendLine("    Pessoa.Nome AS NomePessoa,");
+            sql.AppendLine("    Departamento.Nome AS NomeDepartamento");
             sql.AppendLine(" FROM ");
             sql.AppendLine("    Pessoa");
+            sql.AppendLine("    INNER JOIN Departamento ON (Pessoa.IdDepartamento = Departamento.Id)");
 
             _command = _connection.CreateCommand();
             _command.CommandText = sql.ToString();
             var dataReader = _command.ExecuteReader();
 
-            var retorno = new List<Pessoa>();
+            var pessoas = new List<PessoaDepartamento>();
 
             while (dataReader.Read())
             {
-                retorno.Add(new Pessoa
+                pessoas.Add(new PessoaDepartamento
                 {
-                    Id = (int)dataReader["Id"],
-                    Nome = dataReader["Nome"].ToString(),
-                    IdDepartamento = (int)dataReader["IdDepartamento"],
+                    Id = (int)dataReader["IdPessoa"],
+                    NomePessoa = dataReader["NomePessoa"].ToString(),
+                    NomeDepartamento = dataReader["NomeDepartamento"].ToString()
                 });
             }
 
-            return retorno;
+            return pessoas;
         }
 
         public IList<PessoaEstado> ObterPessoasPorEstado(int IdEstado)
@@ -60,9 +61,9 @@ namespace consoleapp.crud.basico.Repository
             sql.AppendLine("    Estado.Nome as NomeEstado");
             sql.AppendLine(" FROM ");
             sql.AppendLine("    Pessoa");
-            sql.AppendLine("    inner join Departamento on(Pessoa.IdDepartamento = Departamento.Id)");
-            sql.AppendLine("    inner join Cidade on(Departamento.IdCidade = Cidade.Id)");
-            sql.AppendLine("    inner join Estado on(Cidade.IdEstado = Estado.Id)");
+            sql.AppendLine("    inner join Departamento on (Pessoa.IdDepartamento = Departamento.Id)");
+            sql.AppendLine("    inner join Cidade on (Departamento.IdCidade = Cidade.Id)");
+            sql.AppendLine("    inner join Estado on (Cidade.IdEstado = Estado.Id)");
             sql.AppendLine(" WHERE ");
             sql.AppendLine("    Estado.Id = @IdEstado");
 

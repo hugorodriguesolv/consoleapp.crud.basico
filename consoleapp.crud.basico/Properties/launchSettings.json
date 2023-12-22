@@ -8,7 +8,7 @@
     },
     "WSL": {
       "commandName": "WSL2",
-      "distributionName": ""
+      "distributionName": "Ubuntu"
     }
   }
 }

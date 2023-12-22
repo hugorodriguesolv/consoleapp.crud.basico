@@ -9,7 +9,7 @@ namespace consoleapp.crud.basico.Interfaces
 {
     public interface IPessoaRepository
     {
-        IList<Pessoa> ObterTodasPessoas();
+        IList<PessoaDepartamento> ObterTodasPessoas();
 
         IList<PessoaEstado> ObterPessoasPorEstado(int IdEstado);
     }
