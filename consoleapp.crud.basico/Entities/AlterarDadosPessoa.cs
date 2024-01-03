@@ -10,6 +10,9 @@ namespace consoleapp.crud.basico.Entities
     {
         public string? NomePessoa { get; set; }
         public string? NomeDepartamento { get; set; }
+        public string? NomeCidade { get; set; }
+        public string? NomeEstado { get; set; }
+
         public int? NomeId { get; set;}
     }
 }
