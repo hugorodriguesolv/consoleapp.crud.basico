@@ -1,12 +1,7 @@
 ﻿using consoleapp.crud.basico.Entities;
 using consoleapp.crud.basico.Interfaces;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace consoleapp.crud.basico.Repository
 {
@@ -72,7 +67,6 @@ namespace consoleapp.crud.basico.Repository
 
             _command.Parameters.Add("@IdEstado", System.Data.SqlDbType.Int);
             _command.Parameters["@IdEstado"].Value = IdEstado;
-
 
             var dataReader = _command.ExecuteReader();
 
