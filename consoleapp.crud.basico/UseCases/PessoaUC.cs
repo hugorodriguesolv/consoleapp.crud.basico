@@ -21,5 +21,10 @@ namespace consoleapp.crud.basico.UseCases
 
             return pessoasEstado;
         }
+
+        public IList<AlterarDadosPessoa> AlterarDadosPessoais(int idPessoa)
+        {
+
+        }
     }
 }
