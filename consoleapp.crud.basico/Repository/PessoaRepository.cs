@@ -16,7 +16,7 @@ namespace consoleapp.crud.basico.Repository
             _connection.Open();
         }
 
-        public IList<PessoaDepartamento> ObterTodasPessoas()
+        public IList<Departamento> ObterTodasPessoas()
         {
             var sql = new StringBuilder();
             sql.AppendLine("SELECT ");
@@ -31,11 +31,11 @@ namespace consoleapp.crud.basico.Repository
             _command.CommandText = sql.ToString();
             var dataReader = _command.ExecuteReader();
 
-            var pessoas = new List<PessoaDepartamento>();
+            var pessoas = new List<Departamento>();
 
             while (dataReader.Read())
             {
-                pessoas.Add(new PessoaDepartamento
+                pessoas.Add(new Departamento
                 {
                     Id = (int)dataReader["IdPessoa"],
                     NomePessoa = dataReader["NomePessoa"].ToString(),
