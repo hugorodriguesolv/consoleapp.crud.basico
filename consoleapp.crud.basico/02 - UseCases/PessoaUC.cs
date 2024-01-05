@@ -21,11 +21,24 @@ namespace consoleapp.crud.basico.UseCases
 
             return pessoasEstado;
         }
+<<<<<<< HEAD:consoleapp.crud.basico/02 - UseCases/PessoaUC.cs
         public void InserirPessoa()
         {
             var pessoaRepository = new PessoaRepository();
             pessoaRepository.InserirPessoa();
 
         }
+=======
+
+        public bool ApagarPessoa(int idPessoaInformado)
+        {
+            var pessoaRepository = new PessoaRepository();
+            var apagou = pessoaRepository.ExcluirPessoa(idPessoaInformado) > 0 ? true : false;
+
+            return apagou;
+
+        }
+
+>>>>>>> feature/excluir-pessoas:consoleapp.crud.basico/UseCases/PessoaUC.cs
     }
 }
