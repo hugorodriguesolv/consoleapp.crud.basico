@@ -21,5 +21,15 @@ namespace consoleapp.crud.basico.UseCases
 
             return pessoasEstado;
         }
+
+        public bool ApagarPessoa(int idPessoaInformado)
+        {
+            var pessoaRepository = new PessoaRepository();
+            var apagou = pessoaRepository.ExcluirPessoa(idPessoaInformado) > 0 ? true : false;
+
+            return apagou;
+
+        }
+
     }
 }
