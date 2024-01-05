@@ -21,5 +21,11 @@ namespace consoleapp.crud.basico.UseCases
 
             return pessoasEstado;
         }
+        public void InserirPessoa()
+        {
+            var pessoaRepository = new PessoaRepository();
+            pessoaRepository.InserirPessoa();
+
+        }
     }
 }
