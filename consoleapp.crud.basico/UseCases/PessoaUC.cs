@@ -22,11 +22,23 @@ namespace consoleapp.crud.basico.UseCases
             return pessoasEstado;
         }
 
+<<<<<<< HEAD
         public void AlterarDadosPessoais(Pessoa pessoa)
         {
             var pessoaRepository = new PessoaRepository();
             pessoaRepository.AlterarDadosPessoais(idPessoa);
 
         }
+=======
+        public bool ApagarPessoa(int idPessoaInformado)
+        {
+            var pessoaRepository = new PessoaRepository();
+            var apagou = pessoaRepository.ExcluirPessoa(idPessoaInformado) > 0 ? true : false;
+
+            return apagou;
+
+        }
+
+>>>>>>> feature/excluir-pessoas
     }
 }

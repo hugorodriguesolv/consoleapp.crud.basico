@@ -161,7 +161,20 @@ namespace consoleapp.crud.basico.UI
 
         private void ApagarPessoa()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Escolha o Id da pessoa que deseja exluir: ");
+            var IdPessoaInformado = int.Parse(Console.ReadLine());
+
+            var pessoaUC = new PessoaUC();
+            var apagou = pessoaUC.ApagarPessoa(IdPessoaInformado);
+
+            if (apagou)
+            {
+                Console.WriteLine($"A pessoa com o id: {IdPessoaInformado} foi excluída com sucesso!");
+            } 
+            else
+            {
+                Console.WriteLine($"Não foi possível excluir a pessoa com o id: {IdPessoaInformado}.");
+            }
         }
     }
 }

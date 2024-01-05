@@ -86,6 +86,7 @@ namespace consoleapp.crud.basico.Repository
             return retorno;
         }
 
+<<<<<<< HEAD
         public void AlterarDadosPessoais(int idPessoa)
         {
 
@@ -95,6 +96,22 @@ namespace consoleapp.crud.basico.Repository
             sql.AppendLine("    IdDepartamento = (SELECT Id FROM Departamento WHERE Nome = @NovoDepartamento)");
             sql.AppendLine("WHERE Id = @IdPessoa");
 
+=======
+        public int ExcluirPessoa(int idPessoa)
+        {
+            var sql = new StringBuilder();
+            sql.AppendLine("DELETE Pessoa WHERE Id = @Id ");
+            
+            _command = _connection.CreateCommand();
+            _command.CommandText = sql.ToString();
+
+            _command.Parameters.Add("@Id", System.Data.SqlDbType.Int);
+            _command.Parameters["@Id"].Value = idPessoa;
+
+            var linhasAfetadas = _command.ExecuteNonQuery();
+
+            return linhasAfetadas;
+>>>>>>> feature/excluir-pessoas
         }
     }
 }
