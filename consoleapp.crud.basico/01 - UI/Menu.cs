@@ -138,7 +138,20 @@ namespace consoleapp.crud.basico.UI
 
         private void AlterarDadosPessoa()
         {
-            throw new NotImplementedException();
+            Console.Write("Informe o nome da Pessoa: ");
+            string nomePessoa = Console.ReadLine();
+
+
+
+            Console.Write("Infome novo departamento: ");
+            string novoDepartamento = Console.ReadLine();
+
+            var pessoa = new Pessoa();
+            pessoa.Nome = nomePessoa;
+            pessoa.IdDepartamento = int.Parse(novoDepartamento);
+
+            var pessoaUc = new PessoaUC();
+            pessoaUc.AlterarDadosPessoais(0);
         }
 
         private void InserirNovaPessoa()

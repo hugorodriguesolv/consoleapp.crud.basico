@@ -6,7 +6,7 @@ namespace consoleapp.crud.basico.UseCases
 {
     public class PessoaUC : IPessoaUC
     {
-        public IList<PessoaDepartamento> ListarTodasPessoas()
+        public IList<Departamento> ListarTodasPessoas()
         {
             var pessoaRepository = new PessoaRepository();
             var pessoas = pessoaRepository.ObterTodasPessoas();
@@ -30,6 +30,14 @@ namespace consoleapp.crud.basico.UseCases
         }
 =======
 
+<<<<<<< HEAD
+        public void AlterarDadosPessoais(Pessoa pessoa)
+        {
+            var pessoaRepository = new PessoaRepository();
+            pessoaRepository.AlterarDadosPessoais(idPessoa);
+
+        }
+=======
         public bool ApagarPessoa(int idPessoaInformado)
         {
             var pessoaRepository = new PessoaRepository();
@@ -39,6 +47,10 @@ namespace consoleapp.crud.basico.UseCases
 
         }
 
+<<<<<<< HEAD:consoleapp.crud.basico/02 - UseCases/PessoaUC.cs
 >>>>>>> feature/excluir-pessoas:consoleapp.crud.basico/UseCases/PessoaUC.cs
+=======
+>>>>>>> feature/excluir-pessoas
+>>>>>>> feature/alterar-dados-pessoais:consoleapp.crud.basico/UseCases/PessoaUC.cs
     }
 }

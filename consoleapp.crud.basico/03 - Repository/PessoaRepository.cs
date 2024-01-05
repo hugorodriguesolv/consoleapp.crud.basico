@@ -16,7 +16,7 @@ namespace consoleapp.crud.basico.Repository
             _connection.Open();
         }
 
-        public IList<PessoaDepartamento> ObterTodasPessoas()
+        public IList<Departamento> ObterTodasPessoas()
         {
             var sql = new StringBuilder();
             sql.AppendLine("SELECT ");
@@ -31,11 +31,11 @@ namespace consoleapp.crud.basico.Repository
             _command.CommandText = sql.ToString();
             var dataReader = _command.ExecuteReader();
 
-            var pessoas = new List<PessoaDepartamento>();
+            var pessoas = new List<Departamento>();
 
             while (dataReader.Read())
             {
-                pessoas.Add(new PessoaDepartamento
+                pessoas.Add(new Departamento
                 {
                     Id = (int)dataReader["IdPessoa"],
                     NomePessoa = dataReader["NomePessoa"].ToString(),
@@ -87,6 +87,19 @@ namespace consoleapp.crud.basico.Repository
         }
 
 <<<<<<< HEAD:consoleapp.crud.basico/03 - Repository/PessoaRepository.cs
+<<<<<<< HEAD:consoleapp.crud.basico/03 - Repository/PessoaRepository.cs
+=======
+<<<<<<< HEAD
+        public void AlterarDadosPessoais(int idPessoa)
+        {
+
+            var sql = new StringBuilder();
+            sql.AppendLine("UPDATE ");
+            sql.AppendLine("SET Nome = @Nome,");
+            sql.AppendLine("    IdDepartamento = (SELECT Id FROM Departamento WHERE Nome = @NovoDepartamento)");
+            sql.AppendLine("WHERE Id = @IdPessoa");
+
+>>>>>>> feature/alterar-dados-pessoais:consoleapp.crud.basico/Repository/PessoaRepository.cs
 =======
         public int ExcluirPessoa(int idPessoa)
         {
@@ -102,6 +115,7 @@ namespace consoleapp.crud.basico.Repository
             var linhasAfetadas = _command.ExecuteNonQuery();
 
             return linhasAfetadas;
+>>>>>>> feature/excluir-pessoas
         }
 >>>>>>> feature/excluir-pessoas:consoleapp.crud.basico/Repository/PessoaRepository.cs
     }
