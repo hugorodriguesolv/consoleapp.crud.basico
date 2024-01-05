@@ -22,14 +22,12 @@ namespace consoleapp.crud.basico.UseCases
             return pessoasEstado;
         }
 
-<<<<<<< HEAD
         public void AlterarDadosPessoais(Pessoa pessoa)
         {
             var pessoaRepository = new PessoaRepository();
             pessoaRepository.AlterarDadosPessoais(idPessoa);
 
         }
-=======
         public bool ApagarPessoa(int idPessoaInformado)
         {
             var pessoaRepository = new PessoaRepository();
@@ -39,6 +37,5 @@ namespace consoleapp.crud.basico.UseCases
 
         }
 
->>>>>>> feature/excluir-pessoas
     }
 }

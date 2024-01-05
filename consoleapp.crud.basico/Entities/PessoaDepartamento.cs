@@ -1,6 +1,6 @@
 ﻿namespace consoleapp.crud.basico.Entities
 {
-    public class Departamento : Entity
+    public class PessoaDepartamento : Entity
     {
         public string? NomePessoa { get; set; }
 

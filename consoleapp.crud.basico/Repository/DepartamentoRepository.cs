@@ -40,10 +40,11 @@ namespace consoleapp.crud.basico.Repository
 
             while (dataReader.Read())
             {
-                departamentos.Add(new Departamento
+                departamentos.Add(new PessoaDepartamento
                 {
-                    Id = (int)dataReader["IdPessoa"],
-                    Nome = dataReader["NomePessoa"].ToString(),
+                    Id = (int)dataReader["Departamento.Id"],
+                    NomeDepartamento = dataReader["Departamento.Nome"].ToString(),
+                    NomeCidade = dataReader["NomeCidade"].ToString()
                 });
             }
 

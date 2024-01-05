@@ -86,17 +86,15 @@ namespace consoleapp.crud.basico.Repository
             return retorno;
         }
 
-<<<<<<< HEAD
         public void AlterarDadosPessoais(int idPessoa)
         {
-
             var sql = new StringBuilder();
             sql.AppendLine("UPDATE ");
             sql.AppendLine("SET Nome = @Nome,");
             sql.AppendLine("    IdDepartamento = (SELECT Id FROM Departamento WHERE Nome = @NovoDepartamento)");
             sql.AppendLine("WHERE Id = @IdPessoa");
+        }
 
-=======
         public int ExcluirPessoa(int idPessoa)
         {
             var sql = new StringBuilder();
@@ -111,7 +109,6 @@ namespace consoleapp.crud.basico.Repository
             var linhasAfetadas = _command.ExecuteNonQuery();
 
             return linhasAfetadas;
->>>>>>> feature/excluir-pessoas
         }
     }
 }
