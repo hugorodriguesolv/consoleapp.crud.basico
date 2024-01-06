@@ -37,8 +37,8 @@ namespace consoleapp.crud.basico.Repository
             {
                 pessoas.Add(new Departamento
                 {
-                    Id = (int)dataReader["IdPessoa"],
-                    NomePessoa = dataReader["NomePessoa"].ToString(),
+                    IdPessoa = (int)dataReader["IdPessoa"],
+                    Nome = dataReader["NomePessoa"].ToString(),
                     NomeDepartamento = dataReader["NomeDepartamento"].ToString()
                 });
             }
@@ -84,15 +84,6 @@ namespace consoleapp.crud.basico.Repository
             }
 
             return retorno;
-        }
-
-        public void AlterarDadosPessoais(int idPessoa)
-        {
-            var sql = new StringBuilder();
-            sql.AppendLine("UPDATE ");
-            sql.AppendLine("SET Nome = @Nome,");
-            sql.AppendLine("    IdDepartamento = (SELECT Id FROM Departamento WHERE Nome = @NovoDepartamento)");
-            sql.AppendLine("WHERE Id = @IdPessoa");
         }
 
         public int ExcluirPessoa(int idPessoa)
