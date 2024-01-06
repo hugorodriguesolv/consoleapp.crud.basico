@@ -9,5 +9,7 @@ namespace consoleapp.crud.basico.Entities
     public class Pessoa : Entity
     {
         public string? Nome { get; set; }
+
+        public int IdDepartamento { get; set; }
     }
 }
