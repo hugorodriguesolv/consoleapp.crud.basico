@@ -151,7 +151,7 @@ namespace consoleapp.crud.basico.UI
             pessoa.IdDepartamento = int.Parse(novoDepartamento);
 
             var pessoaUc = new PessoaUC();
-            pessoaUc.AlterarDadosPessoais(0);
+            //pessoaUc.AlterarDadosPessoais(0);
         }
 
         private void InserirNovaPessoa()
@@ -160,11 +160,11 @@ namespace consoleapp.crud.basico.UI
             
 
             Console.WriteLine("Informe o nome da nova pessoa: ");
-            var nomeNovaPessoa = int.Parse(Console.ReadLine());
+            var nomeNovaPessoa = (Console.ReadLine());
             Console.WriteLine("Informe o Departamento dessa pessoa: ");
             var idDepartamentoNovaPessoa = int.Parse(Console.ReadLine());
 
-            var novaPessoa = pessoaUC.InserirPessoa(idDepartamentoNovaPessoa, nomeNovaPessoa);
+            pessoaUC.InserirPessoa(idDepartamentoNovaPessoa, nomeNovaPessoa);
         }
 
         private void ApagarPessoa()

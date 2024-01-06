@@ -16,7 +16,7 @@ namespace consoleapp.crud.basico.Repository
             _connection.Open();
         }
 
-        public IList<Departamento> ObterTodasPessoas()
+        public IList<PessoaDepartamento> ObterTodasPessoas()
         {
             var sql = new StringBuilder();
             sql.AppendLine("SELECT ");
@@ -31,11 +31,11 @@ namespace consoleapp.crud.basico.Repository
             _command.CommandText = sql.ToString();
             var dataReader = _command.ExecuteReader();
 
-            var pessoas = new List<Departamento>();
+            var pessoas = new List<PessoaDepartamento>();
 
             while (dataReader.Read())
             {
-                pessoas.Add(new Departamento
+                pessoas.Add(new PessoaDepartamento
                 {
                     Id = (int)dataReader["IdPessoa"],
                     NomePessoa = dataReader["NomePessoa"].ToString(),
@@ -86,10 +86,6 @@ namespace consoleapp.crud.basico.Repository
             return retorno;
         }
 
-<<<<<<< HEAD:consoleapp.crud.basico/03 - Repository/PessoaRepository.cs
-<<<<<<< HEAD:consoleapp.crud.basico/03 - Repository/PessoaRepository.cs
-=======
-<<<<<<< HEAD
         public void AlterarDadosPessoais(int idPessoa)
         {
 
@@ -98,9 +94,25 @@ namespace consoleapp.crud.basico.Repository
             sql.AppendLine("SET Nome = @Nome,");
             sql.AppendLine("    IdDepartamento = (SELECT Id FROM Departamento WHERE Nome = @NovoDepartamento)");
             sql.AppendLine("WHERE Id = @IdPessoa");
+        }
+        
+        public void InserirPessoa (Pessoa pessoa)
+        {
+            var sql = new StringBuilder();
+            sql.AppendLine("INSERT INTO Pessoa (Nome, IdDepartamento)");
+            sql.AppendLine("VALUES");
+            sql.AppendLine("(@Nome, @IdDepartamento)");
 
->>>>>>> feature/alterar-dados-pessoais:consoleapp.crud.basico/Repository/PessoaRepository.cs
-=======
+            _command = _connection.CreateCommand();
+            _command.CommandText = sql.ToString();
+
+            _command.Parameters.Add("@Nome", System.Data.SqlDbType.VarChar);
+            _command.Parameters["@Nome"].Value = pessoa.Nome;
+            
+            _command.Parameters.Add("@IdDepartamento", System.Data.SqlDbType.Int);
+            _command.Parameters["@IdDepartamento"].Value = pessoa.IdDepartamento;
+        }
+
         public int ExcluirPessoa(int idPessoa)
         {
             var sql = new StringBuilder();
@@ -115,8 +127,6 @@ namespace consoleapp.crud.basico.Repository
             var linhasAfetadas = _command.ExecuteNonQuery();
 
             return linhasAfetadas;
->>>>>>> feature/excluir-pessoas
         }
->>>>>>> feature/excluir-pessoas:consoleapp.crud.basico/Repository/PessoaRepository.cs
     }
 }

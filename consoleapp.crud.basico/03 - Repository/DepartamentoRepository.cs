@@ -20,7 +20,6 @@ namespace consoleapp.crud.basico.Repository
             _connection.Open();
         }
 
-        //MODF |  //RETURN METOD        |    //METODO      |
         public IList<DepartamentoCidade> ObterTodosDepartamentos()
         {
             var sql = new StringBuilder();
@@ -36,14 +35,15 @@ namespace consoleapp.crud.basico.Repository
             _command.CommandText = sql.ToString();
             var dataReader = _command.ExecuteReader();
 
-            var departamentos = new List<Departamento>();
+            var departamentos = new List<DepartamentoCidade>();
 
             while (dataReader.Read())
             {
-                departamentos.Add(new Departamento
+                departamentos.Add(new DepartamentoCidade
                 {
-                    Id = (int)dataReader["IdPessoa"],
-                    Nome = dataReader["NomePessoa"].ToString(),
+                    Id = (int)dataReader["Id"],
+                    NomeDepartamento = dataReader["Nome"].ToString(),
+                    NomeCidade = dataReader["NomeCidade"].ToString()
                 });
             }
 
