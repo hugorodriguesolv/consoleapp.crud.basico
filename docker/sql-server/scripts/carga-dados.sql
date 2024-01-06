@@ -1,6 +1,3 @@
-USE geekjobs
-
-GO
 
 
 IF NOT EXISTS (SELECT NAME FROM SYS.tables WHERE NAME = 'Cidade')
@@ -64,11 +61,11 @@ BEGIN
 	/*
 	-- R - READ
 
-	--SELECT @@IDENTITY
-	--SELECT * FROM Estado
-	--SELECT * FROM Cidade
-	--SELECT * FROM Departamento
-	--SELECT * FROM Pessoa
+	SELECT @@IDENTITY
+	SELECT * FROM Estado
+	SELECT * FROM Cidade
+	SELECT * FROM Departamento
+	SELECT * FROM Pessoa
 
 
 	SELECT 
