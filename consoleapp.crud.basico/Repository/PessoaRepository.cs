@@ -85,5 +85,21 @@ namespace consoleapp.crud.basico.Repository
 
             return retorno;
         }
+
+        public int ExcluirPessoa(int idPessoa)
+        {
+            var sql = new StringBuilder();
+            sql.AppendLine("DELETE Pessoa WHERE Id = @Id ");
+            
+            _command = _connection.CreateCommand();
+            _command.CommandText = sql.ToString();
+
+            _command.Parameters.Add("@Id", System.Data.SqlDbType.Int);
+            _command.Parameters["@Id"].Value = idPessoa;
+
+            var linhasAfetadas = _command.ExecuteNonQuery();
+
+            return linhasAfetadas;
+        }
     }
 }
