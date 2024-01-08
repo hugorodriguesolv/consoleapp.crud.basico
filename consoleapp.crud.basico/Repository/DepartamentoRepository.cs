@@ -32,7 +32,7 @@ namespace consoleapp.crud.basico.Repository
             _command.CommandText = sql.ToString();
             var dataReader = _command.ExecuteReader();
 
-            var departamentos = new List<Departamento>();
+            var departamentos = new List<PessoaDepartamento>();
 
             while (dataReader.Read())
             {
@@ -64,14 +64,14 @@ namespace consoleapp.crud.basico.Repository
             _command.CommandText = sql.ToString();
             var dataReader = _command.ExecuteReader();
 
-            var departamentos = new List<Departamento>();
+            var departamentos = new List<DepartamentoCidade>();
 
             while (dataReader.Read())
             {
-                departamentos.Add(new PessoaDepartamento
+                departamentos.Add(new DepartamentoCidade
                 {
-                    Id = (int)dataReader["Departamento.Id"],
-                    NomeDepartamento = dataReader["Departamento.Nome"].ToString(),
+                    Id = (int)dataReader["Id"],
+                    NomeDepartamento = dataReader["Nome"].ToString(),
                     NomeCidade = dataReader["NomeCidade"].ToString()
                 });
             }

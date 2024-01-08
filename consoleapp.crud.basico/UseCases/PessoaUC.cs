@@ -6,7 +6,7 @@ namespace consoleapp.crud.basico.UseCases
 {
     public class PessoaUC : IPessoaUC
     {
-        public IList<Departamento> ListarTodasPessoas()
+        public IList<PessoaDepartamento> ListarTodasPessoas()
         {
             var pessoaRepository = new PessoaRepository();
             var pessoas = pessoaRepository.ObterTodasPessoas();
@@ -22,10 +22,10 @@ namespace consoleapp.crud.basico.UseCases
             return pessoasEstado;
         }
 
-        public void AlterarDadosPessoais(Pessoa pessoa)
+        public void AlterarDadosPessoas(Pessoa pessoa)
         {
             var pessoaRepository = new PessoaRepository();
-            pessoaRepository.AlterarDadosPessoais(idPessoa);
+            pessoaRepository.AlterarDadosPessoas(pessoa);
 
         }
         public bool ApagarPessoa(int idPessoaInformado)

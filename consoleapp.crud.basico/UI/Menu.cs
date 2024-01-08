@@ -55,7 +55,7 @@ namespace consoleapp.crud.basico.UI
                         break;
 
                     case OpcoesMenu.AlterarDadosPessoa:
-                        AlterarNomePessoais();
+                        AlterarDadosPessoais();
                         break;
 
                     case OpcoesMenu.InserirNovaPessoa:
@@ -138,15 +138,71 @@ namespace consoleapp.crud.basico.UI
             }
         }
 
-        private void AlterarNomePessoais()
+        private void AlterarDadosPessoais()
         {
             Console.Clear();
 
-            var exbirMenuAlterarDados = new SubMenuAlterarDados();
+            bool voltar = true;
 
+            while (voltar)
+            {
+
+                Console.WriteLine(" \n ");
+                Console.WriteLine("**********************************************");
+                Console.WriteLine("   Qual a alteração de Pessoa desejada?");
+                Console.WriteLine("**********************************************");
+                Console.WriteLine("1 - Alterar Nome da Pessoa");
+                Console.WriteLine("2 - Alterar Departamento da Pessoa \n");
+                Console.WriteLine("0 - Voltar \n");
+
+                Console.Write("Informe o numero da opção desejada: ");
+                string opcaoEscolha = Console.ReadLine();
+
+                switch (opcaoEscolha)
+                {
+                    case "1":
+                        AlterarNomePessoa();
+                        break;
+
+                    case "2":
+                        AlterarDepartamentoPessoa();
+                        break;
+
+                    case "0":
+                        voltar = false;
+                        break;
+
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Essa opção não existe na lista de opções.");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        break;
+                }
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Pressione qualquer tecla para continuar.");
+            Console.ReadLine();
         }
-            
-        private void InserirNovaPessoa()
+
+            private void AlterarNomePessoa()
+            {
+                PessoaUC listaPessoas = new PessoaUC();
+                var listaPessoas = listaPessoas.ListarTodasPessoas();
+
+                Console.Write("\n");
+                Console.Write("Informe o nome da Pessoa: ");
+                string nomePessoa = Console.ReadLine();
+
+            }
+
+            private void AlterarDepartamentoPessoa()
+            {
+                throw new NotImplementedException();
+            }
+    }
+
+    private void InserirNovaPessoa()
         {
             throw new NotImplementedException();
         }
