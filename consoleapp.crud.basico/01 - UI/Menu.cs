@@ -161,6 +161,9 @@ namespace consoleapp.crud.basico.UI
 
             Console.WriteLine("Informe o nome da nova pessoa: ");
             var nomeNovaPessoa = (Console.ReadLine());
+            
+            
+
             Console.WriteLine("Informe o Departamento dessa pessoa: ");
             var idDepartamentoNovaPessoa = int.Parse(Console.ReadLine());
 
