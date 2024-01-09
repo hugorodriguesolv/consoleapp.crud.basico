@@ -115,7 +115,7 @@ namespace consoleapp.crud.basico.Repository
             _command = _connection.CreateCommand();
             _command.CommandText = sql.ToString();
 
-            _command.Parameters.Add("@NovoNome", System.Data.SqlDbType.Text;
+            _command.Parameters.Add("@NovoNome", System.Data.SqlDbType.Text).Value = novoNome;
             _command.Parameters["@NovoNome"].Value = novoNome;
 
             _command.Parameters.Add("@Id", System.Data.SqlDbType.Int);
