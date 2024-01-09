@@ -101,5 +101,31 @@ namespace consoleapp.crud.basico.Repository
 
             return linhasAfetadas;
         }
+
+        internal int AtualizarPessoas(int idNomeAlterado, string novoNome)
+        {
+            var sql = new StringBuilder();
+            sql.AppendLine("UPDATE ");
+            sql.AppendLine("    Pessoa ");
+            sql.AppendLine("SET ");
+            sql.AppendLine("    Pessoa.Nome = @NovoNome ");
+            sql.AppendLine("WHERE    ");
+            sql.AppendLine("    Id = @Id ");
+
+            _command = _connection.CreateCommand();
+            _command.CommandText = sql.ToString();
+
+            _command.Parameters.Add("@NovoNome", System.Data.SqlDbType.Text;
+            _command.Parameters["@NovoNome"].Value = novoNome;
+
+            _command.Parameters.Add("@Id", System.Data.SqlDbType.Int);
+            _command.Parameters["@Id"].Value = idNomeAlterado;
+
+            var linhasAfetadas = _command.ExecuteNonQuery();
+
+            return linhasAfetadas;
+
+        }
+
     }
 }

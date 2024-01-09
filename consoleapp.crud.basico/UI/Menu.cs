@@ -83,6 +83,7 @@ namespace consoleapp.crud.basico.UI
             } while (exibirMenu);
         }
 
+
         private string MontaMenu()
         {
             var menu = new StringBuilder();
@@ -185,27 +186,38 @@ namespace consoleapp.crud.basico.UI
             Console.ReadLine();
         }
 
-            private void AlterarNomePessoa()
-            {
-                PessoaUC listaPessoas = new PessoaUC();
-                var listaPessoas = listaPessoas.ListarTodasPessoas();
+        private void AlterarNomePessoa()
+        {
+            PessoaUC lstaPessoas = new PessoaUC();
+            var listaPessoas = lstaPessoas.ListarTodasPessoas();
 
-                Console.Write("\n");
-                Console.Write("Informe o nome da Pessoa: ");
-                string nomePessoa = Console.ReadLine();
+            Console.WriteLine(listaPessoas);
+
+            Console.WriteLine("\n Informe o Id da Pessoa: \n");
+            var idPessoaInformado = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("\n Informe o novo para essa Pessoa: \n");
+            var novoNomeInformado = Console.ReadLine();
+
+            var pessoaUC = new PessoaUC();
+            var alterouNome = pessoaUC.AlterarNomePessoas(idPessoaInformado, novoNomeInformado);
+
+            if (alterouNome)
+            {
+                Console.WriteLine($"O nome da pessoa com o Id {idPessoaInformado} foi atualizado para o novo nome {novoNomeInformado}");
 
             }
+            else 
+            {
+                Console.WriteLine($"Não foi possível alterar a pessoa com o id: {idPessoaInformado}");
+            }
 
-            private void AlterarDepartamentoPessoa()
+        }
+
+        private void AlterarDepartamentoPessoa()
             {
                 throw new NotImplementedException();
             }
-    }
-
-    private void InserirNovaPessoa()
-        {
-            throw new NotImplementedException();
-        }
 
         private void ApagarPessoa()
         {
@@ -218,11 +230,16 @@ namespace consoleapp.crud.basico.UI
             if (apagou)
             {
                 Console.WriteLine($"A pessoa com o id: {IdPessoaInformado} foi excluída com sucesso!");
-            } 
+            }
             else
             {
                 Console.WriteLine($"Não foi possível excluir a pessoa com o id: {IdPessoaInformado}.");
             }
         }
+    private void InserirNovaPessoa()
+        {
+            throw new NotImplementedException();
+        }
     }
+
 }

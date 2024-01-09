@@ -22,11 +22,12 @@ namespace consoleapp.crud.basico.UseCases
             return pessoasEstado;
         }
 
-        public void AlterarDadosPessoas(Pessoa pessoa)
+        public bool AlterarNomePessoas(int idPessoaEscolhida, string novoNomeInformado)
         {
             var pessoaRepository = new PessoaRepository();
-            pessoaRepository.AlterarDadosPessoas(pessoa);
+            var alterouNome = pessoaRepository.AtualizarPessoas(idPessoaEscolhida) > 0 ? true : false;
 
+            return alterouNome;
         }
         public bool ApagarPessoa(int idPessoaInformado)
         {
