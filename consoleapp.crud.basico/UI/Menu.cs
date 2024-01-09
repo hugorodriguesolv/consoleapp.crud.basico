@@ -101,7 +101,7 @@ namespace consoleapp.crud.basico.UI
         private void ListarTodasPessoas()
         {
             var pessoaUC = new PessoaUC();
-            var pessoas = pessoaUC.ListarTodasPessoas();
+            var pessoas = pessoaUC.ListarTodasPessoasDepartamento();
             
             var fechamentoTabela = $"| {new string('¯', 8)} | {new string('¯', 25)} | {new string('¯', 25)} |";
 
@@ -156,12 +156,17 @@ namespace consoleapp.crud.basico.UI
             var IdPessoaInformado = int.Parse(Console.ReadLine());
 
             var pessoaUC = new PessoaUC();
+            var pessoa = pessoaUC
+                .ListarTodasPessoasDepartamento()
+                .Where(pes => pes.Id == IdPessoaInformado)
+                .First();
+
             var apagou = pessoaUC.ApagarPessoa(IdPessoaInformado);
             
             if (apagou)
-            {
+            {                    
                 Console.Clear();
-                Console.WriteLine($"A pessoa com o id: {IdPessoaInformado} foi excluída com sucesso!");
+                Console.WriteLine($"A pessoa {pessoa.Id} - {pessoa.NomePessoa} do departamento {pessoa.NomeDepartamento}, foi excluída com sucesso!");
                 Console.WriteLine();
                 ListarTodasPessoas();
             } 
@@ -169,7 +174,6 @@ namespace consoleapp.crud.basico.UI
             {
                 Console.WriteLine($"Não foi possível excluir a pessoa com o id: {IdPessoaInformado}.");
             } 
-
         }
     }
 }
