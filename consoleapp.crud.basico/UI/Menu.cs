@@ -1,12 +1,5 @@
-﻿using consoleapp.crud.basico.Entities;
-using consoleapp.crud.basico.UseCases;
-using Microsoft.Identity.Client;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using consoleapp.crud.basico.UseCases;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace consoleapp.crud.basico.UI
 {
@@ -83,7 +76,6 @@ namespace consoleapp.crud.basico.UI
             } while (exibirMenu);
         }
 
-
         private string MontaMenu()
         {
             var menu = new StringBuilder();
@@ -147,7 +139,6 @@ namespace consoleapp.crud.basico.UI
 
             while (voltar)
             {
-
                 Console.WriteLine(" \n ");
                 Console.WriteLine("**********************************************");
                 Console.WriteLine("   Qual a alteração de Pessoa desejada?");
@@ -205,19 +196,17 @@ namespace consoleapp.crud.basico.UI
             if (alterouNome)
             {
                 Console.WriteLine($"O nome da pessoa com o Id {idPessoaInformado} foi atualizado para o novo nome {novoNomeInformado}");
-
             }
-            else 
+            else
             {
                 Console.WriteLine($"Não foi possível alterar a pessoa com o id: {idPessoaInformado}");
             }
-
         }
 
         private void AlterarDepartamentoPessoa()
-            {
-                throw new NotImplementedException();
-            }
+        {
+            throw new NotImplementedException();
+        }
 
         private void ApagarPessoa()
         {
@@ -236,10 +225,10 @@ namespace consoleapp.crud.basico.UI
                 Console.WriteLine($"Não foi possível excluir a pessoa com o id: {IdPessoaInformado}.");
             }
         }
-    private void InserirNovaPessoa()
+
+        private void InserirNovaPessoa()
         {
             throw new NotImplementedException();
         }
     }
-
 }
