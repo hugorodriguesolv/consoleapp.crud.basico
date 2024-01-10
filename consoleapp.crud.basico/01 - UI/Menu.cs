@@ -157,12 +157,21 @@ namespace consoleapp.crud.basico.UI
         private void InserirNovaPessoa()
         {
             var pessoaUC = new PessoaUC();
-            
 
             Console.WriteLine("Informe o nome da nova pessoa: ");
-            var nomeNovaPessoa = (Console.ReadLine());
-            
-            
+            var nomeNovaPessoa = Console.ReadLine();
+            var pessoas = pessoaUC.ListarTodasPessoas();
+
+            foreach (var pessoa in pessoas) 
+            {
+                //string nome = pessoa.NomePessoa;
+                if (nomeNovaPessoa = pessoa.NomePessoa)
+                {
+                    Console.WriteLine("Essa pessoa já existe!!");
+                    break;
+                }
+                            
+            }
 
             Console.WriteLine("Informe o Departamento dessa pessoa: ");
             var idDepartamentoNovaPessoa = int.Parse(Console.ReadLine());
