@@ -158,15 +158,15 @@ namespace consoleapp.crud.basico.UI
             var pessoaUC = new PessoaUC();
             var pessoa = pessoaUC
                 .ListarTodasPessoasDepartamento()
-                .Where(pes => pes.Id == IdPessoaInformado)
-                .First();
+                .FirstOrDefault(pes => pes.Id == IdPessoaInformado);
 
             var apagou = pessoaUC.ApagarPessoa(IdPessoaInformado);
             
             if (apagou)
             {                    
                 Console.Clear();
-                Console.WriteLine($"A pessoa {pessoa.Id} - {pessoa.NomePessoa} do departamento {pessoa.NomeDepartamento}, foi excluída com sucesso!");
+                Console.WriteLine();
+                Console.WriteLine($"A pessoa {pessoa.NomePessoa} - Id: {pessoa.Id}, do departamento {pessoa.NomeDepartamento}, foi excluída com sucesso!");
                 Console.WriteLine();
                 ListarTodasPessoas();
             } 
