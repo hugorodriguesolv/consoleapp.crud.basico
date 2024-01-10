@@ -13,7 +13,7 @@ services:
     environment:
         MSSQL_PID: "Developer"
         ACCEPT_EULA: "Y"
-        MSSQL_SA_PASSWORD: "AulaGeekJobs1"
+        MSSQL_SA_PASSWORD: "GeekJobsAula1"
     volumes:
         - ./docker/sql-server/dados/:/var/opt/mssql/data
     ports:

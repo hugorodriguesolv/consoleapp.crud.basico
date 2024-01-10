@@ -40,7 +40,7 @@ namespace consoleapp.crud.basico.Repository
                 {
                     Id = (int)dataReader["Departamento.Id"],
                     NomeDepartamento = dataReader["Departamento.Nome"].ToString(),
-                    NomeCidade = dataReader["NomeCidade"].ToString()
+                    NomePessoa = dataReader["NomePessoa"].ToString()
                 });
             }
 

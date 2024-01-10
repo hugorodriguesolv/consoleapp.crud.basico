@@ -25,7 +25,7 @@ namespace consoleapp.crud.basico.UseCases
         public bool AlterarNomePessoas(int idPessoaEscolhida, string novoNomeInformado)
         {
             var pessoaRepository = new PessoaRepository();
-            var alterouNome = pessoaRepository.AtualizarPessoas(idPessoaEscolhida) > 0 ? true : false;
+            var alterouNome = pessoaRepository.AtualizarPessoas(idPessoaEscolhida, novoNomeInformado) > 0 ? true : false;
 
             return alterouNome;
         }
