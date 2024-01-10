@@ -111,6 +111,8 @@ namespace consoleapp.crud.basico.Repository
             
             _command.Parameters.Add("@IdDepartamento", System.Data.SqlDbType.Int);
             _command.Parameters["@IdDepartamento"].Value = pessoa.IdDepartamento;
+
+            _command.ExecuteNonQuery();
         }
 
         public int ExcluirPessoa(int idPessoa)

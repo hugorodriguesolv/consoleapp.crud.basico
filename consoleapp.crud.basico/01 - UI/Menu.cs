@@ -161,22 +161,24 @@ namespace consoleapp.crud.basico.UI
             Console.WriteLine("Informe o nome da nova pessoa: ");
             var nomeNovaPessoa = Console.ReadLine();
             var pessoas = pessoaUC.ListarTodasPessoas();
+            var prosseguirInsercao = true;
 
-            foreach (var pessoa in pessoas) 
-            {
-                //string nome = pessoa.NomePessoa;
-                if (nomeNovaPessoa = pessoa.NomePessoa)
+            foreach (var pessoa in pessoas)
+            { 
+                if (nomeNovaPessoa == pessoa.NomePessoa)
                 {
+                    prosseguirInsercao = false;
                     Console.WriteLine("Essa pessoa já existe!!");
-                    break;
                 }
-                            
             }
 
-            Console.WriteLine("Informe o Departamento dessa pessoa: ");
-            var idDepartamentoNovaPessoa = int.Parse(Console.ReadLine());
+            if (prosseguirInsercao)
+            {
+                Console.WriteLine("Informe o Departamento dessa pessoa: ");
+                var idDepartamentoNovaPessoa = int.Parse(Console.ReadLine());
 
-            pessoaUC.InserirPessoa(idDepartamentoNovaPessoa, nomeNovaPessoa);
+                pessoaUC.InserirPessoa(idDepartamentoNovaPessoa, nomeNovaPessoa);
+            }
         }
 
         private void ApagarPessoa()
