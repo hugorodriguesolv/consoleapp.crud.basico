@@ -1,12 +1,5 @@
-﻿using consoleapp.crud.basico.Entities;
-using consoleapp.crud.basico.UseCases;
-using Microsoft.Identity.Client;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using consoleapp.crud.basico.UseCases;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace consoleapp.crud.basico.UI
 {
