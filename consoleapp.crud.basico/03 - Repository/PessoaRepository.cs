@@ -125,6 +125,7 @@ namespace consoleapp.crud.basico.Repository
 
             _command.Parameters.Add("@Id", System.Data.SqlDbType.Int);
             _command.Parameters["@Id"].Value = idPessoa;
+           
 
             var linhasAfetadas = _command.ExecuteNonQuery();
 
