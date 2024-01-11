@@ -172,12 +172,36 @@ namespace consoleapp.crud.basico.UI
                 }
             }
 
+            var fechamentoTabela = $"| {new string('¯', 8)} | {new string('¯', 25)} | {new string('¯', 25)} |";
+
+            Console.WriteLine(fechamentoTabela);
+            Console.WriteLine($"| {"Id".PadRight(8)} | {"Pessoa".PadRight(25)} | {"Departamento".PadRight(25)} |");
+            Console.WriteLine(fechamentoTabela);
+
+            foreach (var person in pessoas)
+            {
+                Console.WriteLine($"| {person.Id.ToString().PadRight(8)} | {person.NomePessoa.PadRight(25)} | {person.NomeDepartamento.PadRight(25)} |");
+            }
+
             if (prosseguirInsercao)
             {
                 Console.WriteLine("Informe o Departamento dessa pessoa: ");
                 var idDepartamentoNovaPessoa = int.Parse(Console.ReadLine());
 
                 pessoaUC.InserirPessoa(idDepartamentoNovaPessoa, nomeNovaPessoa);
+
+                pessoas = pessoaUC.ListarTodasPessoas();
+
+                fechamentoTabela = $"| {new string('¯', 8)} | {new string('¯', 25)} | {new string('¯', 25)} |";
+
+                Console.WriteLine(fechamentoTabela);
+                Console.WriteLine($"| {"Id".PadRight(8)} | {"Pessoa".PadRight(25)} | {"Departamento".PadRight(25)} |");
+                Console.WriteLine(fechamentoTabela);
+
+                foreach (var person in pessoas)
+                {
+                    Console.WriteLine($"| {person.Id.ToString().PadRight(8)} | {person.NomePessoa.PadRight(25)} | {person.NomeDepartamento.PadRight(25)} |");
+                }
             }
         }
 
