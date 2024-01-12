@@ -1,11 +1,6 @@
 ﻿using consoleapp.crud.basico.Entities;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace consoleapp.crud.basico.Repository
 {
@@ -29,7 +24,7 @@ namespace consoleapp.crud.basico.Repository
             sql.AppendLine("    Cidade.Nome AS NomeCidade ");
             sql.AppendLine("FROM ");
             sql.AppendLine("    Departamento ");
-            sql.AppendLine("    INNER JOIN Cidade ON(Departamento.IdCidade = Cidade.Id) ");
+            sql.AppendLine("    INNER JOIN Cidade ON (Departamento.IdCidade = Cidade.Id) ");
 
             _command = _connection.CreateCommand();
             _command.CommandText = sql.ToString();
