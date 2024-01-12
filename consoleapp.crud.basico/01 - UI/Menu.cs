@@ -187,8 +187,10 @@ namespace consoleapp.crud.basico.UI
 
             if (prosseguirInsercao)
             {
-                Console.WriteLine("Informe o Departamento dessa pessoa: ");
+                Console.WriteLine("Informe o Id do departamento dessa pessoa: ");
                 var idDepartamentoNovaPessoa = int.Parse(Console.ReadLine());
+
+                Console.Clear();
 
                 pessoaUC.InserirPessoa(idDepartamentoNovaPessoa, nomeNovaPessoa);
 
