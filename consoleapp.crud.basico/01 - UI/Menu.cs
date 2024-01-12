@@ -162,11 +162,13 @@ namespace consoleapp.crud.basico.UI
             var nomeNovaPessoa = Console.ReadLine();
             var pessoas = pessoaUC.ListarTodasPessoas();
             var prosseguirInsercao = true;
+            Console.Clear();
 
             foreach (var pessoa in pessoas)
             { 
                 if (nomeNovaPessoa == pessoa.NomePessoa)
                 {
+                    Console.Clear();
                     prosseguirInsercao = false;
                     Console.WriteLine("Essa pessoa já existe!!");
                 }
