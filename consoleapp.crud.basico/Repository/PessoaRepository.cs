@@ -12,7 +12,7 @@ namespace consoleapp.crud.basico.Repository
 
         public PessoaRepository()
         {
-            _connection = new SqlConnection("Data Source=localhost, 1523;Initial Catalog=geekjobs;Integrated Security=False;User ID=sa;Password=AulaGeekJobs1;TrustServerCertificate=true");
+            _connection = new SqlConnection("Data Source=localhost, 1522;Initial Catalog=geekjobs;Integrated Security=False;User ID=sa;Password=AulaGeekJobs1;TrustServerCertificate=true");
             _connection.Open();
         }
 
@@ -108,7 +108,7 @@ namespace consoleapp.crud.basico.Repository
             sql.AppendLine("UPDATE ");
             sql.AppendLine("    Pessoa ");
             sql.AppendLine("SET ");
-            sql.AppendLine("    Pessoa.Nome = @NovoNome ");
+            sql.AppendLine("    Pessoa.Nome = @NovoNome, ");
             sql.AppendLine("    IdDepartamento = @NovoDepartamento ");
             sql.AppendLine("WHERE    ");
             sql.AppendLine("    Id = @Id ");

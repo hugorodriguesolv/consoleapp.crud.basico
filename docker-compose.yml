@@ -17,7 +17,7 @@ services:
     volumes:
         - ./docker/sql-server/dados/:/var/opt/mssql/data
     ports:
-        - "1523:1433"
+        - "1522:1433"
 
   mssqltools:
     image: mcr.microsoft.com/mssql-tools

@@ -157,10 +157,7 @@ namespace consoleapp.crud.basico.UI
         {
             Console.Clear();
 
-            Console.WriteLine(" \n ");
-            Console.WriteLine("**********************************************");
-            Console.WriteLine("*          Alterar Dados de Pessoa           *");
-            Console.WriteLine("**********************************************\n");
+            Console.WriteLine("******     Alterar Dados de Pessoa      ******");
 
             ListarTodasPessoas();
 
