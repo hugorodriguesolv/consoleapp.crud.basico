@@ -149,31 +149,41 @@ namespace consoleapp.crud.basico.UI
         private void ApagarPessoa()
         {
             Console.Clear();
+            Console.WriteLine("***** EXCLUIR PESSOA *****\n");
             ListarTodasPessoas();
             Console.WriteLine();
 
             Console.WriteLine("Escolha o Id da pessoa que deseja exluir: ");
-            var IdPessoaInformado = int.Parse(Console.ReadLine());
+            string inputIdPessoa = Console.ReadLine();
 
-            var pessoaUC = new PessoaUC();
-            var pessoa = pessoaUC
-                .ListarTodasPessoasDepartamento()
-                .FirstOrDefault(pes => pes.Id == IdPessoaInformado);
-
-            var apagou = pessoaUC.ApagarPessoa(IdPessoaInformado);
-            
-            if (apagou)
-            {                    
-                Console.Clear();
-                Console.WriteLine();
-                Console.WriteLine($"A pessoa {pessoa.NomePessoa} - Id: {pessoa.Id}, do departamento {pessoa.NomeDepartamento}, foi excluída com sucesso!");
-                Console.WriteLine();
-                ListarTodasPessoas();
-            } 
+            if (!int.TryParse(inputIdPessoa, out int IdPessoaInformado))
+            {
+                Console.WriteLine("Digite o NÚMERO do Id");
+            }
             else
             {
-                Console.WriteLine($"Não foi possível excluir a pessoa com o id: {IdPessoaInformado}.");
-            } 
+                var pessoaUC = new PessoaUC();
+                var pessoa = pessoaUC
+                    .ListarTodasPessoasDepartamento()
+                    .FirstOrDefault(pes => pes.Id == IdPessoaInformado);
+
+                var apagou = pessoaUC.ApagarPessoa(IdPessoaInformado);
+
+                if (apagou)
+                {
+                    Console.Clear();
+                    Console.WriteLine();
+                    Console.WriteLine("***** EXCLUIR PESSOA *****\n");
+                    Console.WriteLine($"A pessoa {pessoa.NomePessoa} - Id: {pessoa.Id}, do departamento {pessoa.NomeDepartamento}, foi excluída com sucesso!");
+                    Console.WriteLine();
+                    ListarTodasPessoas();
+                }
+                else
+                {
+                    Console.WriteLine($"Não foi possível excluir a pessoa com o id: {IdPessoaInformado}.");
+                }
+            }
+
         }
     }
 }
