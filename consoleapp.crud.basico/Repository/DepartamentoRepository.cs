@@ -16,37 +16,9 @@ namespace consoleapp.crud.basico.Repository
 
         public DepartamentoRepository()
         {
-            _connection = new SqlConnection("Data Source=localhost, 1522;Initial Catalog=geekjobs;Integrated Security=False;User ID=sa;Password=AulaGeekJobs1;TrustServerCertificate=true");
+            _connection = new SqlConnection("Data Source=localhost, 1523;Initial Catalog=geekjobs;Integrated Security=False;User ID=sa;Password=AulaGeekJobs1;TrustServerCertificate=true");
             _connection.Open();
         }
-
-        public IList<PessoaDepartamento> ObterTodasPessoas()
-        {
-            var sql = new StringBuilder();
-            sql.AppendLine("SELECT  ");
-            sql.AppendLine("    Pessoa.Nome AS NomePessoa ");
-            sql.AppendLine("FROM    ");
-            sql.AppendLine("    Pessoa ");
-
-            _command = _connection.CreateCommand();
-            _command.CommandText = sql.ToString();
-            var dataReader = _command.ExecuteReader();
-
-            var departamentos = new List<PessoaDepartamento>();
-
-            while (dataReader.Read())
-            {
-                departamentos.Add(new PessoaDepartamento
-                {
-                    Id = (int)dataReader["Departamento.Id"],
-                    NomeDepartamento = dataReader["Departamento.Nome"].ToString(),
-                    NomePessoa = dataReader["NomePessoa"].ToString()
-                });
-            }
-
-            return departamentos;
-        }
-
 
         //MODF |  //RETURN METOD        |    //METODO      |
         public IList<DepartamentoCidade> ObterTodosDepartamentos()

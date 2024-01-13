@@ -93,6 +93,15 @@ namespace consoleapp.crud.basico.UI
             return menu.ToString();
         }
 
+        private void MontarGrid()
+        {
+            var fechamentoTabela = $"| {new string('¯', 8)} | {new string('¯', 25)} | {new string('¯', 25)} |";
+
+            Console.WriteLine(fechamentoTabela);
+            Console.WriteLine($"| {"Id".PadRight(8)} | {"Pessoa".PadRight(25)} | {"Departamento".PadRight(25)} |");
+            Console.WriteLine(fechamentoTabela);
+        }
+
         private void ListarTodasPessoas()
         {
             var pessoaUC = new PessoaUC();
@@ -131,67 +140,43 @@ namespace consoleapp.crud.basico.UI
             }
         }
 
+        private void ListarDepartamento()
+        {
+            var departamentoUC = new DepartamentoUC();
+            var departamentos = departamentoUC.ListarTodosDepartamentos();
+
+            MontarGrid();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"| {departamento.Id.ToString().PadRight(8)} | {departamento.NomeDepartamento.PadRight(25)} | {departamento.NomeCidade.PadRight(25)} |");
+            }
+        }
+
         private void AlterarDadosPessoais()
         {
             Console.Clear();
 
-            bool voltar = true;
+            Console.WriteLine(" \n ");
+            Console.WriteLine("**********************************************");
+            Console.WriteLine("*          Alterar Dados de Pessoa           *");
+            Console.WriteLine("**********************************************\n");
 
-            while (voltar)
-            {
-                Console.WriteLine(" \n ");
-                Console.WriteLine("**********************************************");
-                Console.WriteLine("   Qual a alteração de Pessoa desejada?");
-                Console.WriteLine("**********************************************");
-                Console.WriteLine("1 - Alterar Nome da Pessoa");
-                Console.WriteLine("2 - Alterar Departamento da Pessoa \n");
-                Console.WriteLine("0 - Voltar \n");
-
-                Console.Write("Informe o numero da opção desejada: ");
-                string opcaoEscolha = Console.ReadLine();
-
-                switch (opcaoEscolha)
-                {
-                    case "1":
-                        AlterarNomePessoa();
-                        break;
-
-                    case "2":
-                        AlterarDepartamentoPessoa();
-                        break;
-
-                    case "0":
-                        voltar = false;
-                        break;
-
-                    default:
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Essa opção não existe na lista de opções.");
-                        Console.ForegroundColor = ConsoleColor.White;
-                        break;
-                }
-            }
-
-            Console.WriteLine();
-            Console.WriteLine("Pressione qualquer tecla para continuar.");
-            Console.ReadLine();
-        }
-
-        private void AlterarNomePessoa()
-        {
-            PessoaUC lstaPessoas = new PessoaUC();
-            var listaPessoas = lstaPessoas.ListarTodasPessoas();
-
-            Console.WriteLine(listaPessoas);
+            ListarTodasPessoas();
 
             Console.WriteLine("\n Informe o Id da Pessoa: \n");
             var idPessoaInformado = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("\n Informe o novo para essa Pessoa: \n");
+            Console.WriteLine($"\n Informe o novo nome: \n");
             var novoNomeInformado = Console.ReadLine();
 
+            ListarDepartamento();
+
+            Console.WriteLine($"\n Informe o Id do novo departamento: \n");
+            var novoIdDepartamentoInformado = int.Parse(Console.ReadLine());
+
             var pessoaUC = new PessoaUC();
-            var alterouNome = pessoaUC.AlterarNomePessoas(idPessoaInformado, novoNomeInformado);
+            var alterouNome = pessoaUC.AlterarNomePessoas(idPessoaInformado, novoNomeInformado, novoIdDepartamentoInformado);
 
             if (alterouNome)
             {
@@ -203,7 +188,11 @@ namespace consoleapp.crud.basico.UI
             }
         }
 
-        private void AlterarDepartamentoPessoa()
+        private void AlterarDadosPessoa()
+        {
+        }
+
+        private void AlterarDadosDepartamento()
         {
             throw new NotImplementedException();
         }

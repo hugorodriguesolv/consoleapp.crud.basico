@@ -22,10 +22,10 @@ namespace consoleapp.crud.basico.UseCases
             return pessoasEstado;
         }
 
-        public bool AlterarNomePessoas(int idPessoaEscolhida, string novoNomeInformado)
+        public bool AlterarNomePessoas(int idPessoaEscolhida, string novoNomeInformado, int novoIdDepartamentoInformado)
         {
             var pessoaRepository = new PessoaRepository();
-            var alterouNome = pessoaRepository.AtualizarPessoas(idPessoaEscolhida, novoNomeInformado) > 0 ? true : false;
+            bool alterouNome = pessoaRepository.AtualizarPessoas(idPessoaEscolhida, novoNomeInformado, novoIdDepartamentoInformado) > 0 ? true : false;
 
             return alterouNome;
         }
@@ -37,6 +37,5 @@ namespace consoleapp.crud.basico.UseCases
             return apagou;
 
         }
-
     }
 }

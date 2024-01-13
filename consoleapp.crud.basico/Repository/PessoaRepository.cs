@@ -12,7 +12,7 @@ namespace consoleapp.crud.basico.Repository
 
         public PessoaRepository()
         {
-            _connection = new SqlConnection("Data Source=localhost, 1522;Initial Catalog=geekjobs;Integrated Security=False;User ID=sa;Password=AulaGeekJobs1;TrustServerCertificate=true");
+            _connection = new SqlConnection("Data Source=localhost, 1523;Initial Catalog=geekjobs;Integrated Security=False;User ID=sa;Password=AulaGeekJobs1;TrustServerCertificate=true");
             _connection.Open();
         }
 
@@ -102,13 +102,14 @@ namespace consoleapp.crud.basico.Repository
             return linhasAfetadas;
         }
 
-        internal int AtualizarPessoas(int idNomeAlterado, string novoNome)
+        internal int AtualizarPessoas(int idNomeAlterado, string novoNome, int novoDepartamento)
         {
             var sql = new StringBuilder();
             sql.AppendLine("UPDATE ");
             sql.AppendLine("    Pessoa ");
             sql.AppendLine("SET ");
             sql.AppendLine("    Pessoa.Nome = @NovoNome ");
+            sql.AppendLine("    IdDepartamento = @NovoDepartamento ");
             sql.AppendLine("WHERE    ");
             sql.AppendLine("    Id = @Id ");
 
@@ -117,6 +118,10 @@ namespace consoleapp.crud.basico.Repository
 
             _command.Parameters.Add("@NovoNome", System.Data.SqlDbType.Text).Value = novoNome;
             _command.Parameters["@NovoNome"].Value = novoNome;
+
+            _command.Parameters.Add("@NovoDepartamento", System.Data.SqlDbType.Int);
+            _command.Parameters["@NovoDepartamento"].Value = novoDepartamento;
+
 
             _command.Parameters.Add("@Id", System.Data.SqlDbType.Int);
             _command.Parameters["@Id"].Value = idNomeAlterado;
