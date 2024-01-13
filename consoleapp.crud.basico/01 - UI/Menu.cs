@@ -191,13 +191,37 @@ namespace consoleapp.crud.basico.UI
 
                 Console.WriteLine($"\nNome da pessoa informado foi: {nomeNovaPessoa}");
                 Console.WriteLine("\nInforme o Id do departamento dessa pessoa: ");
-                var idDepartamentoNovaPessoa = int.Parse(Console.ReadLine());
+                string infoIdDepNovaPessoa = Console.ReadLine();
+                
+                var entradasValidas =
+                    int.TryParse(infoIdDepNovaPessoa , out int idDepartamentoNovaPessoa)
+                    && !string.IsNullOrEmpty(nomeNovaPessoa);
+                
+                if (entradasValidas)
+                {
+                    var departamentoUC = new DepartamentoUC();
 
-                pessoaUC.InserirPessoa(idDepartamentoNovaPessoa, nomeNovaPessoa);
+                    var departamentoExiste = departamentoUC
+                        .ListarTodosDepartamentos()
+                        .Any(dep => dep.Id == idDepartamentoNovaPessoa);
 
-                Console.Clear();
-                Console.WriteLine($"{nomeNovaPessoa} foi inserido com sucesso! \n");
-                ListarTodasPessoas();
+                    if (departamentoExiste)
+                    {
+                        pessoaUC.InserirPessoa(idDepartamentoNovaPessoa, nomeNovaPessoa);
+
+                        Console.Clear();
+                        Console.WriteLine($"{nomeNovaPessoa} foi inserido com sucesso! \n");
+                        ListarTodasPessoas();
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nEsse departamento não existe!!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\nEntrada inválida!! Certifique-se de inserir um número inteiro.");
+                }
             }
             else
             {
