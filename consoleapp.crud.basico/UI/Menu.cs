@@ -156,26 +156,31 @@ namespace consoleapp.crud.basico.UI
         private void AlterarDadosPessoais()
         {
             Console.Clear();
-
-            Console.WriteLine("******     Alterar Dados de Pessoa      ******");
+            Console.WriteLine("******     ALTERAR DADOS DE PESSOA      ******");
 
             ListarTodasPessoas();
 
-            Console.WriteLine("\n Informe o Id da Pessoa: \n");
-            var idPessoaInformado = int.Parse(Console.ReadLine());
+            Console.WriteLine("\n Informe o Id da Pessoa:\n");
+            var idPessoaInformado = Console.ReadLine();
 
-            Console.WriteLine($"\n Informe o novo nome: \n");
+            Console.WriteLine($"\n Informe o novo nome:\n");
             var novoNomeInformado = Console.ReadLine();
+
+            Console.Clear();
+            Console.WriteLine("******     ALTERAR DADOS DE PESSOA      ******");
 
             ListarDepartamento();
 
-            Console.WriteLine($"\n Informe o Id do novo departamento: \n");
-            var novoIdDepartamentoInformado = int.Parse(Console.ReadLine());
+            Console.WriteLine($"Para o novo nome: {novoNomeInformado}");
+            Console.WriteLine($"Informe o Id do departamento atual ou novo departamento:\n");
+            var novoIdDepartamentoInformado = Console.ReadLine();
 
-            var pessoaUC = new PessoaUC();
-            var alterouNome = pessoaUC.AlterarNomePessoas(idPessoaInformado, novoNomeInformado, novoIdDepartamentoInformado);
+            var entradasValidas =
+                int.TryParse(idPessoaInformado, out int IdPessoaInformado)
+                && !string.IsNullOrEmpty(novoNomeInformado)
+                && int.TryParse(novoIdDepartamentoInformado, out int novoIdDepartamento);
 
-            if (alterouNome)
+            if (entradasValidas)
             {
                 Console.WriteLine($"O nome da pessoa com o Id {idPessoaInformado} foi atualizado para o novo nome {novoNomeInformado}");
             }
@@ -183,15 +188,6 @@ namespace consoleapp.crud.basico.UI
             {
                 Console.WriteLine($"Não foi possível alterar a pessoa com o id: {idPessoaInformado}");
             }
-        }
-
-        private void AlterarDadosPessoa()
-        {
-        }
-
-        private void AlterarDadosDepartamento()
-        {
-            throw new NotImplementedException();
         }
 
         private void ApagarPessoa()
