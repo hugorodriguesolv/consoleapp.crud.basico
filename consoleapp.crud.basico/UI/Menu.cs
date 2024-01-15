@@ -1,4 +1,6 @@
-﻿using consoleapp.crud.basico.UseCases;
+using consoleapp.crud.basico.UseCases;
+using consoleapp.crud.basico.Entities;
+using consoleapp.crud.basico.UseCases;
 using System.Text;
 
 namespace consoleapp.crud.basico.UI
@@ -107,6 +109,9 @@ namespace consoleapp.crud.basico.UI
             var pessoaUC = new PessoaUC();
             var pessoas = pessoaUC.ListarTodasPessoas();
 
+            var pessoas = pessoaUC.ListarTodasPessoasDepartamento();
+
+            // Criação da Grid
             var fechamentoTabela = $"| {new string('¯', 8)} | {new string('¯', 25)} | {new string('¯', 25)} |";
 
             Console.WriteLine(fechamentoTabela);
@@ -140,7 +145,24 @@ namespace consoleapp.crud.basico.UI
             }
         }
 
-        private void ListarDepartamento()
+        private void ListarDepartamentos()
+        {
+            var departamentoUC = new DepartamentoUC();
+            var departamentos = departamentoUC.ListarTodosDepartamentos();
+
+            var fechamentoTabela = $"| {new string('¯', 8)} | {new string('¯', 25)} | {new string('¯', 25)} |";
+
+            Console.WriteLine(fechamentoTabela);
+            Console.WriteLine($"| {"Id".PadRight(8)} | {"Departamento".PadRight(25)} | {"Cidade".PadRight(25)} |");
+            Console.WriteLine(fechamentoTabela);
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"| {departamento.Id.ToString().PadRight(8)} | {departamento.NomeDepartamento.PadRight(25)} | {departamento.NomeCidade.PadRight(25)} |");
+            }
+        }
+
+        private void AlterarDadosPessoa()
         {
             var departamentoUC = new DepartamentoUC();
             var departamentos = departamentoUC.ListarTodosDepartamentos();
@@ -169,7 +191,7 @@ namespace consoleapp.crud.basico.UI
             Console.Clear();
             Console.WriteLine("******     ALTERAR DADOS DE PESSOA      ******");
 
-            ListarDepartamento();
+            ListarDepartamentos();
 
             Console.WriteLine($"Para o novo nome: {novoNomeInformado}");
             Console.WriteLine($"Informe o Id do departamento atual ou novo departamento:\n");
@@ -197,10 +219,8 @@ namespace consoleapp.crud.basico.UI
             ListarTodasPessoas();
             Console.WriteLine();
 
-
             Console.WriteLine("Escolha o Id da pessoa que deseja exluir: ");
             string inputIdPessoa = Console.ReadLine();
-
 
             if (!int.TryParse(inputIdPessoa, out int IdPessoaInformado))
             {
@@ -210,12 +230,10 @@ namespace consoleapp.crud.basico.UI
             {
                 var pessoaUC = new PessoaUC();
                 var pessoa = pessoaUC
-                    .ListarTodasPessoas()
+                    .ListarTodasPessoasDepartamento()
                     .FirstOrDefault(pes => pes.Id == IdPessoaInformado);
 
-
                 var apagou = pessoaUC.ApagarPessoa(IdPessoaInformado);
-
 
                 if (apagou)
                 {
@@ -235,7 +253,99 @@ namespace consoleapp.crud.basico.UI
 
         private void InserirNovaPessoa()
         {
-            throw new NotImplementedException();
+            Console.Clear();
+            Console.WriteLine("***** INSERIR NOVA PESSOA *****\n");
+
+            ListarTodasPessoas();
+
+            Console.WriteLine("\nInforme o nome da nova pessoa: ");
+            var nomeNovaPessoa = Console.ReadLine();
+
+            var pessoaUC = new PessoaUC();
+
+            var pessoaExiste = pessoaUC
+                .ListarTodasPessoas()
+                .Any(pes => pes.NomePessoa == nomeNovaPessoa);
+
+            if (!pessoaExiste)
+            {
+                Console.Clear();
+                Console.WriteLine("***** INSERIR NOVA PESSOA *****\n");
+
+                ListarDepartamentos();
+
+                Console.WriteLine($"\nNome da pessoa informado foi: {nomeNovaPessoa}");
+                Console.WriteLine("\nInforme o Id do departamento dessa pessoa: ");
+                string infoIdDepNovaPessoa = Console.ReadLine();
+
+                var entradasValidas =
+                    int.TryParse(infoIdDepNovaPessoa, out int idDepartamentoNovaPessoa)
+                    && !string.IsNullOrEmpty(nomeNovaPessoa);
+
+                if (entradasValidas)
+                {
+                    var departamentoUC = new DepartamentoUC();
+
+                    var departamentoExiste = departamentoUC
+                        .ListarTodosDepartamentos()
+                        .Any(dep => dep.Id == idDepartamentoNovaPessoa);
+
+                    if (departamentoExiste)
+                    {
+                        pessoaUC.InserirPessoa(idDepartamentoNovaPessoa, nomeNovaPessoa);
+
+                        Console.Clear();
+                        Console.WriteLine($"{nomeNovaPessoa} foi inserido com sucesso! \n");
+                        ListarTodasPessoas();
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nEsse departamento não existe!!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\nEntrada inválida!! Certifique-se de inserir um número inteiro.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("\n\nEssa pessoa já existe!!");
+            }
         }
+
+<<<<<<< HEAD
+=======
+
+        private void ApagarPessoa()
+        {
+            Console.Clear();
+            ListarTodasPessoas();
+            Console.WriteLine();
+
+            Console.WriteLine("Escolha o Id da pessoa que deseja exluir: ");
+            var IdPessoaInformado = int.Parse(Console.ReadLine());
+
+            var pessoaUC = new PessoaUC();
+            var pessoa = pessoaUC
+                .ListarTodasPessoasDepartamento()
+                .FirstOrDefault(pes => pes.Id == IdPessoaInformado);
+
+            var apagou = pessoaUC.ApagarPessoa(IdPessoaInformado);
+
+            if (apagou)
+            {
+                Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine($"A pessoa {pessoa.NomePessoa} - Id: {pessoa.Id}, do departamento {pessoa.NomeDepartamento}, foi excluída com sucesso!");
+                Console.WriteLine();
+                ListarTodasPessoas();
+            }
+            else
+            {
+                Console.WriteLine($"Não foi possível excluir a pessoa com o id: {IdPessoaInformado}.");
+            }
+        }
+>>>>>>> origin/feature/inserir-pessoas
     }
 }

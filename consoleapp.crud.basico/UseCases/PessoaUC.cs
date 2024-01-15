@@ -14,6 +14,14 @@ namespace consoleapp.crud.basico.UseCases
             return pessoas;
         }
 
+        public IList<PessoaDepartamento> ListarTodasPessoasDepartamento()
+        {
+            var pessoaRepository = new PessoaRepository();
+            var pessoas = pessoaRepository.ObterTodasPessoas();
+
+            return pessoas;
+        }
+
         public IList<PessoaEstado> ListarPessoasPorEstado(int idEstado)
         {
             var pessoaRepository = new PessoaRepository();
@@ -22,13 +30,35 @@ namespace consoleapp.crud.basico.UseCases
             return pessoasEstado;
         }
 
-        public bool AlterarNomePessoas(int idPessoaEscolhida, string novoNomeInformado, int novoIdDepartamentoInformado)
+
+        public bool AlterarDadosPessoais(Pessoa pessoa)
         {
             var pessoaRepository = new PessoaRepository();
-            bool alterouNome = pessoaRepository.AtualizarPessoas(idPessoaEscolhida, novoNomeInformado, novoIdDepartamentoInformado) > 0 ? true : false;
+            pessoaRepository.AtualizarPessoas(idPessoa) > 0 ? true : false;
+        }
+
+
+        /*public void InserirPessoa(int idDepartamento, string nome)
+        {
+            var pessoa = new Pessoa()
+            {
+                IdDepartamento = idDepartamento,
+                Nome = nome
+            };
+
+            var pessoaRepository = new PessoaRepository();
+            pessoaRepository.InserirPessoa(pessoa);
+
+        }
+
+        public void AlterarDadosPessoais(Pessoa pessoa)
+        {
+            var pessoaRepository = new PessoaRepository();
+            pessoaRepository.AlterarDadosPessoais(idPessoa);
 
             return alterouNome;
-        }
+        }*/
+        
         public bool ApagarPessoa(int idPessoaInformado)
         {
             var pessoaRepository = new PessoaRepository();
