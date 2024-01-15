@@ -12,7 +12,7 @@ namespace consoleapp.crud.basico.Repository
 
         public PessoaRepository()
         {
-            _connection = new SqlConnection("Data Source=localhost, 1523;Initial Catalog=geekjobs;Integrated Security=False;User ID=sa;Password=AulaGeekJobs1;TrustServerCertificate=true");
+            _connection = new SqlConnection("Data Source=localhost, 1522;Initial Catalog=geekjobs;Integrated Security=False;User ID=sa;Password=AulaGeekJobs1;TrustServerCertificate=true");
             _connection.Open();
         }
 
@@ -96,6 +96,7 @@ namespace consoleapp.crud.basico.Repository
 
             _command.Parameters.Add("@Id", System.Data.SqlDbType.Int);
             _command.Parameters["@Id"].Value = idPessoa;
+           
 
             var linhasAfetadas = _command.ExecuteNonQuery();
 

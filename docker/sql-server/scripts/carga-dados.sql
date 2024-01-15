@@ -1,6 +1,4 @@
-USE geekjobs
-
-GO
+USE GEEKJOBS
 
 
 SET NOCOUNT ON;
@@ -45,6 +43,5 @@ INSERT INTO Pessoa (Nome, IdDepartamento) VALUES ('Caio', @@IDENTITY)
 INSERT INTO Cidade (Nome, Populacao, IdEstado) VALUES ('Fortaleza', 2000000, @IDESTADO)
 INSERT INTO Departamento (Nome, IdCidade) VALUES ('Vendas', @@IDENTITY)
 INSERT INTO Pessoa (Nome, IdDepartamento) VALUES ('Sérgio', @@IDENTITY)
-
 
 SET NOCOUNT OFF;
