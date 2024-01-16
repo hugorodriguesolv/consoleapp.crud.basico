@@ -156,11 +156,10 @@ namespace consoleapp.crud.basico.UI
             Console.WriteLine("Escolha o Id da pessoa que deseja exluir: ");
             string inputIdPessoa = Console.ReadLine();
 
-            if (!int.TryParse(inputIdPessoa, out int IdPessoaInformado))
-            {
-                Console.WriteLine("Digite o NÚMERO do Id");
-            }
-            else
+            var entradasValidas = 
+                int.TryParse(inputIdPessoa, out int IdPessoaInformado);
+
+            if (entradasValidas)
             {
                 var pessoaUC = new PessoaUC();
                 var pessoa = pessoaUC
@@ -182,6 +181,11 @@ namespace consoleapp.crud.basico.UI
                 {
                     Console.WriteLine($"Não foi possível excluir a pessoa com o id: {IdPessoaInformado}.");
                 }
+            }
+            else
+            {
+                Console.WriteLine("Digite o NÚMERO do Id");
+                
             }
 
         }
