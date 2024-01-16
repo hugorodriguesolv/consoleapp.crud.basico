@@ -30,15 +30,7 @@ namespace consoleapp.crud.basico.UseCases
             return pessoasEstado;
         }
 
-
-        public bool AlterarDadosPessoais(Pessoa pessoa)
-        {
-            var pessoaRepository = new PessoaRepository();
-            pessoaRepository.AtualizarPessoas(idPessoa) > 0 ? true : false;
-        }
-
-
-        /*public void InserirPessoa(int idDepartamento, string nome)
+        public void InserirPessoa(int idDepartamento, string nome)
         {
             var pessoa = new Pessoa()
             {
@@ -51,14 +43,6 @@ namespace consoleapp.crud.basico.UseCases
 
         }
 
-        public void AlterarDadosPessoais(Pessoa pessoa)
-        {
-            var pessoaRepository = new PessoaRepository();
-            pessoaRepository.AlterarDadosPessoais(idPessoa);
-
-            return alterouNome;
-        }*/
-        
         public bool ApagarPessoa(int idPessoaInformado)
         {
             var pessoaRepository = new PessoaRepository();
@@ -66,6 +50,14 @@ namespace consoleapp.crud.basico.UseCases
 
             return apagou;
 
+        }
+
+        public bool AlterarDadosPessoas(int idPessoaEscolhida, string novoNomeInformado, int novoIdDepartamento)
+        {
+            var atualizar = new PessoaRepository();
+            bool atualizou = atualizar.AtualizarPessoas(idPessoaEscolhida, novoNomeInformado, novoIdDepartamento) > 0 ? false : true;
+
+            return atualizou;
         }
     }
 }
