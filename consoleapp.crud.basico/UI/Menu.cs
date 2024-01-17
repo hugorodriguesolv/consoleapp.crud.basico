@@ -101,7 +101,7 @@ namespace consoleapp.crud.basico.UI
         private void ListarTodasPessoas()
         {
             var pessoaUC = new PessoaUC();
-            var pessoas = pessoaUC.ListarTodasPessoas();
+            var pessoas = pessoaUC.ListarTodasPessoasDepartamento();
             
             var fechamentoTabela = $"| {new string('¯', 8)} | {new string('¯', 25)} | {new string('¯', 25)} |";
 
@@ -149,26 +149,44 @@ namespace consoleapp.crud.basico.UI
         private void ApagarPessoa()
         {
             Console.Clear();
+            Console.WriteLine("***** EXCLUIR PESSOA *****\n");
             ListarTodasPessoas();
             Console.WriteLine();
 
             Console.WriteLine("Escolha o Id da pessoa que deseja exluir: ");
-            var IdPessoaInformado = int.Parse(Console.ReadLine());
+            string inputIdPessoa = Console.ReadLine();
 
-            var pessoaUC = new PessoaUC();
-            var apagou = pessoaUC.ApagarPessoa(IdPessoaInformado);
-            
-            if (apagou)
+            var entradasValidas = 
+                int.TryParse(inputIdPessoa, out int IdPessoaInformado);
+
+            if (entradasValidas)
             {
-                Console.Clear();
-                Console.WriteLine($"A pessoa com o id: {IdPessoaInformado} foi excluída com sucesso!");
-                Console.WriteLine();
-                ListarTodasPessoas();
-            } 
+                var pessoaUC = new PessoaUC();
+                var pessoa = pessoaUC
+                    .ListarTodasPessoasDepartamento()
+                    .FirstOrDefault(pes => pes.Id == IdPessoaInformado);
+
+                var apagou = pessoaUC.ApagarPessoa(IdPessoaInformado);
+
+                if (apagou)
+                {
+                    Console.Clear();
+                    Console.WriteLine();
+                    Console.WriteLine("***** EXCLUIR PESSOA *****\n");
+                    Console.WriteLine($"A pessoa {pessoa.NomePessoa} - Id: {pessoa.Id}, do departamento {pessoa.NomeDepartamento}, foi excluída com sucesso!");
+                    Console.WriteLine();
+                    ListarTodasPessoas();
+                }
+                else
+                {
+                    Console.WriteLine($"Não existe uma pessoa cadastrada com o id: {IdPessoaInformado}.");
+                }
+            }
             else
             {
-                Console.WriteLine($"Não foi possível excluir a pessoa com o id: {IdPessoaInformado}.");
-            } 
+                Console.WriteLine("Entrada inválida!");
+                
+            }
 
         }
     }
