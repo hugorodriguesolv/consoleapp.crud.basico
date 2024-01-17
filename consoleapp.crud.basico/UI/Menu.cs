@@ -179,12 +179,12 @@ namespace consoleapp.crud.basico.UI
                 }
                 else
                 {
-                    Console.WriteLine($"Não foi possível excluir a pessoa com o id: {IdPessoaInformado}.");
+                    Console.WriteLine($"Não existe uma pessoa cadastrada com o id: {IdPessoaInformado}.");
                 }
             }
             else
             {
-                Console.WriteLine("Digite o NÚMERO do Id");
+                Console.WriteLine("Entrada inválida!");
                 
             }
 
