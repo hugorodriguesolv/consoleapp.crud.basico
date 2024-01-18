@@ -121,29 +121,28 @@ namespace consoleapp.crud.basico.Repository
             return linhasAfetadas;
         }
 
-        public int AtualizarPessoas(int idPessoaEscolhida, string novoNome, int novoIdDepartamento)
+        public int AtualizarPessoas(int alterarIdDepartamentoPessoa, string inputNomePessoa, string novoNome)
         {
             var sql = new StringBuilder();
             sql.AppendLine("UPDATE ");
             sql.AppendLine("    Pessoa ");
             sql.AppendLine("SET ");
-            sql.AppendLine("    Pessoa.Nome = @NovoNome, ");
+            sql.AppendLine("    Nome = @NovoNome, ");
             sql.AppendLine("    IdDepartamento = @NovoDepartamento ");
             sql.AppendLine("WHERE    ");
-            sql.AppendLine("    Id = @Id ");
+            sql.AppendLine("    Nome = @Pessoa ");
 
             _command = _connection.CreateCommand();
             _command.CommandText = sql.ToString();
 
-            _command.Parameters.Add("@NovoNome", System.Data.SqlDbType.Text).Value = novoNome;
+            _command.Parameters.Add("@NovoNome", System.Data.SqlDbType.VarChar).Value = novoNome;
             _command.Parameters["@NovoNome"].Value = novoNome;
 
             _command.Parameters.Add("@NovoDepartamento", System.Data.SqlDbType.Int);
-            _command.Parameters["@NovoDepartamento"].Value = novoIdDepartamento;
+            _command.Parameters["@NovoDepartamento"].Value = alterarIdDepartamentoPessoa;
 
-
-            _command.Parameters.Add("@Id", System.Data.SqlDbType.Int);
-            _command.Parameters["@Id"].Value = idPessoaEscolhida;
+            _command.Parameters.Add("@Pessoa", System.Data.SqlDbType.VarChar).Value = inputNomePessoa;
+            _command.Parameters["@Pessoa"].Value = inputNomePessoa;
 
             var linhasAfetadas = _command.ExecuteNonQuery();
 

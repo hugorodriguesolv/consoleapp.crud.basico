@@ -1,4 +1,3 @@
-using consoleapp.crud.basico.Entities;
 using consoleapp.crud.basico.UseCases;
 using System.Text;
 
@@ -94,6 +93,11 @@ namespace consoleapp.crud.basico.UI
             return menu.ToString();
         }
 
+        private void LimparConsole()
+        {
+            Console.Clear();
+        }
+
         private void ListarTodasPessoas()
         {
             var pessoaUC = new PessoaUC();
@@ -150,20 +154,110 @@ namespace consoleapp.crud.basico.UI
             }
         }
 
+        private void CabecalhoAlterarDadosPessoa()
+        {
+            Console.WriteLine("*****     ALTERAR DADOS DE PESSOA      *****\n");
+        }
+
         private void AlterarDadosPessoa()
         {
-            Console.Write("Informe o nome da Pessoa: ");
-            string nomePessoa = Console.ReadLine();
+            LimparConsole();
 
-            Console.Write("Infome novo departamento: ");
-            string novoDepartamento = Console.ReadLine();
+            CabecalhoAlterarDadosPessoa();
 
-            var pessoa = new Pessoa();
-            pessoa.Nome = nomePessoa;
-            pessoa.IdDepartamento = int.Parse(novoDepartamento);
+            ListarTodasPessoas();
 
-            var pessoaUc = new PessoaUC();
-            //pessoaUc.AlterarDadosPessoais(0);
+            Console.WriteLine("\nInforme o Nome da pessoa que deseja alterar: ");
+            var inputNomePessoa = Console.ReadLine();
+            if (string.IsNullOrEmpty(inputNomePessoa))
+            {
+                Console.WriteLine("Entrada Inválida! Campo não pode ficar em branco.");
+            }
+            var pessoaUC = new PessoaUC();
+
+            var pessoaExiste = pessoaUC
+                .ListarTodasPessoas()
+                .Any(pes => pes.NomePessoa == inputNomePessoa);
+
+            if (!pessoaExiste)
+            {
+                Console.WriteLine("\n\nEssa pessoa não existe!");
+                AlterarDadosPessoa();
+            }
+
+            LimparConsole();
+
+            CabecalhoAlterarDadosPessoa();
+
+            ListarTodasPessoas();
+
+            Console.WriteLine($"\nPara {inputNomePessoa}, infome o Novo Nome: ");
+            var novoNome = Console.ReadLine();
+
+            var entradaValidas1 =
+                string.IsNullOrEmpty(novoNome)
+                && string.IsNullOrEmpty(inputNomePessoa);
+
+            if (entradaValidas1)
+            {
+                Console.WriteLine("\nEntrada inválida!! Certifique-se de inserir o nome de quem deseja alterar e o novo nome para qual deseja alterar.");
+                AlterarDadosPessoa();
+            }
+
+            LimparConsole();
+
+            CabecalhoAlterarDadosPessoa();
+
+            var pessoa = pessoaUC
+                .ListarTodasPessoasDepartamento()
+                .FirstOrDefault(pes => pes.NomePessoa == inputNomePessoa);
+            
+            Console.WriteLine($"\nA pessoa {pessoa.NomePessoa} - Id: {pessoa.Id}, será alterada para {novoNome}!\nO departamento atual dessa pessoa é {pessoa.NomeDepartamento}.\n");
+
+            ListarDepartamentos();
+
+            Console.WriteLine($"\nPara alterar o departamento, informe outro Id de departamento\nou\ninforme o Id atual para {novoNome} coninuar no departamento {pessoa.NomeDepartamento}:\n");
+            var idNovoDepartamentoPessoa = Console.ReadLine();
+
+            var entradaValidas2 =
+                int.TryParse(idNovoDepartamentoPessoa, out int alterarIdDepartamentoPessoa);
+
+            if (!entradaValidas2)
+            {
+                Console.WriteLine("\nEntrada inválida!! Certifique-se de inserir um número inteiro.");
+            }
+
+            var departamentoUC = new DepartamentoUC();
+
+            var departamentoExiste = departamentoUC
+                .ListarTodosDepartamentos()
+                .Any(dep => dep.Id == alterarIdDepartamentoPessoa);
+
+            if (!departamentoExiste)
+            {
+                Console.WriteLine("\nEsse departamento não existe!!");
+            }
+
+            LimparConsole();
+
+            CabecalhoAlterarDadosPessoa();
+
+            var alterarPessoa = new PessoaUC();
+            var atualizou = alterarPessoa.AlterarDadosPessoas(alterarIdDepartamentoPessoa, inputNomePessoa, novoNome);
+
+            if (!atualizou)
+            {
+                Console.WriteLine
+                    (
+                        $"Não foi possível alterar o nome de {inputNomePessoa} para o novo nome {novoNome} e departamento {alterarIdDepartamentoPessoa}.\n" +
+                        $"Verifique os dados ou contate o suporte: support@geekjobs.com.br"
+                    );
+            }
+            else
+            {
+                Console.WriteLine($"{inputNomePessoa} foi alterado para {novoNome} com sucesso! \n");
+            }
+            MontaMenu();
         }
 
         private void InserirNovaPessoa()
@@ -268,9 +362,7 @@ namespace consoleapp.crud.basico.UI
             else
             {
                 Console.WriteLine("Entrada inválida!");
-
             }
-
         }
     }
 }
