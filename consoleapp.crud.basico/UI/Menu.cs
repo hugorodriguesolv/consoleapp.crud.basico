@@ -1,5 +1,6 @@
 using consoleapp.crud.basico.Entities;
 using consoleapp.crud.basico.UseCases;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace consoleapp.crud.basico.UI
@@ -94,11 +95,6 @@ namespace consoleapp.crud.basico.UI
             return menu.ToString();
         }
 
-        private void LimparConsole()
-        {
-            Console.Clear();
-        }
-
         private void ListarTodasPessoas()
         {
             var pessoaUC = new PessoaUC();
@@ -162,139 +158,72 @@ namespace consoleapp.crud.basico.UI
 
         private void AlterarDadosPessoais()
         {
-            LimparConsole();
-
             CabecalhoAlterarDadosPessoais();
 
-            ListarTodasPessoas();
+            var idPessoaInput = int.MinValue;
+            var nomePessoaInput = string.Empty;
+            var idDepartamentoPessoaInput = int.MinValue;
 
-            var pessoa = new Pessoa();
-
-            Console.WriteLine("\nInforme o Id da pessoa que deseja alterar: ");
-            var idPessoa = Console.ReadLine();
-
-            var entradasValidas = !int.TryParse(idPessoa, out int inputIdPessoa);
+            var entradasValidas =
+                int.TryParse(ObterIdPessoaAlterarcao(), out idPessoaInput)
+                && NomePessoaValido(ObterNomePessoaAlterarcao(), out nomePessoaInput)
+                && int.TryParse(ObterIdDepartamentoPessoaAlterarcao(), out idDepartamentoPessoaInput);
 
             if (entradasValidas)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Entrada Inválida! Campo não pode ficar em branco.");
+                var pessoa = new Pessoa();
 
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("\nPressione qualquer tecla para retomar.");
-                Console.ReadLine();
-                Console.ForegroundColor = ConsoleColor.White;
+                pessoa.Id = idPessoaInput;
+                pessoa.Nome = nomePessoaInput;
+                pessoa.IdDepartamento = idDepartamentoPessoaInput;
 
-                AlterarDadosPessoais();
-            }
-            var pessoaUC = new PessoaUC();
-
-            var pessoaExiste = pessoaUC
-                .ListarTodasPessoas()
-                .Any(pes => pes.Id == inputIdPessoa);
-
-            if (!pessoaExiste)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\nEssa pessoa não existe!");
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("\nPressione qualquer tecla para retomar.");
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.ReadLine();
-
-                AlterarDadosPessoais();
-            }
-
-            LimparConsole();
-
-            CabecalhoAlterarDadosPessoais();
-
-            ListarTodasPessoas();
-
-            Console.WriteLine($"\nPara {inputIdPessoa}, infome o Novo Nome: ");
-            var novoNome = Console.ReadLine();
-
-            var entradaValidas1 = 
-                string.IsNullOrEmpty(novoNome)
-                || int.TryParse(novoNome, out _);
-
-            if (entradaValidas1)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"\nEntrada inválida!" +
-                                    $"\nCertifique-se de inserir um novo nome para alterar" +
-                                    $"\n ou informe '{inputIdPessoa}' para continuar com o mesmo nome.");
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("\nPressione qualquer tecla para retomar.");
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.ReadLine();
-
-                AlterarDadosPessoais();
-            }
-
-            LimparConsole();
-
-            CabecalhoAlterarDadosPessoais();
-
-            var pessoa = pessoaUC
-                .ListarTodasPessoasDepartamento()
-                .FirstOrDefault(pes => pes.Id == inputIdPessoa);
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"\nA pessoa {pessoa.NomePessoa} - Id: {pessoa.Id}, será alterada para {novoNome}!\nO departamento atual dessa pessoa é {pessoa.NomeDepartamento}.\n");
-
-            Console.ForegroundColor = ConsoleColor.White;
-            ListarDepartamentos();
-
-            Console.WriteLine($"\nPara alterar o departamento, informe outro Id de departamento\nou\ninforme o Id atual para {novoNome} coninuar no departamento {pessoa.NomeDepartamento}:\n");
-            var idNovoDepartamentoPessoa = Console.ReadLine();
-
-            var entradaValidas2 =
-                int.TryParse(idNovoDepartamentoPessoa, out int alterarIdDepartamentoPessoa);
-
-            if (!entradaValidas2)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\nEntrada inválida! Certifique-se de inserir um número inteiro.");
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("\nPressione qualquer tecla para retomar.");
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.ReadLine();
-
-                AlterarDadosPessoais();
-            }
-
-            var departamentoUC = new DepartamentoUC();
-
-            var departamentoExiste = departamentoUC
-                .ListarTodosDepartamentos()
-                .Any(dep => dep.Id == alterarIdDepartamentoPessoa);
-
-            if (!departamentoExiste)
-            {
-                Console.WriteLine("\nEsse departamento não existe!!");
-            }
-
-            LimparConsole();
-
-            CabecalhoAlterarDadosPessoais();
-
-            var alterarPessoa = new PessoaUC();
-            var atualizou = alterarPessoa.AlterarDadosPessoas(pessoa);
-
-            if (!atualizou)
-            {
-                Console.WriteLine
-                    (
-                        $"Não foi possível alterar o nome de {inputIdPessoa} para o novo nome {novoNome} e departamento {alterarIdDepartamentoPessoa}.\n" +
-                        $"Verifique os dados ou contate o suporte: support@geekjobs.com.br"
-                    );
+                var pessoaUc = new PessoaUC();
+                pessoaUc.AlterarDadosPessoas(pessoa);
             }
             else
             {
-                Console.WriteLine($"{inputIdPessoa} foi alterado para {novoNome} com sucesso! \n");
+                Console.WriteLine("Pressione qualer tecla para continuar");
+                Console.ReadKey();
             }
-            MontaMenu();
+        }
+
+        private string ObterIdPessoaAlterarcao()
+        {
+            ListarTodasPessoas();
+
+            Console.WriteLine("Informe o Id da pessoa que será alterado:");
+            var retorno = Console.ReadLine();
+
+            return retorno;
+        }
+
+        private string ObterNomePessoaAlterarcao()
+        {
+            Console.WriteLine("Informe o Id da pessoa que será alterado:");
+            var retorno = Console.ReadLine();
+
+            return retorno;
+        }
+
+        private string ObterIdDepartamentoPessoaAlterarcao()
+        {
+            ListarDepartamentos();
+
+            Console.WriteLine("Informe o Id da pessoa que será alterado:");
+            var retorno = Console.ReadLine();
+
+            return retorno;
+        }
+
+
+        private bool NomePessoaValido(string nomePessoa, out string nomePessoaValidado)
+        {
+            var retorno = true;
+            retorno = !string.IsNullOrWhiteSpace(nomePessoa);
+
+            nomePessoaValidado = nomePessoa;
+
+            return retorno;
         }
 
         private void InserirNovaPessoa()
@@ -326,7 +255,7 @@ namespace consoleapp.crud.basico.UI
 
                 var entradasValidas =
                     int.TryParse(infoIdDepNovaPessoa, out int idDepartamentoNovaPessoa)
-                    && !string.IsNullOrEmpty(nomeNovaPessoa);
+                    && !string.IsNullOrWhiteSpace(nomeNovaPessoa);
 
                 if (entradasValidas)
                 {
