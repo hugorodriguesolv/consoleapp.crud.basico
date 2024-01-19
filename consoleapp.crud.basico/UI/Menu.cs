@@ -10,7 +10,7 @@ namespace consoleapp.crud.basico.UI
             Sair = 0,
             ListarTodasPessoas = 1,
             ListarPessoasPorEstado = 2,
-            AlterarDadosPessoa = 3,
+            AlterarDadosPessoais = 3,
             InserirNovaPessoa = 4,
             ApagarPessoa = 5
         }
@@ -47,8 +47,8 @@ namespace consoleapp.crud.basico.UI
                         ListarPessoasPorEstado();
                         break;
 
-                    case OpcoesMenu.AlterarDadosPessoa:
-                        AlterarDadosPessoa();
+                    case OpcoesMenu.AlterarDadosPessoais:
+                        AlterarDadosPessoais();
                         break;
 
                     case OpcoesMenu.InserirNovaPessoa:
@@ -154,16 +154,16 @@ namespace consoleapp.crud.basico.UI
             }
         }
 
-        private void CabecalhoAlterarDadosPessoa()
+        private void CabecalhoAlterarDadosPessoais()
         {
             Console.WriteLine("*****     ALTERAR DADOS DE PESSOA      *****\n");
         }
 
-        private void AlterarDadosPessoa()
+        private void AlterarDadosPessoais()
         {
             LimparConsole();
 
-            CabecalhoAlterarDadosPessoa();
+            CabecalhoAlterarDadosPessoais();
 
             ListarTodasPessoas();
 
@@ -171,7 +171,15 @@ namespace consoleapp.crud.basico.UI
             var inputNomePessoa = Console.ReadLine();
             if (string.IsNullOrEmpty(inputNomePessoa))
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Entrada Inválida! Campo não pode ficar em branco.");
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\nPressione qualquer tecla para retomar.");
+                Console.ReadLine();
+                Console.ForegroundColor = ConsoleColor.White;
+
+                AlterarDadosPessoais();
             }
             var pessoaUC = new PessoaUC();
 
@@ -181,39 +189,55 @@ namespace consoleapp.crud.basico.UI
 
             if (!pessoaExiste)
             {
-                Console.WriteLine("\n\nEssa pessoa não existe!");
-                AlterarDadosPessoa();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\nEssa pessoa não existe!");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\nPressione qualquer tecla para retomar.");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.ReadLine();
+
+                AlterarDadosPessoais();
             }
 
             LimparConsole();
 
-            CabecalhoAlterarDadosPessoa();
+            CabecalhoAlterarDadosPessoais();
 
             ListarTodasPessoas();
 
             Console.WriteLine($"\nPara {inputNomePessoa}, infome o Novo Nome: ");
             var novoNome = Console.ReadLine();
 
-            var entradaValidas1 =
+            var entradaValidas1 = 
                 string.IsNullOrEmpty(novoNome)
-                && string.IsNullOrEmpty(inputNomePessoa);
+                || int.TryParse(novoNome, out _);
 
             if (entradaValidas1)
             {
-                Console.WriteLine("\nEntrada inválida!! Certifique-se de inserir o nome de quem deseja alterar e o novo nome para qual deseja alterar.");
-                AlterarDadosPessoa();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\nEntrada inválida!" +
+                                    $"\nCertifique-se de inserir um novo nome para alterar" +
+                                    $"\n ou informe '{inputNomePessoa}' para continuar com o mesmo nome.");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\nPressione qualquer tecla para retomar.");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.ReadLine();
+
+                AlterarDadosPessoais();
             }
 
             LimparConsole();
 
-            CabecalhoAlterarDadosPessoa();
+            CabecalhoAlterarDadosPessoais();
 
             var pessoa = pessoaUC
                 .ListarTodasPessoasDepartamento()
                 .FirstOrDefault(pes => pes.NomePessoa == inputNomePessoa);
-            
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"\nA pessoa {pessoa.NomePessoa} - Id: {pessoa.Id}, será alterada para {novoNome}!\nO departamento atual dessa pessoa é {pessoa.NomeDepartamento}.\n");
 
+            Console.ForegroundColor = ConsoleColor.White;
             ListarDepartamentos();
 
             Console.WriteLine($"\nPara alterar o departamento, informe outro Id de departamento\nou\ninforme o Id atual para {novoNome} coninuar no departamento {pessoa.NomeDepartamento}:\n");
@@ -224,7 +248,14 @@ namespace consoleapp.crud.basico.UI
 
             if (!entradaValidas2)
             {
-                Console.WriteLine("\nEntrada inválida!! Certifique-se de inserir um número inteiro.");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\nEntrada inválida! Certifique-se de inserir um número inteiro.");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\nPressione qualquer tecla para retomar.");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.ReadLine();
+
+                AlterarDadosPessoais();
             }
 
             var departamentoUC = new DepartamentoUC();
@@ -240,7 +271,7 @@ namespace consoleapp.crud.basico.UI
 
             LimparConsole();
 
-            CabecalhoAlterarDadosPessoa();
+            CabecalhoAlterarDadosPessoais();
 
             var alterarPessoa = new PessoaUC();
             var atualizou = alterarPessoa.AlterarDadosPessoas(alterarIdDepartamentoPessoa, inputNomePessoa, novoNome);
