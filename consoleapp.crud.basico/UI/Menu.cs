@@ -216,9 +216,12 @@ namespace consoleapp.crud.basico.UI
         private string ObterIdDepartamentoPessoaAlterarcao()
         {
             Console.Clear();
+            
+            CabecalhoAlterarDadosPessoais();
+
             ListarDepartamentos();
 
-            Console.WriteLine("Informe o Id da pessoa que será alterado:");
+            Console.WriteLine("Informe o Id do departamento que será alterado:");
             var retorno = Console.ReadLine();
 
             return retorno;
