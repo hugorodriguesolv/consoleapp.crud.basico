@@ -52,10 +52,10 @@ namespace consoleapp.crud.basico.UseCases
 
         }
 
-        public bool AlterarDadosPessoas(int alterarIdDepartamentoPessoa, string inputNomePessoa, string novoNome)
+        public bool AlterarDadosPessoas(Pessoa pessoa)
         {
             var atualizar = new PessoaRepository();
-            bool atualizou = atualizar.AtualizarPessoas(alterarIdDepartamentoPessoa, inputNomePessoa, novoNome) > 0 ? true : false;
+            bool atualizou = atualizar.AtualizarPessoas(pessoa) > 0 ? true : false;
 
             return atualizou;
         }
