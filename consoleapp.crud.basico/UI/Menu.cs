@@ -186,22 +186,14 @@ namespace consoleapp.crud.basico.UI
                 CabecalhoAlterarDadosPessoais();
                 
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("\n\nDados pessoais alterados com sucesso!");
-
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Pressione qualquer tecla para continuar");
-                Console.ReadKey();
+                Console.WriteLine("\nDados pessoais alterados com sucesso!");
             }
             else
             {
-                CabecalhoAlterarDadosPessoais();
-
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("Os dados informados não são válidos!");
+                Console.ForegroundColor = ConsoleColor.White;
 
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Pressione qualquer tecla para continuar");
-                Console.ReadKey();
             }
         }
 
@@ -242,7 +234,8 @@ namespace consoleapp.crud.basico.UI
         private bool NomePessoaValido(string nomePessoa, out string nomePessoaValidado)
         {
             var retorno = true;
-            retorno = !string.IsNullOrWhiteSpace(nomePessoa);
+            retorno = !string.IsNullOrWhiteSpace(nomePessoa)
+                && !int.TryParse(nomePessoa, out _);
 
             nomePessoaValidado = nomePessoa;
 
