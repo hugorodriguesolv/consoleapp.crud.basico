@@ -158,6 +158,8 @@ namespace consoleapp.crud.basico.UI
 
         private void AlterarDadosPessoais()
         {
+            Console.Clear();
+
             CabecalhoAlterarDadosPessoais();
 
             var idPessoaInput = int.MinValue;
@@ -213,6 +215,7 @@ namespace consoleapp.crud.basico.UI
 
         private string ObterIdDepartamentoPessoaAlterarcao()
         {
+            Console.Clear();
             ListarDepartamentos();
 
             Console.WriteLine("Informe o Id da pessoa que será alterado:");
