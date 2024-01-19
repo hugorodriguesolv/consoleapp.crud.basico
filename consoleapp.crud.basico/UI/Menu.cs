@@ -182,24 +182,35 @@ namespace consoleapp.crud.basico.UI
                 var pessoaUc = new PessoaUC();
                 pessoaUc.AlterarDadosPessoas(pessoa);
 
-                Console.WriteLine("Dados pessoais alterados com sucesso!");
+                Console.Clear();
+                CabecalhoAlterarDadosPessoais();
+                
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\n\nDados pessoais alterados com sucesso!");
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Pressione qualquer tecla para continuar");
+                Console.ReadKey();
             }
             else
             {
+                CabecalhoAlterarDadosPessoais();
+
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("Os dados informados não são válidos!");
 
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Pressione qualer tecla para continuar");
+                Console.WriteLine("Pressione qualquer tecla para continuar");
                 Console.ReadKey();
             }
         }
 
         private string ObterIdPessoaAlterarcao()
         {
+            Console.WriteLine();
             ListarTodasPessoas();
 
-            Console.WriteLine("Informe o Id da pessoa que será alterado:");
+            Console.WriteLine("\nInforme o Id da pessoa que será alterado:");
             var retorno = Console.ReadLine();
 
             return retorno;
@@ -207,7 +218,7 @@ namespace consoleapp.crud.basico.UI
 
         private string ObterNomePessoaAlterarcao()
         {
-            Console.WriteLine("Informe o Id da pessoa que será alterado:");
+            Console.WriteLine("\nInforme o novo Nome da pessoa que será alterado:");
             var retorno = Console.ReadLine();
 
             return retorno;
@@ -218,10 +229,10 @@ namespace consoleapp.crud.basico.UI
             Console.Clear();
             
             CabecalhoAlterarDadosPessoais();
-
+            Console.WriteLine();
             ListarDepartamentos();
 
-            Console.WriteLine("Informe o Id do departamento que será alterado:");
+            Console.WriteLine("\nInforme o Id do departamento que será alterado:");
             var retorno = Console.ReadLine();
 
             return retorno;
