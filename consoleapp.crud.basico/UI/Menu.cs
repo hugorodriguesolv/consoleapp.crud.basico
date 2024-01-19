@@ -179,9 +179,15 @@ namespace consoleapp.crud.basico.UI
 
                 var pessoaUc = new PessoaUC();
                 pessoaUc.AlterarDadosPessoas(pessoa);
+
+                Console.WriteLine("Dados pessoais alterados com sucesso!");
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("Os dados informados não são válidos!");
+
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Pressione qualer tecla para continuar");
                 Console.ReadKey();
             }
