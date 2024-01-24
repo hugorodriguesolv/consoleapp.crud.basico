@@ -1,6 +1,5 @@
 using consoleapp.crud.basico.Entities;
 using consoleapp.crud.basico.UseCases;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace consoleapp.crud.basico.UI
@@ -153,22 +152,24 @@ namespace consoleapp.crud.basico.UI
 
         private void CabecalhoAlterarDadosPessoais()
         {
-            Console.WriteLine("*****     ALTERAR DADOS DE PESSOA      *****\n");
+            Console.WriteLine("*****ALTERAR DADOS DE PESSOA*****\n");
         }
 
         private void AlterarDadosPessoais()
         {
             Console.Clear();
-
             CabecalhoAlterarDadosPessoais();
+            ListarTodasPessoas();
 
             var idPessoaInput = int.MinValue;
             var nomePessoaInput = string.Empty;
             var idDepartamentoPessoaInput = int.MinValue;
 
+            var listaPessoas = new PessoaUC().ListarTodasPessoas();
+
             var entradasValidas =
                 int.TryParse(ObterIdPessoaAlterarcao(), out idPessoaInput)
-                && NomePessoaValido(ObterNomePessoaAlterarcao(), out nomePessoaInput)
+                && NomePessoaValido(ObterNomePessoaAlterarcao(idPessoaInput, listaPessoas), out nomePessoaInput)
                 && int.TryParse(ObterIdDepartamentoPessoaAlterarcao(), out idDepartamentoPessoaInput);
 
             if (entradasValidas)
@@ -184,7 +185,8 @@ namespace consoleapp.crud.basico.UI
 
                 Console.Clear();
                 CabecalhoAlterarDadosPessoais();
-                
+                ListarTodasPessoas();
+
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("\nDados pessoais alterados com sucesso!");
             }
@@ -193,24 +195,26 @@ namespace consoleapp.crud.basico.UI
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("Os dados informados não são válidos!");
                 Console.ForegroundColor = ConsoleColor.White;
-
             }
         }
 
         private string ObterIdPessoaAlterarcao()
         {
-            Console.WriteLine();
-            ListarTodasPessoas();
-
             Console.WriteLine("\nInforme o Id da pessoa que será alterado:");
             var retorno = Console.ReadLine();
 
             return retorno;
         }
 
-        private string ObterNomePessoaAlterarcao()
+        private string ObterNomePessoaAlterarcao(int idPessoa, IList<PessoaDepartamento> pessoas)
         {
             Console.WriteLine("\nInforme o novo Nome da pessoa que será alterado:");
+
+            var nome = pessoas
+                .FirstOrDefault(pes => pes.Id == idPessoa)
+                ?.NomePessoa;
+
+            Console.WriteLine($"Nome atual: {nome}");
             var retorno = Console.ReadLine();
 
             return retorno;
@@ -218,18 +222,14 @@ namespace consoleapp.crud.basico.UI
 
         private string ObterIdDepartamentoPessoaAlterarcao()
         {
-            Console.Clear();
-            
-            CabecalhoAlterarDadosPessoais();
             Console.WriteLine();
             ListarDepartamentos();
 
-            Console.WriteLine("\nInforme o Id do departamento que será alterado:");
+            Console.WriteLine("\n\nInforme o Id do departamento que será alterado:");
             var retorno = Console.ReadLine();
 
             return retorno;
         }
-
 
         private bool NomePessoaValido(string nomePessoa, out string nomePessoaValidado)
         {
