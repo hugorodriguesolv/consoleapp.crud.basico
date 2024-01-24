@@ -1,4 +1,4 @@
-﻿using consoleapp.crud.basico.Entities;
+using consoleapp.crud.basico.Entities;
 using consoleapp.crud.basico.UseCases;
 using System.Text;
 
@@ -11,7 +11,7 @@ namespace consoleapp.crud.basico.UI
             Sair = 0,
             ListarTodasPessoas = 1,
             ListarPessoasPorEstado = 2,
-            AlterarDadosPessoa = 3,
+            AlterarDadosPessoais = 3,
             InserirNovaPessoa = 4,
             ApagarPessoa = 5
         }
@@ -48,8 +48,8 @@ namespace consoleapp.crud.basico.UI
                         ListarPessoasPorEstado();
                         break;
 
-                    case OpcoesMenu.AlterarDadosPessoa:
-                        AlterarDadosPessoa();
+                    case OpcoesMenu.AlterarDadosPessoais:
+                        AlterarDadosPessoais();
                         break;
 
                     case OpcoesMenu.InserirNovaPessoa:
@@ -150,20 +150,96 @@ namespace consoleapp.crud.basico.UI
             }
         }
 
-        private void AlterarDadosPessoa()
+        private void CabecalhoAlterarDadosPessoais()
         {
-            Console.Write("Informe o nome da Pessoa: ");
-            string nomePessoa = Console.ReadLine();
+            Console.WriteLine("*****ALTERAR DADOS DE PESSOA*****\n");
+        }
 
-            Console.Write("Infome novo departamento: ");
-            string novoDepartamento = Console.ReadLine();
+        private void AlterarDadosPessoais()
+        {
+            Console.Clear();
+            CabecalhoAlterarDadosPessoais();
+            ListarTodasPessoas();
 
-            var pessoa = new Pessoa();
-            pessoa.Nome = nomePessoa;
-            pessoa.IdDepartamento = int.Parse(novoDepartamento);
+            var idPessoaInput = int.MinValue;
+            var nomePessoaInput = string.Empty;
+            var idDepartamentoPessoaInput = int.MinValue;
 
-            var pessoaUc = new PessoaUC();
-            //pessoaUc.AlterarDadosPessoais(0);
+            var listaPessoas = new PessoaUC().ListarTodasPessoas();
+
+            var entradasValidas =
+                int.TryParse(ObterIdPessoaAlterarcao(), out idPessoaInput)
+                && NomePessoaValido(ObterNomePessoaAlterarcao(idPessoaInput, listaPessoas), out nomePessoaInput)
+                && int.TryParse(ObterIdDepartamentoPessoaAlterarcao(), out idDepartamentoPessoaInput);
+
+            if (entradasValidas)
+            {
+                var pessoa = new Pessoa();
+
+                pessoa.Id = idPessoaInput;
+                pessoa.Nome = nomePessoaInput;
+                pessoa.IdDepartamento = idDepartamentoPessoaInput;
+
+                var pessoaUc = new PessoaUC();
+                pessoaUc.AlterarDadosPessoas(pessoa);
+
+                Console.Clear();
+                CabecalhoAlterarDadosPessoais();
+                ListarTodasPessoas();
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\nDados pessoais alterados com sucesso!");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("Os dados informados não são válidos!");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+        }
+
+        private string ObterIdPessoaAlterarcao()
+        {
+            Console.WriteLine("\nInforme o Id da pessoa que será alterado:");
+            var retorno = Console.ReadLine();
+
+            return retorno;
+        }
+
+        private string ObterNomePessoaAlterarcao(int idPessoa, IList<PessoaDepartamento> pessoas)
+        {
+            Console.WriteLine("\nInforme o novo Nome da pessoa que será alterado:");
+
+            var nome = pessoas
+                .FirstOrDefault(pes => pes.Id == idPessoa)
+                ?.NomePessoa;
+
+            Console.WriteLine($"Nome atual: {nome}");
+            var retorno = Console.ReadLine();
+
+            return retorno;
+        }
+
+        private string ObterIdDepartamentoPessoaAlterarcao()
+        {
+            Console.WriteLine();
+            ListarDepartamentos();
+
+            Console.WriteLine("\n\nInforme o Id do departamento que será alterado:");
+            var retorno = Console.ReadLine();
+
+            return retorno;
+        }
+
+        private bool NomePessoaValido(string nomePessoa, out string nomePessoaValidado)
+        {
+            var retorno = true;
+            retorno = !string.IsNullOrWhiteSpace(nomePessoa)
+                && !int.TryParse(nomePessoa, out _);
+
+            nomePessoaValidado = nomePessoa;
+
+            return retorno;
         }
 
         private void InserirNovaPessoa()
@@ -192,11 +268,11 @@ namespace consoleapp.crud.basico.UI
                 Console.WriteLine($"\nNome da pessoa informado foi: {nomeNovaPessoa}");
                 Console.WriteLine("\nInforme o Id do departamento dessa pessoa: ");
                 string infoIdDepNovaPessoa = Console.ReadLine();
-                
+
                 var entradasValidas =
-                    int.TryParse(infoIdDepNovaPessoa , out int idDepartamentoNovaPessoa)
-                    && !string.IsNullOrEmpty(nomeNovaPessoa);
-                
+                    int.TryParse(infoIdDepNovaPessoa, out int idDepartamentoNovaPessoa)
+                    && !string.IsNullOrWhiteSpace(nomeNovaPessoa);
+
                 if (entradasValidas)
                 {
                     var departamentoUC = new DepartamentoUC();
@@ -239,7 +315,7 @@ namespace consoleapp.crud.basico.UI
             Console.WriteLine("Escolha o Id da pessoa que deseja exluir: ");
             string inputIdPessoa = Console.ReadLine();
 
-            var entradasValidas = 
+            var entradasValidas =
                 int.TryParse(inputIdPessoa, out int IdPessoaInformado);
 
             if (entradasValidas)
@@ -268,9 +344,7 @@ namespace consoleapp.crud.basico.UI
             else
             {
                 Console.WriteLine("Entrada inválida!");
-                
             }
-
         }
     }
 }

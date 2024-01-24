@@ -9,6 +9,7 @@ namespace consoleapp.crud.basico.Entities
     public class Departamento : Entity
     {
         public string? Nome { get; set; }
+        public string? IdCidade { get; set; }
 
     }
 }

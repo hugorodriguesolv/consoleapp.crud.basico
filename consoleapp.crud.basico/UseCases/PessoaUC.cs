@@ -43,13 +43,6 @@ namespace consoleapp.crud.basico.UseCases
 
         }
 
-        public void AlterarDadosPessoais(Pessoa pessoa)
-        {
-            var pessoaRepository = new PessoaRepository();
-            //pessoaRepository.AlterarDadosPessoais(idPessoa);
-
-        }
-
         public bool ApagarPessoa(int idPessoaInformado)
         {
             var pessoaRepository = new PessoaRepository();
@@ -59,5 +52,12 @@ namespace consoleapp.crud.basico.UseCases
 
         }
 
+        public bool AlterarDadosPessoas(Pessoa pessoa)
+        {
+            var atualizar = new PessoaRepository();
+            bool atualizou = atualizar.AtualizarPessoas(pessoa) > 0 ? true : false;
+
+            return atualizou;
+        }
     }
 }

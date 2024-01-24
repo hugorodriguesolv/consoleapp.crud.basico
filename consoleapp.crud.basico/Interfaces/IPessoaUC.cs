@@ -4,7 +4,7 @@ namespace consoleapp.crud.basico.Interfaces
 {
     public interface IPessoaUC
     {
-        IList<PessoaDepartamento> ListarTodasPessoasDepartamento();
+        IList<PessoaDepartamento> ListarTodasPessoas();
 
         IList<PessoaEstado> ListarPessoasPorEstado(int idEstado);
     }

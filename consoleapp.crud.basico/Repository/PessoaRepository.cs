@@ -84,18 +84,7 @@ namespace consoleapp.crud.basico.Repository
             }
 
             return retorno;
-        }
-
-        public void AlterarDadosPessoais(int idPessoa)
-        {
-
-            var sql = new StringBuilder();
-            sql.AppendLine("UPDATE ");
-            sql.AppendLine("SET Nome = @Nome,");
-            sql.AppendLine("    IdDepartamento = (SELECT Id FROM Departamento WHERE Nome = @NovoDepartamento)");
-            sql.AppendLine("WHERE Id = @IdPessoa");
-        }
-        
+        }        
         public void InserirPessoa (Pessoa pessoa)
         {
             var sql = new StringBuilder();
@@ -131,5 +120,35 @@ namespace consoleapp.crud.basico.Repository
 
             return linhasAfetadas;
         }
+
+        public int AtualizarPessoas(Pessoa pessoa)
+        {
+            var sql = new StringBuilder();
+            sql.AppendLine("UPDATE ");
+            sql.AppendLine("    Pessoa ");
+            sql.AppendLine("SET ");
+            sql.AppendLine("    Nome = @NovoNome, ");
+            sql.AppendLine("    IdDepartamento = @NovoDepartamento ");
+            sql.AppendLine("WHERE    ");
+            sql.AppendLine("    Id = @Id ");
+
+            _command = _connection.CreateCommand();
+            _command.CommandText = sql.ToString();
+
+            _command.Parameters.Add("@NovoNome", System.Data.SqlDbType.VarChar).Value = pessoa.Nome;
+            _command.Parameters["@NovoNome"].Value = pessoa.Nome;
+
+            _command.Parameters.Add("@NovoDepartamento", System.Data.SqlDbType.Int);
+            _command.Parameters["@NovoDepartamento"].Value = pessoa.IdDepartamento;
+
+            _command.Parameters.Add("@Id", System.Data.SqlDbType.Int);
+            _command.Parameters["@Id"].Value = pessoa.Id;
+
+            var linhasAfetadas = _command.ExecuteNonQuery();
+
+            return linhasAfetadas;
+
+        }
+
     }
 }
