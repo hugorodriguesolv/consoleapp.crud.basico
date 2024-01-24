@@ -4,11 +4,18 @@ go
 
 if not exists(select 1 from sys.databases where name = 'geekjobs')
 begin
-
 	create database geekjobs
+end
 
-	use geekjobs
 
+go
+
+use geekjobs
+
+go
+
+if not exists (select name from sys.tables where name = 'Estado')
+begin
 
 	create table dbo.Estado (
 		Id int identity primary key not null,

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace consoleapp.crud.basico.Entities
 {
-    public class Departamento : Entity
+    public class DepartamentoCidade : Entity
     {
-        public string? Nome { get; set; }
-        public string? IdCidade { get; set; }
+        public string NomeDepartamento { get; set; }
+        public string NomeCidade { get; set; }
 
     }
 }
