@@ -11,7 +11,7 @@ namespace consoleapp.crud.basico.Repository
 
         public DepartamentoRepository()
         {
-            _connection = new SqlConnection("Data Source=localhost, 1522;Initial Catalog=geekjobs;Integrated Security=False;User ID=sa;Password=AulaGeekJobs1;TrustServerCertificate=true");
+            _connection = new SqlConnection("Data Source=localhost, 1523;Initial Catalog=geekjobs;Integrated Security=False;User ID=sa;Password=AulaGeekJobs1;TrustServerCertificate=true");
             _connection.Open();
         }
 
