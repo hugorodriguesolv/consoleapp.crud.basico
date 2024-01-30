@@ -117,11 +117,4 @@ namespace consoleapp.crud.basico.UI
         ExclusaoItem,
         OrdenacaoItens
     }
-
-    public class ValorGrid()
-    {
-        public string NomePropriedade { get; set; }
-
-        public string Valor { get; set; }
-    }
 }
