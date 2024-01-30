@@ -8,7 +8,6 @@ namespace consoleapp.crud.basico.UI
     {
         private IList<T> _dadosGrid;
         private string[] _cabecalho;
-        private List<ValorGrid> _valoresGrid = new List<ValorGrid>();
 
         public event EventHandler<DataGridEventArgs<T>> DataGridAlterada;
 
