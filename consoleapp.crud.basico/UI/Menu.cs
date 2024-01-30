@@ -1,5 +1,6 @@
 using consoleapp.crud.basico.Entities;
 using consoleapp.crud.basico.UseCases;
+using System;
 using System.Text;
 
 namespace consoleapp.crud.basico.UI
@@ -99,17 +100,21 @@ namespace consoleapp.crud.basico.UI
             var pessoaUC = new PessoaUC();
             var pessoas = pessoaUC.ListarTodasPessoasDepartamento();
 
-            // Criação da Grid
-            var fechamentoTabela = $"| {new string('¯', 8)} | {new string('¯', 25)} | {new string('¯', 25)} |";
+            var grid = new DataGrid<PessoaDepartamento>(pessoas);
+            grid.DataGridAlterada += DataGridAlterada;
 
-            Console.WriteLine(fechamentoTabela);
-            Console.WriteLine($"| {"Id".PadRight(8)} | {"Pessoa".PadRight(25)} | {"Departamento".PadRight(25)} |");
-            Console.WriteLine(fechamentoTabela);
+            grid.AdicionarLinha(new PessoaDepartamento() { Id = 0, NomePessoa = "Comédia das boas", NomeDepartamento = "Muído Grande" });
+            grid.DataBinding();
+        }
 
-            foreach (var pessoa in pessoas)
-            {
-                Console.WriteLine($"| {pessoa.Id.ToString().PadRight(8)} | {pessoa.NomePessoa.PadRight(25)} | {pessoa.NomeDepartamento.PadRight(25)} |");
-            }
+        private void DataGridAlterada(object? sender, DataGridEventArgs<PessoaDepartamento> e)
+        {
+            Console.Clear();
+
+            Console.WriteLine("O evento ocorreu e altera");
+            Console.WriteLine($"Linha: {e.Linha}");
+            Console.WriteLine($"Pessoa: {e.ItemAlterado.NomePessoa}");
+            Console.WriteLine($"Tipo Evento: {e.TipoEvento}");
         }
 
         private void ListarPessoasPorEstado()
