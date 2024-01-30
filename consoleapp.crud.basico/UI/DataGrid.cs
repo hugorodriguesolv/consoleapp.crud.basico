@@ -1,4 +1,8 @@
-﻿namespace consoleapp.crud.basico.UI
+﻿using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+
+namespace consoleapp.crud.basico.UI
 {
     public class DataGrid<T> where T : class
     {
@@ -40,7 +44,7 @@
         public void DataBinding()
         {
             //ObterDadosCabecalho();
-            MontarCabecalho();
+            MontarDadosGrid();
         }
 
         private void ObterDadosCabecalho()

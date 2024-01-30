@@ -101,9 +101,6 @@ namespace consoleapp.crud.basico.UI
             var pessoas = pessoaUC.ListarTodasPessoasDepartamento();
 
             var grid = new DataGrid<PessoaDepartamento>(pessoas);
-            grid.DataGridAlterada += DataGridAlterada;
-
-            grid.AdicionarLinha(new PessoaDepartamento() { Id = 0, NomePessoa = "Comédia das boas", NomeDepartamento = "Muído Grande" });
             grid.DataBinding();
         }
 
@@ -125,6 +122,11 @@ namespace consoleapp.crud.basico.UI
             var IdEstadoInformado = int.Parse(Console.ReadLine());
 
             var pessoasEstado = pessoaUC.ListarPessoasPorEstado(IdEstadoInformado);
+
+
+            var grid = new DataGrid<PessoaEstado>(pessoasEstado);
+            grid.DataBinding();
+
 
             var fechamentoTabela = $"| {new string('¯', 25)} | {new string('¯', 25)} | {new string('¯', 15)} |";
 
