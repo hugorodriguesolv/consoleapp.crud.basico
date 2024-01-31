@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
+using System.Text;
 
 namespace consoleapp.crud.basico.UI
 {
@@ -8,6 +9,7 @@ namespace consoleapp.crud.basico.UI
     {
         private IList<T> _dadosGrid;
         private string[] _cabecalho;
+        private string[,] _corpoGrid;
 
         public event EventHandler<DataGridEventArgs<T>> DataGridAlterada;
 
@@ -42,19 +44,8 @@ namespace consoleapp.crud.basico.UI
 
         public void DataBinding()
         {
-            //ObterDadosCabecalho();
             MontarDadosGrid();
-        }
-
-        private void ObterDadosCabecalho()
-        {
-            if (_cabecalho == null)
-            {
-                _cabecalho = typeof(T)?.GetProperties()
-                    .Select(prp => prp.Name)
-                    .OrderBy(prp => prp[0])
-                    .ToArray();
-            }
+            MontarLayoutGrid();
         }
 
         private void MontarDadosGrid()
@@ -63,11 +54,11 @@ namespace consoleapp.crud.basico.UI
             var quantidadeColunas = _dadosGrid[0].GetType().GetProperties().Count();
             var propriedades = _dadosGrid[0].GetType().GetProperties();
 
-            var array = new string[quantidadeLinhas, quantidadeColunas];
+            _corpoGrid = new string[quantidadeLinhas, quantidadeColunas];
 
             for (int col = 0; col < quantidadeColunas; col++)
             {
-                array[0, col] = propriedades[col].Name;
+                _corpoGrid[0, col] = propriedades[col].Name;
             }
 
             var lin = 1;
@@ -79,12 +70,40 @@ namespace consoleapp.crud.basico.UI
 
                 foreach (var propriedade in propriedades)
                 {
-                    array[lin, col] = propriedade.GetValue(item).ToString();
+                    _corpoGrid[lin, col] = propriedade.GetValue(item).ToString();
                     col++;
                 }
 
                 lin++;
             }
+        }
+
+        public void MontarLayoutGrid()
+        {
+
+            var linhaGrid = new StringBuilder();
+            var gridMontada = string.Empty;
+
+
+            for (int linha = 1; linha < _corpoGrid.Length; linha++)
+            {
+                var maxColuna = 0;
+
+                for (int coluna = 0; coluna <= _corpoGrid.Rank; coluna++)
+                {
+                    var linhaAux = $"|  {_corpoGrid.GetValue(linha, coluna)}  ";
+                    maxColuna = maxColuna > linhaAux.Length ? maxColuna : linhaAux.Length;
+
+                    linhaGrid.Append(linhaAux);
+                }
+
+                linhaGrid.AppendLine("|");
+
+            }
+
+
+            Console.ReadKey();
+
         }
 
         protected virtual void OnDataGridAlterado(DataGridTipoEvento tipoEvento, int linha, T item)
