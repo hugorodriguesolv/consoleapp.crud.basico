@@ -10,6 +10,7 @@ namespace consoleapp.crud.basico.UI
         private IList<T> _dadosGrid;
         private string[] _cabecalho;
         private string[,] _corpoGrid;
+        private int[] _maxColunas;
 
         public event EventHandler<DataGridEventArgs<T>> DataGridAlterada;
 
@@ -54,11 +55,14 @@ namespace consoleapp.crud.basico.UI
             var quantidadeColunas = _dadosGrid[0].GetType().GetProperties().Count();
             var propriedades = _dadosGrid[0].GetType().GetProperties();
 
+            _maxColunas = new int[quantidadeColunas];
             _corpoGrid = new string[quantidadeLinhas, quantidadeColunas];
 
             for (int col = 0; col < quantidadeColunas; col++)
             {
-                _corpoGrid[0, col] = propriedades[col].Name;
+                var nomePropriedade = propriedades[col].Name;
+                _corpoGrid[0, col] = nomePropriedade;
+                _maxColunas[col] = _maxColunas[col] > nomePropriedade.Length ? _maxColunas[col] : nomePropriedade.Length;
             }
 
             var lin = 1;
@@ -70,7 +74,10 @@ namespace consoleapp.crud.basico.UI
 
                 foreach (var propriedade in propriedades)
                 {
-                    _corpoGrid[lin, col] = propriedade.GetValue(item).ToString();
+                    var valorPropriedade = propriedade?.GetValue(item)?.ToString();
+                    _corpoGrid[lin, col] = valorPropriedade;
+                    _maxColunas[col] = _maxColunas[col] > valorPropriedade.Length ? _maxColunas[col] : valorPropriedade.Length;
+
                     col++;
                 }
 
@@ -80,30 +87,37 @@ namespace consoleapp.crud.basico.UI
 
         public void MontarLayoutGrid()
         {
-
             var linhaGrid = new StringBuilder();
-            var gridMontada = string.Empty;
+            var qtdLinhas = _corpoGrid.GetLength(0);
+            var qtdColunas = _corpoGrid.GetLength(1);
 
-
-            for (int linha = 1; linha < _corpoGrid.Length; linha++)
+            for (int lin = 0; lin < qtdLinhas; lin++)
             {
-                var maxColuna = 0;
-
-                for (int coluna = 0; coluna <= _corpoGrid.Rank; coluna++)
+                for (int col = 0; col < qtdColunas; col++)
                 {
-                    var linhaAux = $"|  {_corpoGrid.GetValue(linha, coluna)}  ";
-                    maxColuna = maxColuna > linhaAux.Length ? maxColuna : linhaAux.Length;
+                    var valorPropriedade = _corpoGrid?.GetValue(lin, col)?.ToString();
+                    var linhaAux = string.Empty;
+                    var tamanho = 0;
+
+                    if (lin > 0)
+                    {
+                        tamanho = _maxColunas[col] % 2 != 0 ? _maxColunas[col] + 1 : _maxColunas[col];
+                        linhaAux = $"|{valorPropriedade?.PadRight(tamanho)}";
+                    }
+                    else
+                    {
+                        tamanho = _maxColunas[col] - valorPropriedade.Length;
+                        var numEspacosVazios = tamanho % 2 == 0 ? tamanho / 2 : (tamanho + 1) / 2;
+                        linhaAux = $"|{new string(' ', numEspacosVazios)}{valorPropriedade}{new string(' ', numEspacosVazios)}";
+                    }
 
                     linhaGrid.Append(linhaAux);
                 }
 
                 linhaGrid.AppendLine("|");
-
             }
 
-
-            Console.ReadKey();
-
+            Console.WriteLine(linhaGrid.ToString());
         }
 
         protected virtual void OnDataGridAlterado(DataGridTipoEvento tipoEvento, int linha, T item)
