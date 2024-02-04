@@ -254,6 +254,10 @@ namespace consoleapp.crud.basico.UI
                         pessoaUC.InserirPessoa(idDepartamentoNovaPessoa, nomeNovaPessoa);
 
                         Console.Clear();
+                        var grid = new DataGrid<PessoaDepartamento>(pessoaUC.ListarTodasPessoas());
+
+                        grid.AdicionarLinha();
+
                         Console.WriteLine($"{nomeNovaPessoa} foi inserido com sucesso! \n");
                         ListarTodasPessoas();
                     }
