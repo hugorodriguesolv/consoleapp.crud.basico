@@ -123,7 +123,7 @@ namespace consoleapp.crud.basico.UI
         protected virtual void OnDataGridAlterado(DataGridTipoEvento tipoEvento, int linha, T item)
         {
             DataGridAlterada?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
-            // ItemAdicionado?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
+            ItemAdicionado?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
         }
     }
 
