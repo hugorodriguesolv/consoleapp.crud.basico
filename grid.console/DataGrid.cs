@@ -32,7 +32,7 @@ namespace Grid.Console
         public void AdicionarLinha(T item)
         {
             _dadosGrid?.Add(item);
-            OnDataGridAlterado(DataGridTipoEvento.AdicaoItem, _dadosGrid.Count(), item);
+            AddItemEvent(_dadosGrid.Count(), item);
         }
 
         public void RemoverLinha(int numeroLinha)
@@ -120,7 +120,11 @@ namespace Grid.Console
         protected virtual void OnDataGridAlterado(DataGridTipoEvento tipoEvento, int linha, T item)
         {
             DataGridAlterada?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
-            ItemAdicionado?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
+        }
+
+        protected virtual void AddItemEvent(int linha, T item)
+        {
+            ItemAdicionado?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.AdicaoItem, linha, item));
         }
     }
 }

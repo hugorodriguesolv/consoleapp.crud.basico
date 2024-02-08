@@ -241,6 +241,8 @@ namespace consoleapp.crud.basico.UI
                     int.TryParse(infoIdDepNovaPessoa, out int idDepartamentoNovaPessoa)
                     && !string.IsNullOrWhiteSpace(nomeNovaPessoa);
 
+                var grid = new DataGrid<PessoaDepartamento>(pessoaUC.ListarTodasPessoas());
+
                 if (entradasValidas)
                 {
                     var departamentoUC = new DepartamentoUC();
@@ -254,12 +256,16 @@ namespace consoleapp.crud.basico.UI
                         pessoaUC.InserirPessoa(idDepartamentoNovaPessoa, nomeNovaPessoa);
 
                         Console.Clear();
-                        var pessoas = pessoaUC.ListarTodasPessoas();
-                        var grid = new DataGrid<PessoaDepartamento>(pessoas);
-
-                        grid.DataBinding();
+                        var pessoaDpt = new PessoaDepartamento();
+                        {
+                            Id = pessoaExiste.Id;
+                            NomePessoa = pessoa.NomePessoa;
+                            NomeDepartamento = pessoa.NomeDepartamento;
+                        };
+                        grid.AdicionarLinha(pessoaDpt);
 
                         Console.WriteLine($"{nomeNovaPessoa} foi inserido com sucesso! \n");
+
                         ListarTodasPessoas();
                     }
                     else
