@@ -29,12 +29,6 @@ namespace Grid.Console
             _cabecalho = args;
         }
 
-        public void AdicionarLinha(T item)
-        {
-            _dadosGrid?.Add(item);
-            AddItemEvent(_dadosGrid.Count(), item);
-        }
-
         public void RemoverLinha(int numeroLinha)
         {
             _dadosGrid.RemoveAt(numeroLinha);
@@ -122,9 +116,11 @@ namespace Grid.Console
             DataGridAlterada?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
         }
 
-        protected virtual void AddItemEvent(int linha, T item)
+        public virtual void AddItemEvent(T item)
         {
-            ItemAdicionado?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.AdicaoItem, linha, item));
+            _dadosGrid?.Add(item);
+            var lines = _dadosGrid.Count();
+            ItemAdicionado?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.AdicaoItem, lines, item));
         }
     }
 }
