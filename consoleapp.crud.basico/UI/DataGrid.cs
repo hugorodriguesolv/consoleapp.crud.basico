@@ -118,13 +118,12 @@ namespace consoleapp.crud.basico.UI
         protected virtual void OnDataGridAlterado(DataGridTipoEvento tipoEvento, int linha, T item)
         {
             DataGridAlterada?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
-            ItemExcluido?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
         }
         
         public virtual void RemoveLineEvent(T item)
         {
-            var line =_dadosGrid.RemoveAt(item);
-            ItemAdicionado?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.ExclusaoItem, line, item));
+            var line =_dadosGrid.Count() - 1;
+            ItemExcluido?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.ExclusaoItem, line, item));
         }
     }
 
