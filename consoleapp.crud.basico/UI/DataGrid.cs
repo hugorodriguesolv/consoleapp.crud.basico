@@ -120,9 +120,9 @@ namespace consoleapp.crud.basico.UI
             DataGridAlterada?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
         }
         
-        public virtual void RemoveLineEvent(T item)
+        public virtual void RemoveLine(int line)
         {
-            var line =_dadosGrid.Count() - 1;
+            var item =_dadosGrid.ElementAt<T>(line);
             ItemExcluido?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.ExclusaoItem, line, item));
         }
     }
