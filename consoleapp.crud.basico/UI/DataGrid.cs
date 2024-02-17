@@ -123,6 +123,7 @@ namespace consoleapp.crud.basico.UI
         public virtual void RemoveLine(int line)
         {
             var item =_dadosGrid.ElementAt<T>(line);
+            _dadosGrid.RemoveAt(line);
             ItemExcluido?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.ExclusaoItem, line, item));
         }
     }
