@@ -1,6 +1,9 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System.Text;
 
-namespace Grid.Console
+namespace consoleapp.crud.basico.UI
 {
     public class DataGrid<T> where T : class
     {
@@ -27,6 +30,12 @@ namespace Grid.Console
         public void DefinirCabecalho(string[] args)
         {
             _cabecalho = args;
+        }
+
+        public void AdicionarLinha(T item)
+        {
+            _dadosGrid?.Add(item);
+            OnDataGridAlterado(DataGridTipoEvento.AdicaoItem, _dadosGrid.Count(), item);
         }
 
         public void RemoverLinha(int numeroLinha)
@@ -108,19 +117,37 @@ namespace Grid.Console
                 linhaGrid.AppendLine("|");
             }
 
-            System.Console.WriteLine(linhaGrid.ToString());
+            Console.WriteLine(linhaGrid.ToString());
         }
 
         protected virtual void OnDataGridAlterado(DataGridTipoEvento tipoEvento, int linha, T item)
         {
             DataGridAlterada?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
+            ItemAdicionado?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
         }
+    }
 
-        public virtual void AddItemEvent(T item)
+    public class DataGridEventArgs<T> : EventArgs
+    {
+        public DataGridTipoEvento TipoEvento { get; }
+
+        public int Linha { get; }
+
+        public T ItemAlterado { get; }
+
+        public DataGridEventArgs(DataGridTipoEvento tipoEvento, int linha, T itemAlterado)
         {
-            _dadosGrid?.Add(item);
-            var lines = _dadosGrid.Count();
-            ItemAdicionado?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.AdicaoItem, lines, item));
+            TipoEvento = tipoEvento;
+            Linha = linha;
+            ItemAlterado = itemAlterado;
         }
+    }
+
+    public enum DataGridTipoEvento
+    {
+        CargaDados,
+        AdicaoItem,
+        ExclusaoItem,
+        OrdenacaoItens
     }
 }
