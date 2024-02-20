@@ -1,5 +1,6 @@
 using consoleapp.crud.basico.Entities;
 using consoleapp.crud.basico.UseCases;
+using Grid.Console;
 using System.Text;
 
 namespace consoleapp.crud.basico.UI
@@ -96,58 +97,25 @@ namespace consoleapp.crud.basico.UI
 
         private void ListarTodasPessoas()
         {
-            var pessoaUC = new PessoaUC();
-            var pessoas = pessoaUC.ListarTodasPessoasDepartamento();
-
-            // Criação da Grid
-            var fechamentoTabela = $"| {new string('¯', 8)} | {new string('¯', 25)} | {new string('¯', 25)} |";
-
-            Console.WriteLine(fechamentoTabela);
-            Console.WriteLine($"| {"Id".PadRight(8)} | {"Pessoa".PadRight(25)} | {"Departamento".PadRight(25)} |");
-            Console.WriteLine(fechamentoTabela);
-
-            foreach (var pessoa in pessoas)
-            {
-                Console.WriteLine($"| {pessoa.Id.ToString().PadRight(8)} | {pessoa.NomePessoa.PadRight(25)} | {pessoa.NomeDepartamento.PadRight(25)} |");
-            }
+            var pessoas = new PessoaUC().ListarTodasPessoasDepartamento();
+            new DataGrid<PessoaDepartamento>(pessoas).DataBinding();
         }
 
         private void ListarPessoasPorEstado()
         {
-            var pessoaUC = new PessoaUC();
-
             Console.WriteLine("Informe um Id de um estado:");
             var IdEstadoInformado = int.Parse(Console.ReadLine());
 
-            var pessoasEstado = pessoaUC.ListarPessoasPorEstado(IdEstadoInformado);
-
-            var fechamentoTabela = $"| {new string('¯', 25)} | {new string('¯', 25)} | {new string('¯', 15)} |";
-
-            Console.WriteLine(fechamentoTabela);
-            Console.WriteLine($"| {"Pessoa".PadRight(25)} | {"Departamento".PadRight(25)} | {"Estado".PadRight(15)} |");
-            Console.WriteLine(fechamentoTabela);
-
-            foreach (var pessoa in pessoasEstado)
-            {
-                Console.WriteLine($"| {pessoa.NomePessoa.PadRight(25)} | {pessoa.NomeDepartamento.PadRight(25)} | {pessoa.NomeEstado.PadRight(15)} |");
-            }
+            var pessoasEstado = new PessoaUC().ListarPessoasPorEstado(IdEstadoInformado);
+            new DataGrid<PessoaEstado>(pessoasEstado).DataBinding();
         }
 
         private void ListarDepartamentos()
         {
-            var departamentoUC = new DepartamentoUC();
-            var departamentos = departamentoUC.ListarTodosDepartamentos();
+            var departamentos = new DepartamentoUC().ListarTodosDepartamentos();
 
-            var fechamentoTabela = $"| {new string('¯', 8)} | {new string('¯', 25)} | {new string('¯', 25)} |";
-
-            Console.WriteLine(fechamentoTabela);
-            Console.WriteLine($"| {"Id".PadRight(8)} | {"Departamento".PadRight(25)} | {"Cidade".PadRight(25)} |");
-            Console.WriteLine(fechamentoTabela);
-
-            foreach (var departamento in departamentos)
-            {
-                Console.WriteLine($"| {departamento.Id.ToString().PadRight(8)} | {departamento.NomeDepartamento.PadRight(25)} | {departamento.NomeCidade.PadRight(25)} |");
-            }
+            var grid = new DataGrid<DepartamentoCidade>(departamentos);
+            grid.DataBinding();
         }
 
         private void CabecalhoAlterarDadosPessoais()
@@ -286,6 +254,11 @@ namespace consoleapp.crud.basico.UI
                         pessoaUC.InserirPessoa(idDepartamentoNovaPessoa, nomeNovaPessoa);
 
                         Console.Clear();
+                        var pessoas = pessoaUC.ListarTodasPessoas();
+                        var grid = new DataGrid<PessoaDepartamento>(pessoas);
+
+                        grid.DataBinding();
+
                         Console.WriteLine($"{nomeNovaPessoa} foi inserido com sucesso! \n");
                         ListarTodasPessoas();
                     }
