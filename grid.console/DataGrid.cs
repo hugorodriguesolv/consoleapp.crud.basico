@@ -38,11 +38,6 @@ namespace consoleapp.crud.basico.UI
             OnDataGridAlterado(DataGridTipoEvento.AdicaoItem, _dadosGrid.Count(), item);
         }
 
-        public void RemoverLinha(int numeroLinha)
-        {
-            _dadosGrid.RemoveAt(numeroLinha);
-        }
-
         public void DataBinding()
         {
             MontarDadosGrid();
@@ -124,6 +119,13 @@ namespace consoleapp.crud.basico.UI
         {
             DataGridAlterada?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
             ItemAdicionado?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
+        }
+
+        public virtual void RemoveLine(int line)
+        {
+            var item =_dadosGrid.ElementAt<T>(line);
+            _dadosGrid.RemoveAt(line);
+            ItemExcluido?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.ExclusaoItem, line, item));
         }
     }
 
