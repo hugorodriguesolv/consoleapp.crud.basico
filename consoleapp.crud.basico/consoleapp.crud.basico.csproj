@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Grid.Console\Grid.Console.csproj" />
+    <ProjectReference Include="..\Grid.Console\Grid.Console.csproj" />
   </ItemGroup>
 
 </Project>
