@@ -1,6 +1,9 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Collections.Generic;
+using System.Collections;
+using System.Text;
 
-namespace Grid.Console
+namespace consoleapp.crud.basico.UI
 {
     public class DataGrid<T> where T : class
     {
@@ -33,11 +36,6 @@ namespace Grid.Console
         {
             _dadosGrid?.Add(item);
             OnDataGridAlterado(DataGridTipoEvento.AdicaoItem, _dadosGrid.Count(), item);
-        }
-
-        public void RemoverLinha(int numeroLinha)
-        {
-            _dadosGrid.RemoveAt(numeroLinha);
         }
 
         public void DataBinding()
@@ -114,7 +112,7 @@ namespace Grid.Console
                 linhaGrid.AppendLine("|");
             }
 
-            System.Console.WriteLine(linhaGrid.ToString());
+            Console.WriteLine(linhaGrid.ToString());
         }
 
         protected virtual void OnDataGridAlterado(DataGridTipoEvento tipoEvento, int linha, T item)
@@ -122,5 +120,36 @@ namespace Grid.Console
             DataGridAlterada?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
             ItemAdicionado?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
         }
+
+        public virtual void RemoveLine(int line)
+        {
+            var item =_dadosGrid.ElementAt<T>(line);
+            _dadosGrid.RemoveAt(line);
+            ItemExcluido?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.ExclusaoItem, line, item));
+        }
+    }
+
+    public class DataGridEventArgs<T> : EventArgs
+    {
+        public DataGridTipoEvento TipoEvento { get; }
+
+        public int Linha { get; }
+
+        public T ItemAlterado { get; }
+
+        public DataGridEventArgs(DataGridTipoEvento tipoEvento, int linha, T itemAlterado)
+        {
+            TipoEvento = tipoEvento;
+            Linha = linha;
+            ItemAlterado = itemAlterado;
+        }
+    }
+
+    public enum DataGridTipoEvento
+    {
+        CargaDados,
+        AdicaoItem,
+        ExclusaoItem,
+        OrdenacaoItens
     }
 }
