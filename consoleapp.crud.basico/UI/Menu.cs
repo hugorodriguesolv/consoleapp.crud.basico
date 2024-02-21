@@ -256,13 +256,13 @@ namespace consoleapp.crud.basico.UI
                         pessoaUC.InserirPessoa(idDepartamentoNovaPessoa, nomeNovaPessoa);
 
                         Console.Clear();
-                        var pessoaDpt = new PessoaDepartamento();
-                        {
-                            Id = pessoaExiste.Id;
-                            NomePessoa = pessoa.NomePessoa;
-                            NomeDepartamento = pessoa.NomeDepartamento;
-                        };
-                        grid.AdicionarLinha(pessoaDpt);
+                        ////var pessoaDpt = new PessoaDepartamento();
+                        ////{
+                        ////    //Id = pessoaExiste.Id;
+                        ////    //NomePessoa = pessoa.NomePessoa;
+                        ////    //NomeDepartamento = pessoa.NomeDepartamento;
+                        ////};
+                        //grid.AdicionarLinha(pessoaDpt);
 
                         Console.WriteLine($"{nomeNovaPessoa} foi inserido com sucesso! \n");
 
