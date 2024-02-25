@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-using System.Collections;
-using System.Text;
+﻿using System.Reflection;
 
 namespace consoleapp.crud.basico.UI
 {
@@ -40,79 +37,55 @@ namespace consoleapp.crud.basico.UI
 
         public void DataBinding()
         {
-            MontarDadosGrid();
             MontarLayoutGrid();
         }
 
-        private void MontarDadosGrid()
+        private static Dictionary<string, int> GetMaxPropertyLengths(IEnumerable<T> items)
         {
-            var quantidadeLinhas = _dadosGrid.Count() + 1;
-            var quantidadeColunas = _dadosGrid[0].GetType().GetProperties().Count();
-            var propriedades = _dadosGrid[0].GetType().GetProperties();
+            Dictionary<string, int> maxPropertyLengths = new Dictionary<string, int>();
 
-            _maxColunas = new int[quantidadeColunas];
-            _corpoGrid = new string[quantidadeLinhas, quantidadeColunas];
+            PropertyInfo[] properties = typeof(T).GetProperties();
 
-            for (int col = 0; col < quantidadeColunas; col++)
+            foreach (var property in properties)
             {
-                var nomePropriedade = propriedades[col].Name;
-                _corpoGrid[0, col] = nomePropriedade;
-                _maxColunas[col] = _maxColunas[col] > nomePropriedade.Length ? _maxColunas[col] : nomePropriedade.Length;
+                int maxLength = items
+                    .Select(item => property.GetValue(item)?.ToString()?.Length ?? 0)
+                    .Max();
+
+                maxPropertyLengths.Add(property.Name, maxLength);
             }
 
-            var lin = 1;
-
-            foreach (var item in _dadosGrid)
-            {
-                var tipoItem = typeof(T).GetType();
-                var col = 0;
-
-                foreach (var propriedade in propriedades)
-                {
-                    var valorPropriedade = propriedade?.GetValue(item)?.ToString();
-                    _corpoGrid[lin, col] = valorPropriedade;
-                    _maxColunas[col] = _maxColunas[col] > valorPropriedade.Length ? _maxColunas[col] : valorPropriedade.Length;
-
-                    col++;
-                }
-
-                lin++;
-            }
+            return maxPropertyLengths;
         }
 
         public void MontarLayoutGrid()
         {
-            var linhaGrid = new StringBuilder();
-            var qtdLinhas = _corpoGrid.GetLength(0);
-            var qtdColunas = _corpoGrid.GetLength(1);
+            var propriedadesTamanho = GetMaxPropertyLengths(_dadosGrid);
 
-            for (int lin = 0; lin < qtdLinhas; lin++)
+            foreach (var prop in propriedadesTamanho)
             {
-                for (int col = 0; col < qtdColunas; col++)
-                {
-                    var valorPropriedade = _corpoGrid?.GetValue(lin, col)?.ToString();
-                    var linhaAux = string.Empty;
-                    var tamanho = 0;
+                var tamanho = prop.Value - prop.Key.Length;
+                var numEspacosVazios = tamanho % 2 == 0 ? tamanho / 2 : (tamanho + 1) / 2;
 
-                    if (lin > 0)
-                    {
-                        tamanho = _maxColunas[col] % 2 != 0 ? _maxColunas[col] + 1 : _maxColunas[col];
-                        linhaAux = $"|{valorPropriedade?.PadRight(tamanho)}";
-                    }
-                    else
-                    {
-                        tamanho = _maxColunas[col] - valorPropriedade.Length;
-                        var numEspacosVazios = tamanho % 2 == 0 ? tamanho / 2 : (tamanho + 1) / 2;
-                        linhaAux = $"|{new string(' ', numEspacosVazios)}{valorPropriedade}{new string(' ', numEspacosVazios)}";
-                    }
-
-                    linhaGrid.Append(linhaAux);
-                }
-
-                linhaGrid.AppendLine("|");
+                Console.Write($"|{new string(' ', numEspacosVazios)}{prop.Key}{new string(' ', numEspacosVazios)}");
             }
 
-            Console.WriteLine(linhaGrid.ToString());
+            Console.Write("| \n");
+
+            foreach (var itemGrid in _dadosGrid)
+            {
+                var propriedades = typeof(T).GetProperties();
+
+                foreach (var prop in propriedades)
+                {
+                    var maxLen = propriedadesTamanho[prop.Name];
+
+                    var tamanho = maxLen % 2 != 0 ? maxLen + 1 : maxLen;
+                    Console.Write($"|{prop.GetValue(itemGrid).ToString()?.PadRight(tamanho)}");
+                }
+
+                Console.Write("| \n");
+            }
         }
 
         protected virtual void OnDataGridAlterado(DataGridTipoEvento tipoEvento, int linha, T item)
@@ -123,7 +96,7 @@ namespace consoleapp.crud.basico.UI
 
         public virtual void RemoveLine(int line)
         {
-            var item =_dadosGrid.ElementAt<T>(line);
+            var item = _dadosGrid.ElementAt<T>(line);
             _dadosGrid.RemoveAt(line);
             ItemExcluido?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.ExclusaoItem, line, item));
         }
