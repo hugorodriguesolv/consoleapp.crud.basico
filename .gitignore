@@ -34,7 +34,7 @@ bld/
 [Ll]ogs/
 
 #Pasta de configurações do Docker
-/docker/sql-server/dados
+docker/sql-server/dados
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
