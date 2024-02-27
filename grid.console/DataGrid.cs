@@ -37,7 +37,7 @@ namespace consoleapp.crud.basico.UI
 
         public void DataBinding()
         {
-            MontarLayoutGrid();
+            Paginar();
         }
 
         private static Dictionary<string, int> GetMaxPropertyLengths(IEnumerable<T> items)
@@ -58,9 +58,19 @@ namespace consoleapp.crud.basico.UI
             return maxPropertyLengths;
         }
 
-        public void MontarLayoutGrid()
+        private void Paginar()
         {
-            var propriedadesTamanho = GetMaxPropertyLengths(_dadosGrid);
+            var tamanhoPagina = 15;
+            var currentPage = 3;
+            var startIndex = currentPage * tamanhoPagina;
+            IList<T> pagina = _dadosGrid.Skip(startIndex).Take(tamanhoPagina).ToList();
+
+            MontarLayoutGrid(pagina);
+        }
+
+        public void MontarLayoutGrid(IList<T> pagina)
+        {
+            var propriedadesTamanho = GetMaxPropertyLengths(pagina);
 
             foreach (var prop in propriedadesTamanho)
             {
@@ -72,7 +82,7 @@ namespace consoleapp.crud.basico.UI
 
             Console.Write("| \n");
 
-            foreach (var itemGrid in _dadosGrid)
+            foreach (var itemGrid in pagina)
             {
                 var propriedades = typeof(T).GetProperties();
 
