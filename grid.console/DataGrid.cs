@@ -37,7 +37,30 @@ namespace consoleapp.crud.basico.UI
 
         public void DataBinding()
         {
-            Paginar();
+            var paginaAtual = 1;
+
+            while (true)
+            {
+                Console.Clear();
+                Paginar(5, paginaAtual);
+
+                var tecla = Console.ReadKey(true);
+
+                switch (tecla.Key)
+                {
+                    case ConsoleKey.LeftArrow:
+                        if (paginaAtual > 1)
+                            --paginaAtual;
+                        break;
+
+                    case ConsoleKey.RightArrow:
+                        ++paginaAtual;
+                        break;
+
+                    case ConsoleKey.Escape:
+                        return;
+                }
+            }
         }
 
         private static Dictionary<string, int> GetMaxPropertyLengths(IEnumerable<T> items)
@@ -48,8 +71,12 @@ namespace consoleapp.crud.basico.UI
 
             foreach (var property in properties)
             {
+                var cabecalho = items
+                    .Select(cab => property.Name.ToString().Length);
+
                 int maxLength = items
                     .Select(item => property.GetValue(item)?.ToString()?.Length ?? 0)
+                    .Union(cabecalho)
                     .Max();
 
                 maxPropertyLengths.Add(property.Name, maxLength);
@@ -58,14 +85,14 @@ namespace consoleapp.crud.basico.UI
             return maxPropertyLengths;
         }
 
-        private void Paginar()
+        private void Paginar(int tamanhoPagina, int paginaAtual)
         {
-            var tamanhoPagina = 15;
-            var currentPage = 3;
-            var startIndex = currentPage * tamanhoPagina;
+            var startIndex = --paginaAtual * tamanhoPagina;
             IList<T> pagina = _dadosGrid.Skip(startIndex).Take(tamanhoPagina).ToList();
 
             MontarLayoutGrid(pagina);
+
+            Console.WriteLine($"Página {++paginaAtual} de 9");
         }
 
         public void MontarLayoutGrid(IList<T> pagina)
