@@ -38,11 +38,24 @@ namespace consoleapp.crud.basico.UI
         public void DataBinding()
         {
             var paginaAtual = 1;
+            var tamanhoPagina = 10;
 
+            Paginar(tamanhoPagina, paginaAtual);
+        }
+
+        private void Paginar(int tamanhoPagina, int paginaAtual)
+        {
             while (true)
             {
                 Console.Clear();
-                Paginar(5, paginaAtual);
+
+                var startIndex = --paginaAtual * tamanhoPagina;
+                IList<T> pagina = _dadosGrid.Skip(startIndex).Take(tamanhoPagina).ToList();
+                var totalPaginas = Math.Ceiling((double)_dadosGrid.Count / tamanhoPagina);
+
+                MontarLayoutGrid(pagina);
+
+                Console.WriteLine($"Página de {++paginaAtual} até {totalPaginas}");
 
                 var tecla = Console.ReadKey(true);
 
@@ -54,7 +67,8 @@ namespace consoleapp.crud.basico.UI
                         break;
 
                     case ConsoleKey.RightArrow:
-                        ++paginaAtual;
+                        if (paginaAtual <= totalPaginas)
+                            ++paginaAtual;
                         break;
 
                     case ConsoleKey.Escape:
@@ -63,39 +77,7 @@ namespace consoleapp.crud.basico.UI
             }
         }
 
-        private static Dictionary<string, int> GetMaxPropertyLengths(IEnumerable<T> items)
-        {
-            Dictionary<string, int> maxPropertyLengths = new Dictionary<string, int>();
-
-            PropertyInfo[] properties = typeof(T).GetProperties();
-
-            foreach (var property in properties)
-            {
-                var cabecalho = items
-                    .Select(cab => property.Name.ToString().Length);
-
-                int maxLength = items
-                    .Select(item => property.GetValue(item)?.ToString()?.Length ?? 0)
-                    .Union(cabecalho)
-                    .Max();
-
-                maxPropertyLengths.Add(property.Name, maxLength);
-            }
-
-            return maxPropertyLengths;
-        }
-
-        private void Paginar(int tamanhoPagina, int paginaAtual)
-        {
-            var startIndex = --paginaAtual * tamanhoPagina;
-            IList<T> pagina = _dadosGrid.Skip(startIndex).Take(tamanhoPagina).ToList();
-
-            MontarLayoutGrid(pagina);
-
-            Console.WriteLine($"Página {++paginaAtual} de 9");
-        }
-
-        public void MontarLayoutGrid(IList<T> pagina)
+        private void MontarLayoutGrid(IList<T> pagina)
         {
             var propriedadesTamanho = GetMaxPropertyLengths(pagina);
 
@@ -123,6 +105,28 @@ namespace consoleapp.crud.basico.UI
 
                 Console.Write("| \n");
             }
+        }
+
+        private static Dictionary<string, int> GetMaxPropertyLengths(IEnumerable<T> items)
+        {
+            Dictionary<string, int> maxPropertyLengths = new Dictionary<string, int>();
+
+            PropertyInfo[] properties = typeof(T).GetProperties();
+
+            foreach (var property in properties)
+            {
+                var cabecalho = items
+                    .Select(cab => property.Name.ToString().Length);
+
+                var maxLength = items
+                    .Select(item => property.GetValue(item)?.ToString()?.Length ?? 0)
+                    .Union(cabecalho)
+                    .Max();
+
+                maxPropertyLengths.Add(property.Name, maxLength);
+            }
+
+            return maxPropertyLengths;
         }
 
         protected virtual void OnDataGridAlterado(DataGridTipoEvento tipoEvento, int linha, T item)

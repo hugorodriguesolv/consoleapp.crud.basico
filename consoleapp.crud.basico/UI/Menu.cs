@@ -72,9 +72,6 @@ namespace consoleapp.crud.basico.UI
                         break;
                 }
 
-                Console.WriteLine();
-                Console.WriteLine("Pressione qualquer tecla para continuar.");
-                Console.ReadLine();
             } while (exibirMenu);
         }
 
@@ -98,7 +95,9 @@ namespace consoleapp.crud.basico.UI
         private void ListarTodasPessoas()
         {
             var pessoas = new PessoaUC().ListarTodasPessoasDepartamento();
-            new DataGrid<PessoaDepartamento>(pessoas).DataBinding();
+            
+            var grid = new DataGrid<PessoaDepartamento>(pessoas);
+            grid.DataBinding();
         }
 
         private void ListarPessoasPorEstado()
