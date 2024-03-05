@@ -2,12 +2,48 @@
 
 namespace consoleapp.crud.basico.UI
 {
+    /// <summary>
+    ///
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class DataGrid<T> where T : class
     {
         private IList<T> _dadosGrid;
         private string[] _cabecalho;
         private string[,] _corpoGrid;
         private int[] _maxColunas;
+
+        private int _quantidadeItensPagina = 5;
+        private int _paginaInicial = 1;
+
+        private bool _paginar = false;
+
+        /// <summary>
+        /// Quantidade de itens por página
+        /// </summary>
+        public int QuantidadeItensPagina
+        {
+            get { return _quantidadeItensPagina; }
+            set { _quantidadeItensPagina = value; }
+        }
+
+        /// <summary>
+        /// Página que a grid irá exibir primeiro
+        /// </summary>
+        public int PaginaInicial
+        {
+            get { return _paginaInicial; }
+            set { _paginaInicial = value; }
+        }
+
+        /// <summary>
+        /// Opção para que de forma automática a grid seja paginada
+        /// </summary>
+        public bool Paginar
+        {
+            get { return _paginar; }
+            set { _paginar = value; }
+        }
 
         public event EventHandler<DataGridEventArgs<T>> DataGridAlterada;
 
@@ -37,18 +73,16 @@ namespace consoleapp.crud.basico.UI
 
         public void DataBinding()
         {
-            var paginaAtual = 1;
-            var tamanhoPagina = 10;
-
-            Paginar(tamanhoPagina, paginaAtual);
+            if (_paginar)
+                PaginarGrid(_quantidadeItensPagina, _paginaInicial);
+            else
+                MontarLayoutGrid(_dadosGrid);
         }
 
-        private void Paginar(int tamanhoPagina, int paginaAtual)
+        private void PaginarGrid(int tamanhoPagina, int paginaAtual)
         {
             while (true)
             {
-                Console.Clear();
-
                 var startIndex = --paginaAtual * tamanhoPagina;
                 IList<T> pagina = _dadosGrid.Skip(startIndex).Take(tamanhoPagina).ToList();
                 var totalPaginas = Math.Ceiling((double)_dadosGrid.Count / tamanhoPagina);
@@ -79,6 +113,8 @@ namespace consoleapp.crud.basico.UI
 
         private void MontarLayoutGrid(IList<T> pagina)
         {
+            Console.Clear();
+
             var propriedadesTamanho = GetMaxPropertyLengths(pagina);
 
             foreach (var prop in propriedadesTamanho)

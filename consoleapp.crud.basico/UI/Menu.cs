@@ -94,9 +94,19 @@ namespace consoleapp.crud.basico.UI
 
         private void ListarTodasPessoas()
         {
-            var pessoas = new PessoaUC().ListarTodasPessoasDepartamento();
+            var pessoas = new PessoaUC()
+                .ListarTodasPessoasDepartamento();
             
             var grid = new DataGrid<PessoaDepartamento>(pessoas);
+
+            // Config do componente
+            grid.Paginar = true;
+            grid.QuantidadeItensPagina = 9;
+            grid.PaginaInicial = 2;
+
+
+
+
             grid.DataBinding();
         }
 
