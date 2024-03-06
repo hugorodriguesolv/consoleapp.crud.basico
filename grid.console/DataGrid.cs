@@ -8,8 +8,8 @@ namespace consoleapp.crud.basico.UI
     /// <typeparam name="T"></typeparam>
     public class DataGrid<T> where T : class
     {
+        private IList<T> _dados = new List<T>();
         private IList<T> _dadosGrid = new List<T>();
-        private IList<T> _dadosGridOrdenada = new List<T>();
 
         private string[] _cabecalho;
         private string[,] _corpoGrid;
@@ -41,9 +41,9 @@ namespace consoleapp.crud.basico.UI
         public DataGrid()
         { }
 
-        public DataGrid(IList<T> dadosGrid) => _dadosGrid = dadosGrid;
+        public DataGrid(IList<T> dadosGrid) => _dados = dadosGrid;
 
-        public void CarregarDados(IList<T> dadosGrid) => _dadosGrid = dadosGrid;
+        public void CarregarDados(IList<T> dadosGrid) => _dados = dadosGrid;
 
         public void DefinirCabecalho(string[] args)
         {
@@ -52,8 +52,8 @@ namespace consoleapp.crud.basico.UI
 
         public void AdicionarLinha(T item)
         {
-            _dadosGrid?.Add(item);
-            OnDataGridAlterado(DataGridTipoEvento.AdicaoItem, _dadosGrid.Count(), item);
+            _dados?.Add(item);
+            OnDataGridAlterado(DataGridTipoEvento.AdicaoItem, _dados.Count(), item);
         }
 
         private void PaginarGrid(IList<T> listaItens, int tamanhoPagina, int paginaAtual)
@@ -90,24 +90,17 @@ namespace consoleapp.crud.basico.UI
 
         public void OrdenarCampos<Tkey>(Func<T, Tkey> campos)
         {
-            _dadosGridOrdenada = _dadosGrid
+            _dadosGrid = _dados
                 .OrderBy(campos)
                 .ToList();
         }
 
         public void DataBinding()
         {
-            IList<T> lista;
-
-            if (_dadosGridOrdenada != null)
-                lista = _dadosGridOrdenada;
-            else
-                lista = _dadosGrid;
-
             if (Paginar)
-                PaginarGrid(lista, QuantidadeItensPagina, PaginaInicial);
+                PaginarGrid(_dadosGrid, QuantidadeItensPagina, PaginaInicial);
             else
-                MontarLayoutGrid(lista);
+                MontarLayoutGrid(_dadosGrid);
         }
 
         private void MontarLayoutGrid(IList<T> pagina)
@@ -172,8 +165,8 @@ namespace consoleapp.crud.basico.UI
 
         public virtual void RemoveLine(int line)
         {
-            var item = _dadosGrid.ElementAt<T>(line);
-            _dadosGrid.RemoveAt(line);
+            var item = _dados.ElementAt<T>(line);
+            _dados.RemoveAt(line);
             ItemExcluido?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.ExclusaoItem, line, item));
         }
     }
