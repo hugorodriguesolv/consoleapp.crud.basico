@@ -71,7 +71,6 @@ namespace consoleapp.crud.basico.UI
                         Console.ForegroundColor = ConsoleColor.White;
                         break;
                 }
-
             } while (exibirMenu);
         }
 
@@ -96,7 +95,7 @@ namespace consoleapp.crud.basico.UI
         {
             var pessoas = new PessoaUC()
                 .ListarTodasPessoasDepartamento();
-            
+
             var grid = new DataGrid<PessoaDepartamento>(pessoas);
 
             // Config do componente
@@ -104,8 +103,7 @@ namespace consoleapp.crud.basico.UI
             grid.QuantidadeItensPagina = 9;
             grid.PaginaInicial = 2;
 
-
-
+            grid.OrdenarCampos(x => x.NomeDepartamento);
 
             grid.DataBinding();
         }
@@ -116,7 +114,11 @@ namespace consoleapp.crud.basico.UI
             var IdEstadoInformado = int.Parse(Console.ReadLine());
 
             var pessoasEstado = new PessoaUC().ListarPessoasPorEstado(IdEstadoInformado);
-            new DataGrid<PessoaEstado>(pessoasEstado).DataBinding();
+            
+            var grid = new DataGrid<PessoaEstado>(pessoasEstado);
+            grid.OrdenarCampos(cmp => cmp.NomeEstado);
+            grid.DataBinding();
+
         }
 
         private void ListarDepartamentos()
