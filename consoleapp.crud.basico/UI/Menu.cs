@@ -101,9 +101,9 @@ namespace consoleapp.crud.basico.UI
             // Config do componente
             grid.Paginar = true;
             grid.QuantidadeItensPagina = 9;
-            grid.PaginaInicial = 2;
+            grid.PaginaInicial = 1;
 
-            grid.OrdenarCampos(x => x.NomeDepartamento);
+            //grid.OrdenarCampos(x => x.NomeDepartamento);
 
             grid.DataBinding();
         }

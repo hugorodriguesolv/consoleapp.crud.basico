@@ -56,36 +56,15 @@ namespace consoleapp.crud.basico.UI
             OnDataGridAlterado(DataGridTipoEvento.AdicaoItem, _dados.Count(), item);
         }
 
-        private void PaginarGrid(IList<T> listaItens, int tamanhoPagina, int paginaAtual)
+        private void PaginarGrid(int tamanhoPagina, int paginaAtual)
         {
-            while (true)
-            {
-                var startIndex = --paginaAtual * tamanhoPagina;
-                IList<T> pagina = listaItens.Skip(startIndex).Take(tamanhoPagina).ToList();
-                var totalPaginas = Math.Ceiling((double)listaItens.Count / tamanhoPagina);
+            var startIndex = --paginaAtual * tamanhoPagina;
+            _dadosGrid = _dados.Skip(startIndex).Take(tamanhoPagina).ToList();
+            var totalPaginas = Math.Ceiling((double)_dados.Count / tamanhoPagina);
 
-                MontarLayoutGrid(pagina);
+            MontarLayoutGrid(_dadosGrid);
 
-                Console.WriteLine($"Página de {++paginaAtual} até {totalPaginas}");
-
-                var tecla = Console.ReadKey(true);
-
-                switch (tecla.Key)
-                {
-                    case ConsoleKey.LeftArrow:
-                        if (paginaAtual > 1)
-                            --paginaAtual;
-                        break;
-
-                    case ConsoleKey.RightArrow:
-                        if (paginaAtual <= totalPaginas)
-                            ++paginaAtual;
-                        break;
-
-                    case ConsoleKey.Escape:
-                        return;
-                }
-            }
+            Console.WriteLine($"Página de {++paginaAtual} até {totalPaginas}");
         }
 
         public void OrdenarCampos<Tkey>(Func<T, Tkey> campos)
@@ -95,12 +74,57 @@ namespace consoleapp.crud.basico.UI
                 .ToList();
         }
 
+        private void OrdenarCampos(string nomeCampo)
+        {
+            var propriedade = typeof(T).GetProperty(nomeCampo);
+            Func<T, object> expression = x => propriedade.GetValue(x);
+
+            IList<T> dadosOrdenados = _dadosGrid.OrderBy(expression).ToList();
+            MontarLayoutGrid(dadosOrdenados);
+        }
+
         public void DataBinding()
         {
-            if (Paginar)
-                PaginarGrid(_dadosGrid, QuantidadeItensPagina, PaginaInicial);
-            else
-                MontarLayoutGrid(_dadosGrid);
+            var paginaAtual = PaginaInicial;
+            PaginarGrid(QuantidadeItensPagina, paginaAtual);
+
+            while (true)
+            {
+                var tecla = Console.ReadKey(true);
+
+                switch (tecla.Key)
+                {
+                    case ConsoleKey.PageDown:
+                        
+                        if (paginaAtual > 1)
+                        {
+                            --paginaAtual;
+                            PaginarGrid(QuantidadeItensPagina, paginaAtual);
+                        }
+
+                        break;
+
+                    case ConsoleKey.PageUp:
+                        ++paginaAtual;
+                        PaginarGrid(QuantidadeItensPagina, paginaAtual);
+                        break;
+
+                    case ConsoleKey.LeftArrow:
+                        OrdenarCampos("NomeDepartamento");
+                        break;
+
+                    case ConsoleKey.RightArrow:
+                        break;
+
+                    case ConsoleKey.Escape:
+                        return;
+                }
+            }
+
+            //if (Paginar)
+            //    PaginarGrid(_dadosGrid, QuantidadeItensPagina, PaginaInicial);
+            //else
+            //    MontarLayoutGrid(_dadosGrid);
         }
 
         private void MontarLayoutGrid(IList<T> pagina)
