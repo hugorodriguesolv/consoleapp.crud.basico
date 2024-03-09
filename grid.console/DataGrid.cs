@@ -67,19 +67,19 @@ namespace consoleapp.crud.basico.UI
             Console.WriteLine($"Página de {++paginaAtual} até {totalPaginas}");
         }
 
-        public void OrdenarCampos<Tkey>(Func<T, Tkey> campos)
+        public void OrdenarCampos<Tkey>(Func<T, Tkey> expressao)
         {
             _dadosGrid = _dados
-                .OrderBy(campos)
+                .OrderBy(expressao)
                 .ToList();
         }
 
         private void OrdenarCampos(string nomeCampo)
         {
             var propriedade = typeof(T).GetProperty(nomeCampo);
-            Func<T, object> expression = x => propriedade.GetValue(x);
+            Func<T, object> expressao = x => propriedade.GetValue(x);
 
-            IList<T> dadosOrdenados = _dadosGrid.OrderBy(expression).ToList();
+            IList<T> dadosOrdenados = _dadosGrid.OrderBy(expressao).ToList();
             MontarLayoutGrid(dadosOrdenados);
         }
 
