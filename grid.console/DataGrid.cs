@@ -61,9 +61,7 @@ namespace consoleapp.crud.basico.UI
             var startIndex = --paginaAtual * tamanhoPagina;
             _dadosGrid = _dados.Skip(startIndex).Take(tamanhoPagina).ToList();
             var totalPaginas = Math.Ceiling((double)_dados.Count / tamanhoPagina);
-
             MontarLayoutGrid(_dadosGrid);
-
             Console.WriteLine($"Página de {++paginaAtual} até {totalPaginas}");
         }
 
@@ -86,7 +84,11 @@ namespace consoleapp.crud.basico.UI
         public void DataBinding()
         {
             var paginaAtual = PaginaInicial;
-            PaginarGrid(QuantidadeItensPagina, paginaAtual);
+
+            if (Paginar)
+                PaginarGrid(QuantidadeItensPagina, paginaAtual);
+            else 
+                MontarLayoutGrid(_dados);
 
             while (true)
             {
@@ -95,7 +97,7 @@ namespace consoleapp.crud.basico.UI
                 switch (tecla.Key)
                 {
                     case ConsoleKey.PageDown:
-                        
+
                         if (paginaAtual > 1)
                         {
                             --paginaAtual;
@@ -114,6 +116,7 @@ namespace consoleapp.crud.basico.UI
                         break;
 
                     case ConsoleKey.RightArrow:
+                        OrdenarCampos("NomePessoa");
                         break;
 
                     case ConsoleKey.Escape:
