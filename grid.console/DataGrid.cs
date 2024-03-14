@@ -14,6 +14,7 @@ namespace consoleapp.crud.basico.UI
         private string[] _cabecalho;
         private string[,] _corpoGrid;
         private int[] _maxColunas;
+        private double _totalPaginas;
 
         /// <summary>
         /// Quantidade de itens por página
@@ -60,9 +61,9 @@ namespace consoleapp.crud.basico.UI
         {
             var startIndex = --paginaAtual * tamanhoPagina;
             _dadosGrid = _dados.Skip(startIndex).Take(tamanhoPagina).ToList();
-            var totalPaginas = Math.Ceiling((double)_dados.Count / tamanhoPagina);
+            _totalPaginas = Math.Ceiling((double)_dados.Count / tamanhoPagina);
             MontarLayoutGrid(_dadosGrid);
-            Console.WriteLine($"Página de {++paginaAtual} até {totalPaginas}");
+            Console.WriteLine($"Página de {++paginaAtual} até {_totalPaginas}");
         }
 
         public void OrdenarCampos<Tkey>(Func<T, Tkey> expressao)
@@ -110,8 +111,11 @@ namespace consoleapp.crud.basico.UI
                         break;
 
                     case ConsoleKey.PageUp:
-                        ++paginaAtual;
-                        PaginarGrid(QuantidadeItensPagina, paginaAtual);
+                        if (paginaAtual < _totalPaginas)
+                        {
+                            ++paginaAtual;
+                            PaginarGrid(QuantidadeItensPagina, paginaAtual);
+                        }
                         break;
 
                     case ConsoleKey.LeftArrow:
@@ -128,11 +132,6 @@ namespace consoleapp.crud.basico.UI
                         return;
                 }
             }
-
-            //if (Paginar)
-            //    PaginarGrid(_dadosGrid, QuantidadeItensPagina, PaginaInicial);
-            //else
-            //    MontarLayoutGrid(_dadosGrid);
         }
 
         private void MontarLayoutGrid(IList<T> pagina, int cursorIndiceCabecalho = 1)
