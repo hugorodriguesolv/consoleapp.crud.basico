@@ -15,6 +15,7 @@ namespace consoleapp.crud.basico.UI
         private string[,] _corpoGrid;
         private int[] _maxColunas;
         private double _totalPaginas;
+        private int _paginaAtual;
 
         /// <summary>
         /// Quantidade de itens por página
@@ -63,7 +64,7 @@ namespace consoleapp.crud.basico.UI
             _dadosGrid = _dados.Skip(startIndex).Take(tamanhoPagina).ToList();
             _totalPaginas = Math.Ceiling((double)_dados.Count / tamanhoPagina);
             MontarLayoutGrid(_dadosGrid);
-            Console.WriteLine($"Página de {++paginaAtual} até {_totalPaginas}");
+            _paginaAtual = ++paginaAtual;
         }
 
         public void OrdenarCampos<Tkey>(Func<T, Tkey> expressao)
@@ -87,11 +88,11 @@ namespace consoleapp.crud.basico.UI
 
         public void DataBinding()
         {
-            var paginaAtual = PaginaInicial;
+            _paginaAtual = PaginaInicial;
             var indexCursorCabcalho = 0;
 
             if (Paginar)
-                PaginarGrid(QuantidadeItensPagina, paginaAtual);
+                PaginarGrid(QuantidadeItensPagina, _paginaAtual);
             else
                 MontarLayoutGrid(_dados);
 
@@ -103,18 +104,18 @@ namespace consoleapp.crud.basico.UI
                 {
                     case ConsoleKey.PageDown:
 
-                        if (paginaAtual > 1)
+                        if (_paginaAtual > 1)
                         {
-                            --paginaAtual;
-                            PaginarGrid(QuantidadeItensPagina, paginaAtual);
+                            --_paginaAtual;
+                            PaginarGrid(QuantidadeItensPagina, _paginaAtual);
                         }
                         break;
 
                     case ConsoleKey.PageUp:
-                        if (paginaAtual < _totalPaginas)
+                        if (_paginaAtual < _totalPaginas)
                         {
-                            ++paginaAtual;
-                            PaginarGrid(QuantidadeItensPagina, paginaAtual);
+                            ++_paginaAtual;
+                            PaginarGrid(QuantidadeItensPagina, _paginaAtual);
                         }
                         break;
 
@@ -139,14 +140,14 @@ namespace consoleapp.crud.basico.UI
             Console.Clear();
 
             var propriedadesTamanho = GetMaxPropertyLengths(pagina);
-            var indexAux = 1;
+            var coluna = 1;
 
             foreach (var prop in propriedadesTamanho)
             {
                 var tamanho = prop.Value - prop.Key.Length;
                 var numEspacosVazios = tamanho % 2 == 0 ? tamanho / 2 : (tamanho + 1) / 2;
 
-                if (cursorIndiceCabecalho == indexAux)
+                if (cursorIndiceCabecalho == coluna)
                 {
                     Console.BackgroundColor = ConsoleColor.Blue;
                     Console.ForegroundColor = ConsoleColor.White;
@@ -158,10 +159,12 @@ namespace consoleapp.crud.basico.UI
 
                 Console.Write($"|{new string(' ', numEspacosVazios)}{prop.Key}{new string(' ', numEspacosVazios)}");
 
-                indexAux++;
+                coluna++;
             }
 
             Console.Write("| \n");
+
+            var linha = 1;
 
             foreach (var itemGrid in pagina)
             {
@@ -169,6 +172,12 @@ namespace consoleapp.crud.basico.UI
 
                 foreach (var prop in propriedades)
                 {
+                    if (linha % 2 == 0)
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkYellow;
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+
                     var maxLen = propriedadesTamanho[prop.Name];
 
                     var tamanho = maxLen % 2 != 0 ? maxLen + 1 : maxLen;
@@ -176,7 +185,12 @@ namespace consoleapp.crud.basico.UI
                 }
 
                 Console.Write("| \n");
+                Console.ResetColor();
+
+                ++linha;
             }
+
+            Console.WriteLine($"\n\rPágina de {_paginaAtual} até {_totalPaginas}");
         }
 
         private static Dictionary<string, int> GetMaxPropertyLengths(IEnumerable<T> items)

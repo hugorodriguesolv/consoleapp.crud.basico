@@ -99,9 +99,9 @@ namespace consoleapp.crud.basico.UI
             var grid = new DataGrid<PessoaDepartamento>(pessoas);
 
             // Config do componente
-            grid.Paginar = false;
-            grid.QuantidadeItensPagina = 5;
-            grid.PaginaInicial = 2;
+            grid.Paginar = true;
+            grid.QuantidadeItensPagina = 12;
+            grid.PaginaInicial = 1;
 
             grid.OrdenarCampos(x => x.NomePessoa);
 
