@@ -16,6 +16,8 @@ namespace consoleapp.crud.basico.UI
         private double _totalPaginas;
         private int _paginaAtual;
 
+        public string Titulo { get; set; }
+
         /// <summary>
         /// Quantidade de itens por página
         /// </summary>
@@ -95,14 +97,14 @@ namespace consoleapp.crud.basico.UI
                     break;
             }
 
-
             MontarLayoutGrid(_dadosGrid, cursorIndiceCabecalho);
         }
 
         public void DataBinding()
         {
             _paginaAtual = PaginaInicial;
-            var indexCursorCabcalho = 0;
+            var colunaCabecalho = 0;
+            var linhaGrid = 0;
             var qtdColunas = typeof(T).GetProperties().Length - 1;
 
             if (Paginar)
@@ -120,7 +122,7 @@ namespace consoleapp.crud.basico.UI
 
                         if (_paginaAtual > 1)
                         {
-                            indexCursorCabcalho = 0;
+                            colunaCabecalho = 0;
                             --_paginaAtual;
                             PaginarGrid(QuantidadeItensPagina, _paginaAtual);
                         }
@@ -136,29 +138,58 @@ namespace consoleapp.crud.basico.UI
                         break;
 
                     case ConsoleKey.LeftArrow:
-                        if (indexCursorCabcalho > 0)
+                        if (colunaCabecalho > 0)
                         {
-                            --indexCursorCabcalho;
-                            MontarLayoutGrid(_dadosGrid, indexCursorCabcalho);
+                            --colunaCabecalho;
+                            MontarLayoutGrid(_dadosGrid, colunaCabecalho);
                         }
                         break;
 
                     case ConsoleKey.RightArrow:
-                        if (indexCursorCabcalho < qtdColunas)
+                        if (colunaCabecalho < qtdColunas)
                         {
-                            ++indexCursorCabcalho;
-                            MontarLayoutGrid(_dadosGrid, indexCursorCabcalho);
+                            ++colunaCabecalho;
+                            MontarLayoutGrid(_dadosGrid, colunaCabecalho);
                         }
                         break;
 
                     case ConsoleKey.DownArrow:
-                        OrdenarCampos(indexCursorCabcalho, TipoOrdem.Decrecente);
+                        OrdenarCampos(colunaCabecalho, TipoOrdem.Decrecente);
                         break;
 
                     case ConsoleKey.UpArrow:
-                        OrdenarCampos(indexCursorCabcalho, TipoOrdem.Crescente);
+                        OrdenarCampos(colunaCabecalho, TipoOrdem.Crescente);
                         break;
 
+                    case ConsoleKey.Enter:
+
+                        var continuar = true;
+                        linhaGrid = 0;
+
+                        while (continuar)
+                        {
+                            tecla = Console.ReadKey(true);
+
+                            switch (tecla.Key)
+                            {
+                                case ConsoleKey.DownArrow:
+                                    ++linhaGrid;
+                                    MontarLayoutGrid(_dadosGrid, linhaSelecionada: linhaGrid);
+                                    break;
+
+                                case ConsoleKey.UpArrow:
+                                    --linhaGrid;
+                                    MontarLayoutGrid(_dadosGrid, linhaSelecionada: linhaGrid);
+                                    break;
+
+                                case ConsoleKey.Escape:
+                                    continuar = false;
+                                    PaginarGrid(QuantidadeItensPagina, _paginaAtual);
+                                    break;
+                            }
+                        }
+
+                        break;
 
                     case ConsoleKey.Escape:
                         return;
@@ -166,9 +197,10 @@ namespace consoleapp.crud.basico.UI
             }
         }
 
-        private void MontarLayoutGrid(IList<T> pagina, int cursorIndiceCabecalho = 0)
+        private void MontarLayoutGrid(IList<T> pagina, int colunaSelecionada = 0, int linhaSelecionada = 0)
         {
             Console.Clear();
+            Console.WriteLine($"{Titulo}\n\r");
 
             var propriedadesTamanho = GetMaxPropertyLengths(pagina);
             var coluna = 0;
@@ -178,7 +210,7 @@ namespace consoleapp.crud.basico.UI
                 var tamanho = prop.Value - prop.Key.Length;
                 var numEspacosVazios = tamanho % 2 == 0 ? tamanho / 2 : (tamanho + 1) / 2;
 
-                if (cursorIndiceCabecalho == coluna)
+                if (coluna == colunaSelecionada)
                 {
                     Console.BackgroundColor = ConsoleColor.Yellow;
                     Console.ForegroundColor = ConsoleColor.Black;
@@ -197,7 +229,6 @@ namespace consoleapp.crud.basico.UI
             Console.Write("| \n");
             Console.ResetColor();
 
-
             var linha = 1;
 
             foreach (var itemGrid in pagina)
@@ -209,6 +240,13 @@ namespace consoleapp.crud.basico.UI
                     if (linha % 2 == 0)
                     {
                         Console.BackgroundColor = ConsoleColor.DarkGray;
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+
+                    if (linha == linhaSelecionada)
+                    {
+                        Console.ResetColor();
+                        Console.BackgroundColor = ConsoleColor.DarkRed;
                         Console.ForegroundColor = ConsoleColor.White;
                     }
 
@@ -280,7 +318,7 @@ namespace consoleapp.crud.basico.UI
     }
 
     public enum TipoOrdem
-    { 
+    {
         Crescente,
         Decrecente
     }

@@ -103,7 +103,10 @@ namespace consoleapp.crud.basico.UI
             grid.QuantidadeItensPagina = 12;
             grid.PaginaInicial = 1;
 
-            grid.OrdenarCampos(x => x.NomePessoa);
+            grid.Titulo = "***************************************\n\r"+
+                          "      Listar todas as pessoas\n\r" +
+                          "***************************************\n\r"+
+                          "\n\rEscolha um funcionário da grid:";
 
             grid.DataBinding();
         }
@@ -116,7 +119,7 @@ namespace consoleapp.crud.basico.UI
             var pessoasEstado = new PessoaUC().ListarPessoasPorEstado(IdEstadoInformado);
             
             var grid = new DataGrid<PessoaEstado>(pessoasEstado);
-            grid.OrdenarCampos(cmp => cmp.NomeEstado);
+            grid.Paginar = false;
             grid.DataBinding();
 
         }
