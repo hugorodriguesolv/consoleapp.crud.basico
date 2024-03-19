@@ -5,6 +5,7 @@
         CargaDados,
         AdicaoItem,
         ExclusaoItem,
-        OrdenacaoItens
+        OrdenacaoItens,
+        SelecaoItem
     }
 }
