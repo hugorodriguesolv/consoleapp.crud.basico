@@ -71,10 +71,6 @@ namespace consoleapp.crud.basico.UI
                         Console.ForegroundColor = ConsoleColor.White;
                         break;
                 }
-
-                Console.WriteLine();
-                Console.WriteLine("Pressione qualquer tecla para continuar.");
-                Console.ReadLine();
             } while (exibirMenu);
         }
 
@@ -97,8 +93,22 @@ namespace consoleapp.crud.basico.UI
 
         private void ListarTodasPessoas()
         {
-            var pessoas = new PessoaUC().ListarTodasPessoasDepartamento();
-            new DataGrid<PessoaDepartamento>(pessoas).DataBinding();
+            var pessoas = new PessoaUC()
+                .ListarTodasPessoasDepartamento();
+
+            var grid = new DataGrid<PessoaDepartamento>(pessoas);
+
+            // Config do componente
+            grid.Paginar = true;
+            grid.QuantidadeItensPagina = 12;
+            grid.PaginaInicial = 1;
+
+            grid.Titulo = "***************************************\n\r"+
+                          "      Listar todas as pessoas\n\r" +
+                          "***************************************\n\r"+
+                          "\n\rEscolha um funcionário da grid:";
+
+            grid.DataBinding();
         }
 
         private void ListarPessoasPorEstado()
@@ -107,7 +117,11 @@ namespace consoleapp.crud.basico.UI
             var IdEstadoInformado = int.Parse(Console.ReadLine());
 
             var pessoasEstado = new PessoaUC().ListarPessoasPorEstado(IdEstadoInformado);
-            new DataGrid<PessoaEstado>(pessoasEstado).DataBinding();
+            
+            var grid = new DataGrid<PessoaEstado>(pessoasEstado);
+            grid.Paginar = false;
+            grid.DataBinding();
+
         }
 
         private void ListarDepartamentos()
