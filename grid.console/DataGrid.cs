@@ -164,7 +164,9 @@ namespace consoleapp.crud.basico.UI
                     case ConsoleKey.Enter:
 
                         var continuar = true;
-                        linhaGrid = 0;
+                        linhaGrid = 1;
+
+                        MontarLayoutGrid(_dadosGrid, -1, linhaGrid);
 
                         while (continuar)
                         {
@@ -173,13 +175,21 @@ namespace consoleapp.crud.basico.UI
                             switch (tecla.Key)
                             {
                                 case ConsoleKey.DownArrow:
-                                    ++linhaGrid;
-                                    MontarLayoutGrid(_dadosGrid, linhaSelecionada: linhaGrid);
+                                    
+                                    if (linhaGrid < QuantidadeItensPagina)
+                                    {
+                                        ++linhaGrid;
+                                        MontarLayoutGrid(_dadosGrid, -1, linhaGrid);
+                                    }
                                     break;
 
                                 case ConsoleKey.UpArrow:
-                                    --linhaGrid;
-                                    MontarLayoutGrid(_dadosGrid, linhaSelecionada: linhaGrid);
+
+                                    if (linhaGrid != 1)
+                                    {
+                                        --linhaGrid;
+                                        MontarLayoutGrid(_dadosGrid, -1, linhaGrid);
+                                    }
                                     break;
 
                                 case ConsoleKey.Escape:
@@ -246,7 +256,7 @@ namespace consoleapp.crud.basico.UI
                     if (linha == linhaSelecionada)
                     {
                         Console.ResetColor();
-                        Console.BackgroundColor = ConsoleColor.DarkRed;
+                        Console.BackgroundColor = ConsoleColor.DarkGreen;
                         Console.ForegroundColor = ConsoleColor.White;
                     }
 
