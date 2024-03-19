@@ -1,4 +1,4 @@
-﻿namespace Grid.Console
+﻿namespace Component.Grid
 {
     public enum DataGridTipoEvento
     {

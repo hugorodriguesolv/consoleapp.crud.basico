@@ -1,6 +1,6 @@
 using consoleapp.crud.basico.Entities;
 using consoleapp.crud.basico.UseCases;
-using Grid.Console;
+using Component.Grid;
 using System.Text;
 
 namespace consoleapp.crud.basico.UI
@@ -99,7 +99,7 @@ namespace consoleapp.crud.basico.UI
             var grid = new DataGrid<PessoaDepartamento>(pessoas);
 
             // Config do componente
-            grid.Paginar = true;
+            grid.PaginarItensGrid = true;
             grid.QuantidadeItensPagina = 12;
             grid.PaginaInicial = 1;
 
@@ -119,7 +119,7 @@ namespace consoleapp.crud.basico.UI
             var pessoasEstado = new PessoaUC().ListarPessoasPorEstado(IdEstadoInformado);
             
             var grid = new DataGrid<PessoaEstado>(pessoasEstado);
-            grid.Paginar = false;
+            grid.PaginarItensGrid = false;
             grid.DataBinding();
 
         }

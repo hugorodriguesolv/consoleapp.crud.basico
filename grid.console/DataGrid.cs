@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace consoleapp.crud.basico.UI
+namespace Component.Grid
 {
     /// <summary>
     ///
@@ -31,16 +31,20 @@ namespace consoleapp.crud.basico.UI
         /// <summary>
         /// Opção para que de forma automática a grid seja paginada
         /// </summary>
-        public bool Paginar { get; set; } = false;
+        public bool PaginarItensGrid { get; set; } = false;
 
-        public event EventHandler<DataGridEventArgs<T>> DataGridAlterada;
+        // Eventos
+        public event EventHandler<DataGridEventArgs<T>> Ordenar;
 
-        public event EventHandler<DataGridEventArgs<T>> ItemExcluido;
+        public event EventHandler<DataGridEventArgs<T>> ExcluirItem;
 
-        public event EventHandler<DataGridEventArgs<T>> ItemAdicionado;
+        public event EventHandler<DataGridEventArgs<T>> AdicionarItem;
 
-        public event EventHandler<DataGridEventArgs<T>> GridPaginada;
+        public event EventHandler<DataGridEventArgs<T>> Paginar;
 
+        public event EventHandler<DataGridEventArgs<T>> SelecionarItem;
+
+        // Construtor
         public DataGrid()
         { }
 
@@ -56,7 +60,6 @@ namespace consoleapp.crud.basico.UI
         public void AdicionarLinha(T item)
         {
             _dados?.Add(item);
-            OnDataGridAlterado(DataGridTipoEvento.AdicaoItem, _dados.Count(), item);
         }
 
         private void PaginarGrid(int tamanhoPagina, int paginaAtual)
@@ -107,7 +110,7 @@ namespace consoleapp.crud.basico.UI
             var linhaGrid = 0;
             var qtdColunas = typeof(T).GetProperties().Length - 1;
 
-            if (Paginar)
+            if (PaginarItensGrid)
                 PaginarGrid(QuantidadeItensPagina, _paginaAtual);
             else
                 MontarLayoutGrid(_dados);
@@ -175,7 +178,7 @@ namespace consoleapp.crud.basico.UI
                             switch (tecla.Key)
                             {
                                 case ConsoleKey.DownArrow:
-                                    
+
                                     if (linhaGrid < QuantidadeItensPagina)
                                     {
                                         ++linhaGrid;
@@ -296,48 +299,11 @@ namespace consoleapp.crud.basico.UI
 
             return maxPropertyLengths;
         }
-
-        protected virtual void OnDataGridAlterado(DataGridTipoEvento tipoEvento, int linha, T item)
-        {
-            DataGridAlterada?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
-            ItemAdicionado?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
-        }
-
-        public virtual void RemoveLine(int line)
-        {
-            var item = _dados.ElementAt<T>(line);
-            _dados.RemoveAt(line);
-            ItemExcluido?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.ExclusaoItem, line, item));
-        }
-    }
-
-    public class DataGridEventArgs<T> : EventArgs
-    {
-        public DataGridTipoEvento TipoEvento { get; }
-
-        public int Linha { get; }
-
-        public T ItemAlterado { get; }
-
-        public DataGridEventArgs(DataGridTipoEvento tipoEvento, int linha, T itemAlterado)
-        {
-            TipoEvento = tipoEvento;
-            Linha = linha;
-            ItemAlterado = itemAlterado;
-        }
     }
 
     public enum TipoOrdem
     {
         Crescente,
         Decrecente
-    }
-
-    public enum DataGridTipoEvento
-    {
-        CargaDados,
-        AdicaoItem,
-        ExclusaoItem,
-        OrdenacaoItens
     }
 }
