@@ -301,7 +301,7 @@ namespace Component.Grid
                 ++linha;
             }
 
-            Console.WriteLine($"\n\rPágina de {_paginaAtual} até {_totalPaginas}");
+            Console.WriteLine($"\n\rPágina de {_paginaAtual} até {_totalPaginas}\n\r");
         }
 
         private static Dictionary<string, int> GetMaxPropertyLengths(IEnumerable<T> items)
