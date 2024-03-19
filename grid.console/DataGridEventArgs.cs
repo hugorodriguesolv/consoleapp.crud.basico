@@ -14,13 +14,36 @@
     {
         public int Coluna { get; }
 
+        public TipoOrdem TipoOrdenacao { get; }
+
         public IList<T> itensOrdenados { get; }
 
-        public DataGridOrdernacaoEventArgs(int coluna, IList<T> itensOrdenados)
+        public DataGridOrdernacaoEventArgs(int coluna, TipoOrdem tipoOrdenacao, IList<T> itensOrdenados)
             : base(DataGridTipoEvento.OrdenacaoItens)
         {
             Coluna = coluna;
+            TipoOrdenacao = tipoOrdenacao;
             this.itensOrdenados = itensOrdenados;
+        }
+    }
+
+    public class DataGridPagincaoEventArgs<T> : DataGridEventArgs<T>
+    {
+        public int QuantidadePaginas { get; }
+
+        public int PaginaAtual { get; }
+
+        public int PaginaAnterior { get; }
+
+        public int QuantidadeItensPagina { get; }
+
+        public DataGridPagincaoEventArgs(int quantidadePaginas, int paginaAtual, int paginaAnterior, int quantidadeItensPagina)
+            : base(DataGridTipoEvento.Paginacao)
+        {
+            QuantidadePaginas = quantidadePaginas;
+            PaginaAtual = paginaAtual;
+            PaginaAnterior = paginaAnterior;
+            QuantidadeItensPagina = quantidadeItensPagina;
         }
     }
 
@@ -28,9 +51,9 @@
     {
         public T Item { get; }
 
-        public int Linha { get; }
+        public int? Linha { get; }
 
-        public DataGridItemAdicionadoEventArgs(T item, int linha)
+        public DataGridItemAdicionadoEventArgs(T item, int? linha)
             : base(DataGridTipoEvento.AdicaoItem)
         {
             Item = item;
@@ -53,10 +76,13 @@
     {
         public T Item { get; }
 
+        public int Linha { get; }
+
         public DataGridItemSelecionadoEventArgs(T item, int linha)
             : base(DataGridTipoEvento.SelecaoItem)
         {
             Item = item;
+            Linha = linha;
         }
     }
 }

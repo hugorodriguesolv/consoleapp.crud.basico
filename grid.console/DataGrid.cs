@@ -34,15 +34,15 @@ namespace Component.Grid
         public bool PaginarItensGrid { get; set; } = false;
 
         // Eventos
-        public event EventHandler<DataGridEventArgs<T>> Ordenar;
+        public event EventHandler<DataGridOrdernacaoEventArgs<T>> Ordenar;
 
-        public event EventHandler<DataGridEventArgs<T>> ExcluirItem;
+        public event EventHandler<DataGridItemExcluidoEventArgs<T>> ExcluirItem;
 
-        public event EventHandler<DataGridEventArgs<T>> AdicionarItem;
+        public event EventHandler<DataGridItemAdicionadoEventArgs<T>> AdicionarItem;
 
-        public event EventHandler<DataGridEventArgs<T>> Paginar;
+        public event EventHandler<DataGridPagincaoEventArgs<T>> Paginar;
 
-        public event EventHandler<DataGridEventArgs<T>> SelecionarItem;
+        public event EventHandler<DataGridItemSelecionadoEventArgs<T>> SelecionarItem;
 
         // Construtor
         public DataGrid()
@@ -60,6 +60,24 @@ namespace Component.Grid
         public void AdicionarLinha(T item)
         {
             _dados?.Add(item);
+
+            AdicionarItem?.Invoke(this, new DataGridItemAdicionadoEventArgs<T>(item, _dados?.Count));
+        }
+
+        public void ExcluirLinha(int linha)
+        {
+            var item = _dados[linha];
+            _dados.RemoveAt(linha);
+
+            ExcluirItem?.Invoke(this, new DataGridItemExcluidoEventArgs<T>(item, linha));
+        }
+
+        private void ObterItem(int linha)
+        {
+            var index = --linha;
+            var item = _dadosGrid[index];
+
+            SelecionarItem?.Invoke(this, new DataGridItemSelecionadoEventArgs<T>(item, linha));
         }
 
         private void PaginarGrid(int tamanhoPagina, int paginaAtual)
@@ -69,6 +87,8 @@ namespace Component.Grid
             _totalPaginas = Math.Ceiling((double)_dados.Count / tamanhoPagina);
             MontarLayoutGrid(_dadosGrid);
             _paginaAtual = ++paginaAtual;
+
+            Paginar?.Invoke(this, new DataGridPagincaoEventArgs<T>((int)_totalPaginas, paginaAtual, (paginaAtual - 1), tamanhoPagina));
         }
 
         public void OrdenarCampos<Tkey>(Func<T, Tkey> expressao)
@@ -101,6 +121,8 @@ namespace Component.Grid
             }
 
             MontarLayoutGrid(_dadosGrid, cursorIndiceCabecalho);
+
+            Ordenar?.Invoke(this, new DataGridOrdernacaoEventArgs<T>(cursorIndiceCabecalho, tipoOrdem, _dadosGrid));
         }
 
         public void DataBinding()
@@ -193,6 +215,10 @@ namespace Component.Grid
                                         --linhaGrid;
                                         MontarLayoutGrid(_dadosGrid, -1, linhaGrid);
                                     }
+                                    break;
+
+                                case ConsoleKey.Enter:
+                                    ObterItem(linhaGrid);
                                     break;
 
                                 case ConsoleKey.Escape:

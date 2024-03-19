@@ -1,6 +1,6 @@
+using Component.Grid;
 using consoleapp.crud.basico.Entities;
 using consoleapp.crud.basico.UseCases;
-using Component.Grid;
 using System.Text;
 
 namespace consoleapp.crud.basico.UI
@@ -97,18 +97,24 @@ namespace consoleapp.crud.basico.UI
                 .ListarTodasPessoasDepartamento();
 
             var grid = new DataGrid<PessoaDepartamento>(pessoas);
+            grid.SelecionarItem += Grid_SelecionarItem;
 
             // Config do componente
             grid.PaginarItensGrid = true;
             grid.QuantidadeItensPagina = 12;
             grid.PaginaInicial = 1;
 
-            grid.Titulo = "***************************************\n\r"+
+            grid.Titulo = "***************************************\n\r" +
                           "      Listar todas as pessoas\n\r" +
-                          "***************************************\n\r"+
+                          "***************************************\n\r" +
                           "\n\rEscolha um funcionário da grid:";
 
             grid.DataBinding();
+        }
+
+        private void Grid_SelecionarItem(object? sender, DataGridItemSelecionadoEventArgs<PessoaDepartamento> e)
+        {
+            Console.WriteLine($"Item selecionado na linha {e.Linha}: {e.Item.Id} - {e.Item.NomePessoa} | {e.Item.NomeDepartamento}");
         }
 
         private void ListarPessoasPorEstado()
@@ -117,11 +123,10 @@ namespace consoleapp.crud.basico.UI
             var IdEstadoInformado = int.Parse(Console.ReadLine());
 
             var pessoasEstado = new PessoaUC().ListarPessoasPorEstado(IdEstadoInformado);
-            
+
             var grid = new DataGrid<PessoaEstado>(pessoasEstado);
             grid.PaginarItensGrid = false;
             grid.DataBinding();
-
         }
 
         private void ListarDepartamentos()
