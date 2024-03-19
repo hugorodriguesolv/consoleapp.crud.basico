@@ -74,7 +74,7 @@ namespace Component.Grid
 
         private void ObterItem(int linha)
         {
-            var index = --linha;
+            var index = linha - 1;
             var item = _dadosGrid[index];
 
             SelecionarItem?.Invoke(this, new DataGridItemSelecionadoEventArgs<T>(item, linha));
