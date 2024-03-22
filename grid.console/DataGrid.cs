@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 
-namespace consoleapp.crud.basico.UI
+namespace Component.Grid
 {
     /// <summary>
-    ///
+    /// Componente Grid para telas de console
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Tipo da entidade que será utilizada como </typeparam>
     public class DataGrid<T> where T : class
     {
         private IList<T> _dados = new List<T>();
@@ -16,6 +16,9 @@ namespace consoleapp.crud.basico.UI
         private double _totalPaginas;
         private int _paginaAtual;
 
+        /// <summary>
+        /// Título da Grid
+        /// </summary>
         public string Titulo { get; set; }
 
         /// <summary>
@@ -31,34 +34,100 @@ namespace consoleapp.crud.basico.UI
         /// <summary>
         /// Opção para que de forma automática a grid seja paginada
         /// </summary>
-        public bool Paginar { get; set; } = false;
+        public bool PaginarItensGrid { get; set; } = false;
 
-        public event EventHandler<DataGridEventArgs<T>> DataGridAlterada;
+        /// <summary>
+        /// O evento ocorre quando a coluna da gird é ordenada
+        /// </summary>
+        public event EventHandler<DataGridOrdernacaoEventArgs<T>> Ordenar;
 
-        public event EventHandler<DataGridEventArgs<T>> ItemExcluido;
+        /// <summary>
+        /// O evento ocorre quando um item da grid é excluído
+        /// </summary>
+        public event EventHandler<DataGridItemExcluidoEventArgs<T>> ExcluirItem;
 
-        public event EventHandler<DataGridEventArgs<T>> ItemAdicionado;
+        /// <summary>
+        /// O evento ocorre quando um item é adicionado a grid
+        /// </summary>
+        public event EventHandler<DataGridItemAdicionadoEventArgs<T>> AdicionarItem;
 
-        public event EventHandler<DataGridEventArgs<T>> GridPaginada;
+        /// <summary>
+        /// O evento ocorre quando a grid é paginada
+        /// </summary>
+        public event EventHandler<DataGridPagincaoEventArgs<T>> Paginar;
 
+        /// <summary>
+        /// O evento ocorre quando um item da grid é slecionado
+        /// </summary>
+        public event EventHandler<DataGridItemSelecionadoEventArgs<T>> SelecionarItem;
+
+        /// <summary>
+        /// Construtor
+        /// </summary>
         public DataGrid()
         { }
 
+        /// <summary>
+        /// Construtor
+        /// </summary>
+        /// <param name="dadosGrid">Dados que dão a carga na grid</param>
         public DataGrid(IList<T> dadosGrid) => _dados = dadosGrid;
 
+        /// <summary>
+        /// Carrega os dados da grid
+        /// </summary>
+        /// <param name="dadosGrid">Dados que dão carga na grid</param>
         public void CarregarDados(IList<T> dadosGrid) => _dados = dadosGrid;
 
+        /// <summary>
+        /// Método para definir o cabeçalho
+        /// </summary>
+        /// <param name="args">Array de itens que serão utilizados como cabeçalho</param>
         public void DefinirCabecalho(string[] args)
         {
             _cabecalho = args;
         }
 
+        /// <summary>
+        /// Adiciona um item aos itens da grid
+        /// </summary>
+        /// <param name="item">Item que será adicionada aos itens existentes da grid</param>
         public void AdicionarLinha(T item)
         {
             _dados?.Add(item);
-            OnDataGridAlterado(DataGridTipoEvento.AdicaoItem, _dados.Count(), item);
+
+            AdicionarItem?.Invoke(this, new DataGridItemAdicionadoEventArgs<T>(item, _dados?.Count));
         }
 
+        /// <summary>
+        /// Exclui a linha da grid
+        /// </summary>
+        /// <param name="linha">Linha que será excluida</param>
+        public void ExcluirLinha(int linha)
+        {
+            var item = _dados[linha];
+            _dados.RemoveAt(linha);
+
+            ExcluirItem?.Invoke(this, new DataGridItemExcluidoEventArgs<T>(item, linha));
+        }
+
+        /// <summary>
+        /// Obtém o item da grid
+        /// </summary>
+        /// <param name="linha">Linha selecionada</param>
+        private void ObterItem(int linha)
+        {
+            var index = linha - 1;
+            var item = _dadosGrid[index];
+
+            SelecionarItem?.Invoke(this, new DataGridItemSelecionadoEventArgs<T>(item, linha));
+        }
+
+        /// <summary>
+        /// Faz a paginação da grid
+        /// </summary>
+        /// <param name="tamanhoPagina">Tamanho da página da grid</param>
+        /// <param name="paginaAtual">Página atual da grid</param>
         private void PaginarGrid(int tamanhoPagina, int paginaAtual)
         {
             var startIndex = --paginaAtual * tamanhoPagina;
@@ -66,8 +135,15 @@ namespace consoleapp.crud.basico.UI
             _totalPaginas = Math.Ceiling((double)_dados.Count / tamanhoPagina);
             MontarLayoutGrid(_dadosGrid);
             _paginaAtual = ++paginaAtual;
+
+            Paginar?.Invoke(this, new DataGridPagincaoEventArgs<T>((int)_totalPaginas, paginaAtual, (paginaAtual - 1), tamanhoPagina));
         }
 
+        /// <summary>
+        /// Ordena a coluna da grid conforme a expressão
+        /// </summary>
+        /// <typeparam name="Tkey">Tipo dos dados</typeparam>
+        /// <param name="expressao">Expressão do campo em que será ordenado</param>
         public void OrdenarCampos<Tkey>(Func<T, Tkey> expressao)
         {
             _dadosGrid = _dados
@@ -75,9 +151,14 @@ namespace consoleapp.crud.basico.UI
                 .ToList();
         }
 
-        private void OrdenarCampos(int cursorIndiceCabecalho = 0, TipoOrdem tipoOrdem = TipoOrdem.Crescente)
+        /// <summary>
+        /// Ordena a coluna da grid conforme o índice do cabeçalho
+        /// </summary>
+        /// <param name="indiceCabecalho">Posição do índice do cabelaho</param>
+        /// <param name="tipoOrdem">Tipo de ordenação</param>
+        private void OrdenarCampos(int indiceCabecalho = 0, TipoOrdem tipoOrdem = TipoOrdem.Crescente)
         {
-            var propriedade = typeof(T).GetProperties()[cursorIndiceCabecalho];
+            var propriedade = typeof(T).GetProperties()[indiceCabecalho];
             Func<T, object> expressao = x => propriedade.GetValue(x);
 
             switch (tipoOrdem)
@@ -97,9 +178,14 @@ namespace consoleapp.crud.basico.UI
                     break;
             }
 
-            MontarLayoutGrid(_dadosGrid, cursorIndiceCabecalho);
+            MontarLayoutGrid(_dadosGrid, indiceCabecalho);
+
+            Ordenar?.Invoke(this, new DataGridOrdernacaoEventArgs<T>(indiceCabecalho, tipoOrdem, _dadosGrid));
         }
 
+        /// <summary>
+        /// Exibe a grid na tela
+        /// </summary>
         public void DataBinding()
         {
             _paginaAtual = PaginaInicial;
@@ -107,7 +193,7 @@ namespace consoleapp.crud.basico.UI
             var linhaGrid = 0;
             var qtdColunas = typeof(T).GetProperties().Length - 1;
 
-            if (Paginar)
+            if (PaginarItensGrid)
                 PaginarGrid(QuantidadeItensPagina, _paginaAtual);
             else
                 MontarLayoutGrid(_dados);
@@ -175,7 +261,7 @@ namespace consoleapp.crud.basico.UI
                             switch (tecla.Key)
                             {
                                 case ConsoleKey.DownArrow:
-                                    
+
                                     if (linhaGrid < QuantidadeItensPagina)
                                     {
                                         ++linhaGrid;
@@ -190,6 +276,10 @@ namespace consoleapp.crud.basico.UI
                                         --linhaGrid;
                                         MontarLayoutGrid(_dadosGrid, -1, linhaGrid);
                                     }
+                                    break;
+
+                                case ConsoleKey.Enter:
+                                    ObterItem(linhaGrid);
                                     break;
 
                                 case ConsoleKey.Escape:
@@ -207,14 +297,33 @@ namespace consoleapp.crud.basico.UI
             }
         }
 
+        private void MontarTituloGrid()
+        {
+            var tituloGrid = "***************************************\n\r" +
+                             $"{Titulo}\n\r" +
+                             "***************************************" +
+                             "\n\rPressione 'Enter' para escolher um item da grid:" +
+                             "\n\rPressione 'Seta para baixo' ou 'Seta para baixo' para ordenar a grid:" +
+                             "\n\rPressione 'Page Down' ou 'Page Up' para mudar a página da grid:\n\r";
+
+            Console.WriteLine(tituloGrid);
+        }
+
+        /// <summary>
+        /// Monta o layout da grid e imprime a grid na tela
+        /// </summary>
+        /// <param name="pagina">Página em que a grid será exibida</param>
+        /// <param name="colunaSelecionada">Coluna da grid que ficará selecionada</param>
+        /// <param name="linhaSelecionada">Linha da grid que ficará selecionada</param>
         private void MontarLayoutGrid(IList<T> pagina, int colunaSelecionada = 0, int linhaSelecionada = 0)
         {
             Console.Clear();
-            Console.WriteLine($"{Titulo}\n\r");
+            MontarTituloGrid();
 
-            var propriedadesTamanho = GetMaxPropertyLengths(pagina);
+            var propriedadesTamanho = ObterTamanhoMaximoPropriedade(pagina);
             var coluna = 0;
 
+            // Cabeçalho da grid
             foreach (var prop in propriedadesTamanho)
             {
                 var tamanho = prop.Value - prop.Key.Length;
@@ -241,6 +350,7 @@ namespace consoleapp.crud.basico.UI
 
             var linha = 1;
 
+            // Itens da grid
             foreach (var itemGrid in pagina)
             {
                 var propriedades = typeof(T).GetProperties();
@@ -272,10 +382,15 @@ namespace consoleapp.crud.basico.UI
                 ++linha;
             }
 
-            Console.WriteLine($"\n\rPágina de {_paginaAtual} até {_totalPaginas}");
+            Console.WriteLine($"\n\rPágina de {_paginaAtual} até {_totalPaginas}\n\r");
         }
 
-        private static Dictionary<string, int> GetMaxPropertyLengths(IEnumerable<T> items)
+        /// <summary>
+        /// Obtém o tamanho máximo dos valores da propriedade para ser usado no espaço para a montagem da grid
+        /// </summary>
+        /// <param name="items">Coleção de itens que serão analisados</param>
+        /// <returns>Dicionário com todos os tamanhos máximos por coluna da grid</returns>
+        private static Dictionary<string, int> ObterTamanhoMaximoPropriedade(IEnumerable<T> items)
         {
             Dictionary<string, int> maxPropertyLengths = new Dictionary<string, int>();
 
@@ -296,48 +411,14 @@ namespace consoleapp.crud.basico.UI
 
             return maxPropertyLengths;
         }
-
-        protected virtual void OnDataGridAlterado(DataGridTipoEvento tipoEvento, int linha, T item)
-        {
-            DataGridAlterada?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
-            ItemAdicionado?.Invoke(this, new DataGridEventArgs<T>(tipoEvento, linha, item));
-        }
-
-        public virtual void RemoveLine(int line)
-        {
-            var item = _dados.ElementAt<T>(line);
-            _dados.RemoveAt(line);
-            ItemExcluido?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.ExclusaoItem, line, item));
-        }
     }
 
-    public class DataGridEventArgs<T> : EventArgs
-    {
-        public DataGridTipoEvento TipoEvento { get; }
-
-        public int Linha { get; }
-
-        public T ItemAlterado { get; }
-
-        public DataGridEventArgs(DataGridTipoEvento tipoEvento, int linha, T itemAlterado)
-        {
-            TipoEvento = tipoEvento;
-            Linha = linha;
-            ItemAlterado = itemAlterado;
-        }
-    }
-
+    /// <summary>
+    /// Tipo de ordenação
+    /// </summary>
     public enum TipoOrdem
     {
         Crescente,
         Decrecente
-    }
-
-    public enum DataGridTipoEvento
-    {
-        CargaDados,
-        AdicaoItem,
-        ExclusaoItem,
-        OrdenacaoItens
     }
 }
