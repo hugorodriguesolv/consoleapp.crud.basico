@@ -36,23 +36,47 @@ namespace Component.Grid
         /// </summary>
         public bool PaginarItensGrid { get; set; } = false;
 
-        // Eventos
+        /// <summary>
+        /// O evento ocorre quando a coluna da gird é ordenada
+        /// </summary>
         public event EventHandler<DataGridOrdernacaoEventArgs<T>> Ordenar;
 
+        /// <summary>
+        /// O evento ocorre quando um item da grid é excluído
+        /// </summary>
         public event EventHandler<DataGridItemExcluidoEventArgs<T>> ExcluirItem;
 
+        /// <summary>
+        /// O evento ocorre quando um item é adicionado a grid
+        /// </summary>
         public event EventHandler<DataGridItemAdicionadoEventArgs<T>> AdicionarItem;
 
+        /// <summary>
+        /// O evento ocorre quando a grid é paginada
+        /// </summary>
         public event EventHandler<DataGridPagincaoEventArgs<T>> Paginar;
 
+        /// <summary>
+        /// O evento ocorre quando um item da grid é slecionado
+        /// </summary>
         public event EventHandler<DataGridItemSelecionadoEventArgs<T>> SelecionarItem;
 
-        // Construtor
+        /// <summary>
+        /// Construtor
+        /// </summary>
         public DataGrid()
         { }
 
+        /// <summary>
+        /// Construtor
+        /// </summary>
+        /// <param name="dadosGrid">Dados que dão a carga na grid</param>
         public DataGrid(IList<T> dadosGrid) => _dados = dadosGrid;
 
+        /// <summary>
+        /// Carrega os dados da grid
+        /// </summary>
+        /// <param name="dadosGrid">Dados que dão carga na grid</param>
         public void CarregarDados(IList<T> dadosGrid) => _dados = dadosGrid;
 
         /// <summary>
@@ -273,6 +297,18 @@ namespace Component.Grid
             }
         }
 
+        private void MontarTituloGrid()
+        {
+            var tituloGrid = "***************************************\n\r" +
+                             $"{Titulo}\n\r" +
+                             "***************************************" +
+                             "\n\rPressione 'Enter' para escolher um item da grid:" +
+                             "\n\rPressione 'Seta para baixo' ou 'Seta para baixo' para ordenar a grid:" +
+                             "\n\rPressione 'Page Down' ou 'Page Up' para mudar a página da grid:\n\r";
+
+            Console.WriteLine(tituloGrid);
+        }
+
         /// <summary>
         /// Monta o layout da grid e imprime a grid na tela
         /// </summary>
@@ -282,7 +318,7 @@ namespace Component.Grid
         private void MontarLayoutGrid(IList<T> pagina, int colunaSelecionada = 0, int linhaSelecionada = 0)
         {
             Console.Clear();
-            Console.WriteLine($"{Titulo}\n\r");
+            MontarTituloGrid();
 
             var propriedadesTamanho = ObterTamanhoMaximoPropriedade(pagina);
             var coluna = 0;

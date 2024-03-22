@@ -1,6 +1,7 @@
 using Component.Grid;
 using consoleapp.crud.basico.Entities;
 using consoleapp.crud.basico.UseCases;
+using System.Collections.Generic;
 using System.Text;
 
 namespace consoleapp.crud.basico.UI
@@ -100,14 +101,10 @@ namespace consoleapp.crud.basico.UI
             grid.SelecionarItem += Grid_SelecionarItem;
 
             // Config do componente
+            grid.Titulo = "Listar todas as pessoas";
             grid.PaginarItensGrid = true;
             grid.QuantidadeItensPagina = 12;
             grid.PaginaInicial = 1;
-
-            grid.Titulo = "***************************************\n\r" +
-                          "      Listar todas as pessoas\n\r" +
-                          "***************************************\n\r" +
-                          "\n\rEscolha um funcionário da grid:";
 
             grid.DataBinding();
         }
