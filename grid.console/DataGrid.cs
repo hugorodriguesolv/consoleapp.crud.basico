@@ -388,7 +388,11 @@ namespace Component.Grid
                 ++linha;
             }
 
-            Console.WriteLine($"\n\rPágina de {_paginaAtual} até {_totalPaginas}\n\r");
+            if (PaginarItensGrid)
+            {
+                Console.WriteLine($"\n\rPágina de {_paginaAtual} até {_totalPaginas}\n\r");
+            }
+            
             ImprimirGrid?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.GridImpressa));
         }
 
