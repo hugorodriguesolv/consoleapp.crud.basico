@@ -140,7 +140,7 @@ namespace consoleapp.crud.basico.UI
             else 
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\n\rNão exitem pessoas cadastradas para o Estado selecionado!");
+                Console.WriteLine($"\n\rNão existem pessoas cadastradas para o Estado {e.Item.Id} - {e.Item.Nome}!");
                 Console.ResetColor();
             }
         }
