@@ -130,10 +130,19 @@ namespace consoleapp.crud.basico.UI
         {
             var pessoasEstado = new PessoaUC().ListarPessoasPorEstado(e.Item.Id);
 
-            var grid = new DataGrid<PessoaEstado>(pessoasEstado);
-            grid.PaginarItensGrid = false;
-            grid.Titulo = $"Pessoas pertencentes ao Estado {e.Item.Id} - {e.Item.Nome}";
-            grid.DataBinding();
+            if (pessoasEstado?.Count > 0)
+            {
+                var grid = new DataGrid<PessoaEstado>(pessoasEstado);
+                grid.PaginarItensGrid = false;
+                grid.Titulo = $"Pessoas pertencentes ao Estado {e.Item.Id} - {e.Item.Nome}";
+                grid.DataBinding();
+            }
+            else 
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\n\rNão exitem pessoas cadastradas para o Estado selecionado!");
+                Console.ResetColor();
+            }
         }
 
         private void ListarDepartamentos()
