@@ -62,6 +62,12 @@ namespace Component.Grid
         public event EventHandler<DataGridItemSelecionadoEventArgs<T>> SelecionarItem;
 
         /// <summary>
+        /// O evento ocorre quando qualquer alteração na grid é realizada
+        /// </summary>
+        public event EventHandler<DataGridEventArgs<T>> ImprimirGrid;
+
+
+        /// <summary>
         /// Construtor
         /// </summary>
         public DataGrid()
@@ -383,6 +389,7 @@ namespace Component.Grid
             }
 
             Console.WriteLine($"\n\rPágina de {_paginaAtual} até {_totalPaginas}\n\r");
+            ImprimirGrid?.Invoke(this, new DataGridEventArgs<T>(DataGridTipoEvento.GridImpressa));
         }
 
         /// <summary>

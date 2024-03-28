@@ -1,7 +1,6 @@
 using Component.Grid;
 using consoleapp.crud.basico.Entities;
 using consoleapp.crud.basico.UseCases;
-using System.Collections.Generic;
 using System.Text;
 
 namespace consoleapp.crud.basico.UI
@@ -98,7 +97,6 @@ namespace consoleapp.crud.basico.UI
                 .ListarTodasPessoasDepartamento();
 
             var grid = new DataGrid<PessoaDepartamento>(pessoas);
-            grid.SelecionarItem += Grid_SelecionarItem;
 
             // Config do componente
             grid.Titulo = "Listar todas as pessoas";
@@ -109,20 +107,32 @@ namespace consoleapp.crud.basico.UI
             grid.DataBinding();
         }
 
-        private void Grid_SelecionarItem(object? sender, DataGridItemSelecionadoEventArgs<PessoaDepartamento> e)
-        {
-            Console.WriteLine($"Item selecionado na linha {e.Linha}: {e.Item.Id} - {e.Item.NomePessoa} | {e.Item.NomeDepartamento}");
-        }
-
         private void ListarPessoasPorEstado()
         {
-            Console.WriteLine("Informe um Id de um estado:");
-            var IdEstadoInformado = int.Parse(Console.ReadLine());
+            var estados = new EstadoUC().ListarTodosEstados();
 
-            var pessoasEstado = new PessoaUC().ListarPessoasPorEstado(IdEstadoInformado);
+            var gridEstados = new DataGrid<Estado>(estados);
+            gridEstados.ImprimirGrid += GridEstados_ImprimirGrid;
+            gridEstados.SelecionarItem += GridEstados_SelecionarItem;
+
+            gridEstados.Titulo = "Todos os Estados da federação";
+            gridEstados.PaginarItensGrid = true;
+            gridEstados.QuantidadeItensPagina = 5;
+            gridEstados.DataBinding();
+        }
+
+        private void GridEstados_ImprimirGrid(object? sender, DataGridEventArgs<Estado> e)
+        {
+            Console.WriteLine("Selecione o um Estado da Federação");
+        }
+
+        private void GridEstados_SelecionarItem(object? sender, DataGridItemSelecionadoEventArgs<Estado> e)
+        {
+            var pessoasEstado = new PessoaUC().ListarPessoasPorEstado(e.Item.Id);
 
             var grid = new DataGrid<PessoaEstado>(pessoasEstado);
             grid.PaginarItensGrid = false;
+            grid.Titulo = $"Pessoas pertencentes ao Estado {e.Item.Id} - {e.Item.Nome}";
             grid.DataBinding();
         }
 

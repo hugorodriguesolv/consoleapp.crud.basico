@@ -7,6 +7,7 @@
         ExclusaoItem,
         Paginacao,
         OrdenacaoItens,
-        SelecaoItem
+        SelecaoItem,
+        GridImpressa
     }
 }
