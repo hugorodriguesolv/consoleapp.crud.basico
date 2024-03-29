@@ -164,7 +164,7 @@ namespace consoleapp.crud.basico.UI
         //        grid.Titulo = $"Pessoas pertencentes ao Estado {e.Item.Id} - {e.Item.Nome}";
         //        grid.DataBinding();
         //    }
-        //    else 
+        //    else
         //    {
         //        Console.ForegroundColor = ConsoleColor.Red;
         //        Console.WriteLine($"\n\rNão existem pessoas cadastradas para o Estado {e.Item.Id} - {e.Item.Nome}!");
@@ -273,7 +273,6 @@ namespace consoleapp.crud.basico.UI
             return retorno;
         }
 
-        
         private void ListarPessoasPorEstado()
         {
             var estados = new EstadoUC().ListarTodosEstados();
@@ -304,94 +303,58 @@ namespace consoleapp.crud.basico.UI
                 grid.Titulo = $"Pessoas pertencentes ao Estado {e.Item.Id} - {e.Item.Nome}";
                 grid.DataBinding();
             }
-            else 
+            else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"\n\rNão existem pessoas cadastradas para o Estado {e.Item.Id} - {e.Item.Nome}!");
                 Console.ResetColor();
             }
         }
-        
+
         /// //////////////////////////////
-        
+
+        public Pessoa Pessoa { get; set; } = new Pessoa();
+
         private void InserirNovaPessoa()
         {
-            //Console.Clear();
-            //ListarTodasPessoas();
+            Console.WriteLine("Informe o nome da nova pessoa:");
+            Pessoa.Nome = Console.ReadLine();
 
-            var gridInserir = new DataGrid<DepartamentoUC>();
-            gridInserir.Titulo = "Inserir nova pessoa";
+            var departamentos = new DepartamentoUC().ListarTodosDepartamentos();
 
-            Console.WriteLine("\nInforme o nome da nova pessoa: ");
-            var nomeNovaPessoa = Console.ReadLine();
+            var gridDepartamento = new DataGrid<DepartamentoCidade>(departamentos);
+            gridDepartamento.SelecionarItem += GridDepartamento_SelecionarItem;
+            gridDepartamento.Titulo = "Selecione o departamento";
+            gridDepartamento.QuantidadeItensPagina = 10;
+            gridDepartamento.PaginarItensGrid = true;
+            gridDepartamento.DataBinding();
+        }
 
-            var pessoaUC = new PessoaUC();
+        private void GridDepartamento_SelecionarItem(object? sender, DataGridItemSelecionadoEventArgs<DepartamentoCidade> e)
+        {
+            Pessoa.IdDepartamento = e.Item.Id;
 
-            var pessoaExiste = pessoaUC
-                .ListarTodasPessoas()
-                .Any(pes => pes.NomePessoa == nomeNovaPessoa);
+            Console.WriteLine("Você deseja inserir essa nova pessoa? S/N");
+            var confirmado = Console.ReadLine() == "S" ? true : false;
 
-            if (!pessoaExiste)
+            if (confirmado)
             {
-                Console.Clear();
+                var pessoaUC = new PessoaUC();
+                pessoaUC.InserirPessoa(Pessoa.IdDepartamento, Pessoa.Nome);
+                Console.WriteLine("Pessoa inserida com sucesso!");
 
-                var departamentos =  new DepartamentoUC().ListarTodosDepartamentos();
 
-                gridInserir.ImprimirGrid += GridInserir_ImprimirGrid;
-                gridInserir.SelecionarItem += GridInserir_SelecionarItem;
-                Console.WriteLine($"\nNome da pessoa informado foi: {nomeNovaPessoa}");
-                gridInserir.DataBinding();
-                string infoIdDepNovaPessoa = Console.ReadLine();
-
-                var entradasValidas =
-                    int.TryParse(infoIdDepNovaPessoa, out int idDepartamentoNovaPessoa)
-                    && !string.IsNullOrWhiteSpace(nomeNovaPessoa);
-
-                var grid = new DataGrid<PessoaDepartamento>(pessoaUC.ListarTodasPessoas());
-
-                if (entradasValidas)
-                {
-                    var departamentoUC = new DepartamentoUC();
-
-                    var departamentoExiste = departamentoUC
-                        .ListarTodosDepartamentos()
-                        .Any(dep => dep.Id == idDepartamentoNovaPessoa);
-
-                    if (departamentoExiste)
-                    {
-                        pessoaUC.InserirPessoa(idDepartamentoNovaPessoa, nomeNovaPessoa);
-
-                        Console.Clear();
-
-                        Console.WriteLine($"{nomeNovaPessoa} foi inserido com sucesso! \n");
-
-                        ListarTodasPessoas();
-                    }
-                    else
-                    {
-                        Console.WriteLine("\nEsse departamento não existe!!");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("\nEntrada inválida!! Certifique-se de inserir um número inteiro.");
-                }
+                var pessoasDeparamento = pessoaUC.ListarTodasPessoasDepartamento();
+                var gridPessoasDepartamento = new DataGrid<PessoaDepartamento>(pessoasDeparamento);
+                gridPessoasDepartamento.Titulo = "Inserir nova pessoa";
+                gridPessoasDepartamento.PaginarItensGrid = true;
+                gridPessoasDepartamento.QuantidadeItensPagina = 10;
+                gridPessoasDepartamento.DataBinding();
             }
             else
-            {
-                Console.WriteLine("\n\nEssa pessoa já existe!!");
+            { 
+                Console.WriteLine("Chegou"); 
             }
-        }
-
-        private void GridInserir_SelecionarItem(object? sender, DataGridItemSelecionadoEventArgs<DepartamentoUC> e)
-        {
-            var idDepartamento = new DepartamentoUC().ListarTodosDepartamentos();
-
-        }
-
-        private void GridInserir_ImprimirGrid(object? sender, DataGridEventArgs<DepartamentoUC> e)
-        {
-            Console.WriteLine("Informe o Id do departamento para essa pessoa: ");
         }
 
         private void ApagarPessoa()
