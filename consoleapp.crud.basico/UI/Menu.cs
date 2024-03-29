@@ -107,43 +107,43 @@ namespace consoleapp.crud.basico.UI
             grid.DataBinding();
         }
 
-        private void ListarPessoasPorEstado()
-        {
-            var estados = new EstadoUC().ListarTodosEstados();
+        //private void ListarPessoasPorEstado()
+        //{
+        //    var estados = new EstadoUC().ListarTodosEstados();
 
-            var gridEstados = new DataGrid<Estado>(estados);
-            gridEstados.ImprimirGrid += GridEstados_ImprimirGrid;
-            gridEstados.SelecionarItem += GridEstados_SelecionarItem;
+        //    var gridEstados = new DataGrid<Estado>(estados);
+        //    gridEstados.ImprimirGrid += GridEstados_ImprimirGrid;
+        //    gridEstados.SelecionarItem += GridEstados_SelecionarItem;
 
-            gridEstados.Titulo = "Todos os Estados da federação";
-            gridEstados.PaginarItensGrid = true;
-            gridEstados.QuantidadeItensPagina = 5;
-            gridEstados.DataBinding();
-        }
+        //    gridEstados.Titulo = "Todos os Estados da federação";
+        //    gridEstados.PaginarItensGrid = true;
+        //    gridEstados.QuantidadeItensPagina = 5;
+        //    gridEstados.DataBinding();
+        //}
 
-        private void GridEstados_ImprimirGrid(object? sender, DataGridEventArgs<Estado> e)
-        {
-            Console.WriteLine("Selecione o um Estado da Federação");
-        }
+        //private void GridEstados_ImprimirGrid(object? sender, DataGridEventArgs<Estado> e)
+        //{
+        //    Console.WriteLine("Selecione o um Estado da Federação");
+        //}
 
-        private void GridEstados_SelecionarItem(object? sender, DataGridItemSelecionadoEventArgs<Estado> e)
-        {
-            var pessoasEstado = new PessoaUC().ListarPessoasPorEstado(e.Item.Id);
+        //private void GridEstados_SelecionarItem(object? sender, DataGridItemSelecionadoEventArgs<Estado> e)
+        //{
+        //    var pessoasEstado = new PessoaUC().ListarPessoasPorEstado(e.Item.Id);
 
-            if (pessoasEstado?.Count > 0)
-            {
-                var grid = new DataGrid<PessoaEstado>(pessoasEstado);
-                grid.PaginarItensGrid = false;
-                grid.Titulo = $"Pessoas pertencentes ao Estado {e.Item.Id} - {e.Item.Nome}";
-                grid.DataBinding();
-            }
-            else 
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"\n\rNão existem pessoas cadastradas para o Estado {e.Item.Id} - {e.Item.Nome}!");
-                Console.ResetColor();
-            }
-        }
+        //    if (pessoasEstado?.Count > 0)
+        //    {
+        //        var grid = new DataGrid<PessoaEstado>(pessoasEstado);
+        //        grid.PaginarItensGrid = false;
+        //        grid.Titulo = $"Pessoas pertencentes ao Estado {e.Item.Id} - {e.Item.Nome}";
+        //        grid.DataBinding();
+        //    }
+        //    else 
+        //    {
+        //        Console.ForegroundColor = ConsoleColor.Red;
+        //        Console.WriteLine($"\n\rNão existem pessoas cadastradas para o Estado {e.Item.Id} - {e.Item.Nome}!");
+        //        Console.ResetColor();
+        //    }
+        //}
 
         private void ListarDepartamentos()
         {
@@ -245,12 +245,54 @@ namespace consoleapp.crud.basico.UI
             return retorno;
         }
 
+        
+        private void ListarPessoasPorEstado()
+        {
+            var estados = new EstadoUC().ListarTodosEstados();
+
+            var gridEstados = new DataGrid<Estado>(estados);
+            gridEstados.ImprimirGrid += GridEstados_ImprimirGrid;
+            gridEstados.SelecionarItem += GridEstados_SelecionarItem;
+
+            gridEstados.Titulo = "Todos os Estados da federação";
+            gridEstados.PaginarItensGrid = true;
+            gridEstados.QuantidadeItensPagina = 5;
+            gridEstados.DataBinding();
+        }
+
+        private void GridEstados_ImprimirGrid(object? sender, DataGridEventArgs<Estado> e)
+        {
+            Console.WriteLine("Selecione o um Estado da Federação");
+        }
+
+        private void GridEstados_SelecionarItem(object? sender, DataGridItemSelecionadoEventArgs<Estado> e)
+        {
+            var pessoasEstado = new PessoaUC().ListarPessoasPorEstado(e.Item.Id);
+
+            if (pessoasEstado?.Count > 0)
+            {
+                var grid = new DataGrid<PessoaEstado>(pessoasEstado);
+                grid.PaginarItensGrid = false;
+                grid.Titulo = $"Pessoas pertencentes ao Estado {e.Item.Id} - {e.Item.Nome}";
+                grid.DataBinding();
+            }
+            else 
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\n\rNão existem pessoas cadastradas para o Estado {e.Item.Id} - {e.Item.Nome}!");
+                Console.ResetColor();
+            }
+        }
+        
+        /// //////////////////////////////
+        
         private void InserirNovaPessoa()
         {
-            Console.Clear();
-            Console.WriteLine("***** INSERIR NOVA PESSOA *****\n");
+            //Console.Clear();
+            //ListarTodasPessoas();
 
-            ListarTodasPessoas();
+            var gridInserir = new DataGrid<DepartamentoUC>();
+            gridInserir.Titulo = "Inserir nova pessoa";
 
             Console.WriteLine("\nInforme o nome da nova pessoa: ");
             var nomeNovaPessoa = Console.ReadLine();
@@ -264,12 +306,13 @@ namespace consoleapp.crud.basico.UI
             if (!pessoaExiste)
             {
                 Console.Clear();
-                Console.WriteLine("***** INSERIR NOVA PESSOA *****\n");
 
-                ListarDepartamentos();
+                var departamentos =  new DepartamentoUC().ListarTodosDepartamentos();
 
+                gridInserir.ImprimirGrid += GridInserir_ImprimirGrid;
+                gridInserir.SelecionarItem += GridInserir_SelecionarItem;
                 Console.WriteLine($"\nNome da pessoa informado foi: {nomeNovaPessoa}");
-                Console.WriteLine("\nInforme o Id do departamento dessa pessoa: ");
+                gridInserir.DataBinding();
                 string infoIdDepNovaPessoa = Console.ReadLine();
 
                 var entradasValidas =
@@ -291,13 +334,6 @@ namespace consoleapp.crud.basico.UI
                         pessoaUC.InserirPessoa(idDepartamentoNovaPessoa, nomeNovaPessoa);
 
                         Console.Clear();
-                        ////var pessoaDpt = new PessoaDepartamento();
-                        ////{
-                        ////    //Id = pessoaExiste.Id;
-                        ////    //NomePessoa = pessoa.NomePessoa;
-                        ////    //NomeDepartamento = pessoa.NomeDepartamento;
-                        ////};
-                        //grid.AdicionarLinha(pessoaDpt);
 
                         Console.WriteLine($"{nomeNovaPessoa} foi inserido com sucesso! \n");
 
@@ -317,6 +353,17 @@ namespace consoleapp.crud.basico.UI
             {
                 Console.WriteLine("\n\nEssa pessoa já existe!!");
             }
+        }
+
+        private void GridInserir_SelecionarItem(object? sender, DataGridItemSelecionadoEventArgs<DepartamentoUC> e)
+        {
+            var idDepartamento = new DepartamentoUC().ListarTodosDepartamentos();
+
+        }
+
+        private void GridInserir_ImprimirGrid(object? sender, DataGridEventArgs<DepartamentoUC> e)
+        {
+            Console.WriteLine("Informe o Id do departamento para essa pessoa: ");
         }
 
         private void ApagarPessoa()
