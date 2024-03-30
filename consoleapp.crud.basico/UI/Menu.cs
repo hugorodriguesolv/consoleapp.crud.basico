@@ -93,10 +93,10 @@ namespace consoleapp.crud.basico.UI
 
         private void ListarTodasPessoas()
         {
-            var pessoas = new PessoaUC()
-                .ListarTodasPessoasDepartamento();
+            var pessoas = new PessoaUC().ListarTodasPessoasDepartamento();
 
             var grid = new DataGrid<PessoaDepartamento>(pessoas);
+            grid.LinhaDigitada += Grid_LinhaDigitada;
 
             // Config do componente
             grid.Titulo = "Listar todas as pessoas";
@@ -105,6 +105,11 @@ namespace consoleapp.crud.basico.UI
             grid.PaginaInicial = 1;
 
             grid.DataBinding();
+        }
+
+        private void Grid_LinhaDigitada(object? sender, DataGridBufferLinhaEventArgs<PessoaDepartamento> e)
+        {
+            Console.WriteLine($"Posso fazer qualquer coisa: {e.LinhaDigitada}");
         }
 
         private void ListarPessoasPorEstado()
@@ -137,7 +142,7 @@ namespace consoleapp.crud.basico.UI
                 grid.Titulo = $"Pessoas pertencentes ao Estado {e.Item.Id} - {e.Item.Nome}";
                 grid.DataBinding();
             }
-            else 
+            else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"\n\rNão existem pessoas cadastradas para o Estado {e.Item.Id} - {e.Item.Nome}!");
