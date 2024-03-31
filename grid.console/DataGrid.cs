@@ -16,6 +16,8 @@ namespace Component.Grid
         private double _totalPaginas;
         private int _paginaAtual;
         private string _bufferLinha = string.Empty;
+        private int _colunaCabecalho = 0;
+        private int _linhaGrid = 0;
 
         /// <summary>
         /// Título da Grid
@@ -169,67 +171,41 @@ namespace Component.Grid
             }
         }
 
-        private void NavegarCabeclahoGridSe(bool condicao, int colunaCabecalho)
+        private void NavegarCabeclahoGridSe(bool condicao, TipoNavegacaoCabecalho tipoNavegacao)
         {
             if (condicao)
-                MontarLayoutGrid(_dadosGrid, colunaCabecalho);
+            {
+                switch (tipoNavegacao)
+                {
+                    case TipoNavegacaoCabecalho.Esquerda:
+                        --_colunaCabecalho;
+                        break;
+
+                    case TipoNavegacaoCabecalho.Direira:
+                        ++_colunaCabecalho;
+                        break;
+                }
+
+                MontarLayoutGrid(_dadosGrid, _colunaCabecalho);
+            }
         }
 
-        private void NavegarLinhasGrid()
+        private void NavegarItensGridSe(bool condicional, TipoNavegacaoItens tipoNavegacao)
         {
-            var linhaGrid = 0;
-
-            if (_bufferLinha.Length == 0)
+            if (condicional)
             {
-                var continuar = true;
-                linhaGrid = 1;
-
-                MontarLayoutGrid(_dadosGrid, -1, linhaGrid);
-
-                while (continuar)
+                switch (tipoNavegacao)
                 {
-                    var tecla = Console.ReadKey(true);
+                    case TipoNavegacaoItens.Acima:
+                        --_linhaGrid;
+                        break;
 
-                    switch (tecla.Key)
-                    {
-                        case ConsoleKey.DownArrow:
-
-                            if (linhaGrid < QuantidadeItensPagina)
-                            {
-                                ++linhaGrid;
-                                MontarLayoutGrid(_dadosGrid, -1, linhaGrid);
-                            }
-                            break;
-
-                        case ConsoleKey.UpArrow:
-
-                            if (linhaGrid != 1)
-                            {
-                                --linhaGrid;
-                                MontarLayoutGrid(_dadosGrid, -1, linhaGrid);
-                            }
-                            break;
-
-                        case ConsoleKey.Enter:
-                            ObterItem(linhaGrid);
-                            break;
-
-                        case ConsoleKey.Escape:
-                            continuar = false;
-                            PaginarGrid(QuantidadeItensPagina, _paginaAtual);
-                            break;
-
-                        default:
-                            AcumularBufferLinha(tecla);
-                            break;
-                    }
+                    case TipoNavegacaoItens.Abaixo:
+                        ++_linhaGrid;
+                        break;
                 }
-            }
-            else
-            {
-                LimparLinhaAtual();
-                LinhaDigitada?.Invoke(this, new DataGridBufferLinhaEventArgs<T>(_bufferLinha));
-                _bufferLinha = string.Empty;
+
+                MontarLayoutGrid(_dadosGrid, -1, _linhaGrid);
             }
         }
 
@@ -277,13 +253,47 @@ namespace Component.Grid
             Ordenar?.Invoke(this, new DataGridOrdernacaoEventArgs<T>(indiceCabecalho, tipoOrdem, _dadosGrid));
         }
 
+        private void NavegarLinhasGrid()
+        {
+            if (_bufferLinha.Length == 0)
+            {
+                _linhaGrid = 1;
+                MontarLayoutGrid(_dadosGrid, -1, _linhaGrid);
+
+                var continuarFuncoesGrid = true;
+
+                var teclasComando = new Dictionary<ConsoleKey, Action>
+                {
+                    { ConsoleKey.DownArrow, () => NavegarItensGridSe(_linhaGrid < QuantidadeItensPagina, TipoNavegacaoItens.Abaixo) },
+                    { ConsoleKey.UpArrow, () => NavegarItensGridSe(_linhaGrid != 1, TipoNavegacaoItens.Acima) },
+                    { ConsoleKey.Enter, () => ObterItem(_linhaGrid) },
+                    { ConsoleKey.Escape, () => { continuarFuncoesGrid = false;  PaginarGrid(QuantidadeItensPagina, _paginaAtual); } }
+                };
+
+                while (continuarFuncoesGrid)
+                {
+                    var tecla = Console.ReadKey(true);
+
+                    if (teclasComando.TryGetValue(tecla.Key, out var action))
+                        action();
+                    else
+                        AcumularBufferLinha(tecla);
+                }
+            }
+            else
+            {
+                LimparLinhaAtual();
+                LinhaDigitada?.Invoke(this, new DataGridBufferLinhaEventArgs<T>(_bufferLinha));
+                _bufferLinha = string.Empty;
+            }
+        }
+
         /// <summary>
         /// Exibe a grid na tela
         /// </summary>
         public void DataBinding()
         {
             _paginaAtual = PaginaInicial;
-            var colunaCabecalho = 0;
             var qtdColunas = typeof(T).GetProperties().Length - 1;
 
             if (PaginarItensGrid)
@@ -297,10 +307,10 @@ namespace Component.Grid
             {
                 { ConsoleKey.PageDown, () => PaginarGridSe(_paginaAtual > 1, TipoNavegacaoPagina.PaginaSuperior) },
                 { ConsoleKey.PageUp, () => PaginarGridSe(_paginaAtual < _totalPaginas, TipoNavegacaoPagina.PaginaInferior) },
-                { ConsoleKey.LeftArrow, () => NavegarCabeclahoGridSe(colunaCabecalho > 0, --colunaCabecalho) },
-                { ConsoleKey.RightArrow, () => NavegarCabeclahoGridSe(colunaCabecalho < qtdColunas, ++colunaCabecalho) },
-                { ConsoleKey.DownArrow, () => OrdenarCampos(colunaCabecalho, TipoOrdem.Decrecente) },
-                { ConsoleKey.UpArrow, () => OrdenarCampos(colunaCabecalho, TipoOrdem.Crescente) },
+                { ConsoleKey.LeftArrow, () => NavegarCabeclahoGridSe(_colunaCabecalho > 0, TipoNavegacaoCabecalho.Esquerda) },
+                { ConsoleKey.RightArrow, () => NavegarCabeclahoGridSe(_colunaCabecalho < qtdColunas, TipoNavegacaoCabecalho.Direira) },
+                { ConsoleKey.DownArrow, () => OrdenarCampos(_colunaCabecalho, TipoOrdem.Decrecente) },
+                { ConsoleKey.UpArrow, () => OrdenarCampos(_colunaCabecalho, TipoOrdem.Crescente) },
                 { ConsoleKey.Enter, () => NavegarLinhasGrid() },
                 { ConsoleKey.Escape, () => continuarFuncoesGrid = false },
             };
@@ -470,5 +480,17 @@ namespace Component.Grid
     {
         PaginaSuperior,
         PaginaInferior
+    }
+
+    public enum TipoNavegacaoCabecalho
+    {
+        Esquerda,
+        Direira
+    }
+
+    public enum TipoNavegacaoItens
+    {
+        Acima,
+        Abaixo
     }
 }
