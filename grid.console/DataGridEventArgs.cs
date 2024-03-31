@@ -10,6 +10,17 @@
         }
     }
 
+    public class DataGridBufferLinhaEventArgs<T> : DataGridEventArgs<T>
+    {
+        public string LinhaDigitada { get; }
+
+        public DataGridBufferLinhaEventArgs(string linhaDigitada)
+            : base(DataGridTipoEvento.LinhaDigitada)
+        {
+            this.LinhaDigitada = linhaDigitada;
+        }
+    }
+
     public class DataGridOrdernacaoEventArgs<T> : DataGridEventArgs<T>
     {
         public int Coluna { get; }

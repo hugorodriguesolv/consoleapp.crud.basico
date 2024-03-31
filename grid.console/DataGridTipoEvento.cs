@@ -8,6 +8,7 @@
         Paginacao,
         OrdenacaoItens,
         SelecaoItem,
-        GridImpressa
+        GridImpressa,
+        LinhaDigitada
     }
 }
