@@ -107,43 +107,43 @@ namespace consoleapp.crud.basico.UI
             grid.DataBinding();
         }
 
-        //private void ListarPessoasPorEstado()
-        //{
-        //    var estados = new EstadoUC().ListarTodosEstados();
+        private void ListarPessoasPorEstado()
+        {
+            var estados = new EstadoUC().ListarTodosEstados();
 
-        //    var gridEstados = new DataGrid<Estado>(estados);
-        //    gridEstados.ImprimirGrid += GridEstados_ImprimirGrid;
-        //    gridEstados.SelecionarItem += GridEstados_SelecionarItem;
+            var gridEstados = new DataGrid<Estado>(estados);
+            gridEstados.ImprimirGrid += GridEstados_ImprimirGrid;
+            gridEstados.SelecionarItem += GridEstados_SelecionarItem;
 
-        //    gridEstados.Titulo = "Todos os Estados da federação";
-        //    gridEstados.PaginarItensGrid = true;
-        //    gridEstados.QuantidadeItensPagina = 5;
-        //    gridEstados.DataBinding();
-        //}
+            gridEstados.Titulo = "Todos os Estados da federação";
+            gridEstados.PaginarItensGrid = true;
+            gridEstados.QuantidadeItensPagina = 5;
+            gridEstados.DataBinding();
+        }
 
-        //private void GridEstados_ImprimirGrid(object? sender, DataGridEventArgs<Estado> e)
-        //{
-        //    Console.WriteLine("Selecione o um Estado da Federação");
-        //}
+        private void GridEstados_ImprimirGrid(object? sender, DataGridEventArgs<Estado> e)
+        {
+            Console.WriteLine("Selecione o um Estado da Federação");
+        }
 
-        //private void GridEstados_SelecionarItem(object? sender, DataGridItemSelecionadoEventArgs<Estado> e)
-        //{
-        //    var pessoasEstado = new PessoaUC().ListarPessoasPorEstado(e.Item.Id);
+        private void GridEstados_SelecionarItem(object? sender, DataGridItemSelecionadoEventArgs<Estado> e)
+        {
+            var pessoasEstado = new PessoaUC().ListarPessoasPorEstado(e.Item.Id);
 
-        //    if (pessoasEstado?.Count > 0)
-        //    {
-        //        var grid = new DataGrid<PessoaEstado>(pessoasEstado);
-        //        grid.PaginarItensGrid = false;
-        //        grid.Titulo = $"Pessoas pertencentes ao Estado {e.Item.Id} - {e.Item.Nome}";
-        //        grid.DataBinding();
-        //    }
-        //    else
-        //    {
-        //        Console.ForegroundColor = ConsoleColor.Red;
-        //        Console.WriteLine($"\n\rNão existem pessoas cadastradas para o Estado {e.Item.Id} - {e.Item.Nome}!");
-        //        Console.ResetColor();
-        //    }
-        //}
+            if (pessoasEstado?.Count > 0)
+            {
+                var grid = new DataGrid<PessoaEstado>(pessoasEstado);
+                grid.PaginarItensGrid = false;
+                grid.Titulo = $"Pessoas pertencentes ao Estado {e.Item.Id} - {e.Item.Nome}";
+                grid.DataBinding();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\n\rNão existem pessoas cadastradas para o Estado {e.Item.Id} - {e.Item.Nome}!");
+                Console.ResetColor();
+            }
+        }
 
         private void ListarDepartamentos()
         {
@@ -244,46 +244,6 @@ namespace consoleapp.crud.basico.UI
 
             return retorno;
         }
-
-        private void ListarPessoasPorEstado()
-        {
-            var estados = new EstadoUC().ListarTodosEstados();
-
-            var gridEstados = new DataGrid<Estado>(estados);
-            gridEstados.ImprimirGrid += GridEstados_ImprimirGrid;
-            gridEstados.SelecionarItem += GridEstados_SelecionarItem;
-
-            gridEstados.Titulo = "Todos os Estados da federação";
-            gridEstados.PaginarItensGrid = true;
-            gridEstados.QuantidadeItensPagina = 5;
-            gridEstados.DataBinding();
-        }
-
-        private void GridEstados_ImprimirGrid(object? sender, DataGridEventArgs<Estado> e)
-        {
-            Console.WriteLine("Selecione o um Estado da Federação");
-        }
-
-        private void GridEstados_SelecionarItem(object? sender, DataGridItemSelecionadoEventArgs<Estado> e)
-        {
-            var pessoasEstado = new PessoaUC().ListarPessoasPorEstado(e.Item.Id);
-
-            if (pessoasEstado?.Count > 0)
-            {
-                var grid = new DataGrid<PessoaEstado>(pessoasEstado);
-                grid.PaginarItensGrid = false;
-                grid.Titulo = $"Pessoas pertencentes ao Estado {e.Item.Id} - {e.Item.Nome}";
-                grid.DataBinding();
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"\n\rNão existem pessoas cadastradas para o Estado {e.Item.Id} - {e.Item.Nome}!");
-                Console.ResetColor();
-            }
-        }
-
-        /// //////////////////////////////
 
         public Pessoa Pessoa { get; set; } = new Pessoa();
 
