@@ -280,10 +280,6 @@ namespace consoleapp.crud.basico.UI
                 pessoaUC.InserirPessoa(Pessoa.IdDepartamento, Pessoa.Nome);
                 Console.WriteLine("Pessoa inserida com sucesso!");
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 6eb8b0d06b8212a10171f0fa98f14304ca815c00
                 var pessoasDeparamento = pessoaUC.ListarTodasPessoasDepartamento();
                 var gridPessoasDepartamento = new DataGrid<PessoaDepartamento>(pessoasDeparamento);
                 gridPessoasDepartamento.Titulo = "Inserir nova pessoa";
@@ -292,13 +288,8 @@ namespace consoleapp.crud.basico.UI
                 gridPessoasDepartamento.DataBinding();
             }
             else
-<<<<<<< HEAD
             {
                 Console.WriteLine("Chegou");
-=======
-            { 
-                Console.WriteLine("Chegou"); 
->>>>>>> 6eb8b0d06b8212a10171f0fa98f14304ca815c00
             }
         }
 
