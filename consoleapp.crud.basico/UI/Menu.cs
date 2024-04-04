@@ -254,16 +254,32 @@ namespace consoleapp.crud.basico.UI
 
         private void InserirNovaPessoa()
         {
-            Console.WriteLine("Informe o nome da nova pessoa:");
-            Pessoa.Nome = Console.ReadLine();
-
             var departamentos = new DepartamentoUC().ListarTodosDepartamentos();
+            var gridDepartamento = new DataGrid<DepartamentoCidade>(departamentos);
 
+            gridDepartamento.ImprimirGrid += GridDepartamento_ImprimirGrid;
+            gridDepartamento.LinhaDigitada += GridDepartamento_LinhaDigitada;
+            gridDepartamento.Titulo = "Inserir Nova Pessoa";
+            gridDepartamento.QuantidadeItensPagina = 10;
+            gridDepartamento.PaginarItensGrid = true;
+            gridDepartamento.DataBinding();
+        }
+
+        private void GridDepartamento_ImprimirGrid(object? sender, DataGridEventArgs<DepartamentoCidade> e)
+        {
+            Console.WriteLine("\nQual o nome da pessoa que deseja inserir? ");
+        }
+
+        private void GridDepartamento_LinhaDigitada(object? sender, DataGridBufferLinhaEventArgs<DepartamentoCidade> e)
+        {
+            Pessoa.Nome = e?.LinhaDigitada;
+            var departamentos = new DepartamentoUC().ListarTodosDepartamentos();
             var gridDepartamento = new DataGrid<DepartamentoCidade>(departamentos);
             gridDepartamento.SelecionarItem += GridDepartamento_SelecionarItem;
             gridDepartamento.Titulo = "Selecione o departamento";
             gridDepartamento.QuantidadeItensPagina = 10;
             gridDepartamento.PaginarItensGrid = true;
+
             gridDepartamento.DataBinding();
         }
 
@@ -289,7 +305,7 @@ namespace consoleapp.crud.basico.UI
             }
             else
             {
-                Console.WriteLine("Chegou");
+                Console.WriteLine("Ação cancelada!");
             }
         }
 
