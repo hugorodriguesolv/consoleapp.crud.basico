@@ -311,44 +311,51 @@ namespace consoleapp.crud.basico.UI
 
         private void ApagarPessoa()
         {
-            Console.Clear();
-            Console.WriteLine("***** EXCLUIR PESSOA *****\n");
-            ListarTodasPessoas();
-            Console.WriteLine();
+            var pessoas = new PessoaUC().ListarTodasPessoasDepartamento();
+            var grid = new DataGrid<PessoaDepartamento>(pessoas);
+            grid.ImprimirGrid += Grid_ImprimirGrid;
+            grid.SelecionarItem += Grid_SelecionarItem;
+            grid.PaginarItensGrid = true;
+            grid.QuantidadeItensPagina = 10;
+            grid.Titulo = "Apagar Pessoa";
+            grid.DataBinding();
 
-            Console.WriteLine("Escolha o Id da pessoa que deseja exluir: ");
-            string inputIdPessoa = Console.ReadLine();
+        }
 
-            var entradasValidas =
-                int.TryParse(inputIdPessoa, out int IdPessoaInformado);
+        private void Grid_SelecionarItem(object? sender, DataGridItemSelecionadoEventArgs<PessoaDepartamento> e)
+        {
+            Pessoa.Id = e.Item.Id;
+            Console.WriteLine("Você deseja excluir essa pessoa? S/N");
+            var confirmado = Console.ReadLine() == "S" ? true : false;
 
-            if (entradasValidas)
+            if (confirmado)
             {
                 var pessoaUC = new PessoaUC();
                 var pessoa = pessoaUC
                     .ListarTodasPessoasDepartamento()
-                    .FirstOrDefault(pes => pes.Id == IdPessoaInformado);
+                    .FirstOrDefault(pes => pes.Id == Pessoa.Id);
 
-                var apagou = pessoaUC.ApagarPessoa(IdPessoaInformado);
+                var apagou = pessoaUC.ApagarPessoa(Pessoa.Id);
 
                 if (apagou)
                 {
-                    Console.Clear();
-                    Console.WriteLine();
-                    Console.WriteLine("***** EXCLUIR PESSOA *****\n");
-                    Console.WriteLine($"A pessoa {pessoa.NomePessoa} - Id: {pessoa.Id}, do departamento {pessoa.NomeDepartamento}, foi excluída com sucesso!");
-                    Console.WriteLine();
-                    ListarTodasPessoas();
+                    Console.WriteLine($"A pessoa {pessoa?.NomePessoa} - Id: {pessoa?.Id}, do departamento {pessoa?.NomeDepartamento}, foi excluída com sucesso!");
                 }
                 else
                 {
-                    Console.WriteLine($"Não existe uma pessoa cadastrada com o id: {IdPessoaInformado}.");
+                    Console.WriteLine($"Não existe uma pessoa cadastrada com o id: {Pessoa.Id}.");
                 }
             }
             else
             {
-                Console.WriteLine("Entrada inválida!");
+                Console.WriteLine("Ação Cancelada!");
             }
+
+        }
+
+        private void Grid_ImprimirGrid(object? sender, DataGridEventArgs<PessoaDepartamento> e)
+        {
+            Console.WriteLine("Escolha o Id da pessoa que deseja exluir:");
         }
     }
 }
