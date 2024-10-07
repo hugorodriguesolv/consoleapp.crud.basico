@@ -43,6 +43,12 @@ namespace consoleapp.crud.basico.UI
             _dadosGrid.RemoveAt(numeroLinha);
         }
 
+        public void OrdenarColuna()
+        {
+            _dadosGrid.
+
+        }
+
         public void DataBinding()
         {
             MontarDadosGrid();
